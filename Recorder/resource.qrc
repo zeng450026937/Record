@@ -1,0 +1,35 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resource/close.png</file>
+        <file>resource/delete.png</file>
+        <file>resource/edit.png</file>
+        <file>resource/folder.png</file>
+        <file>resource/icon.png</file>
+        <file>resource/max.png</file>
+        <file>resource/min.png</file>
+        <file>resource/u152.png</file>
+        <file>resource/u154.png</file>
+        <file>resource/u579.png</file>
+        <file>resource/u581.png</file>
+        <file>resource/u620.png</file>
+        <file>resource/u622.png</file>
+        <file>resource/u1364.png</file>
+        <file>resource/u1378.png</file>
+        <file>resource/u1405.png</file>
+        <file>resource/u1412.png</file>
+        <file>resource/u1418.png</file>
+        <file>resource/u1640.png</file>
+        <file>resource/u1643.png</file>
+        <file>resource/u1645.png</file>
+        <file>resource/u1762.png</file>
+        <file>resource/u1764.png</file>
+        <file>resource/u1766.png</file>
+        <file>resource/u1610.png</file>
+        <file>resource/u1768.png</file>
+        <file>resource/u2136.png</file>
+        <file>resource/loading.gif</file>
+        <file>resource/loading2.gif</file>
+        <file>resource/keyword.png</file>
+        <file>resource/location.png</file>
+    </qresource>
+</RCC>

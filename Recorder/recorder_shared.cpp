@@ -665,7 +665,7 @@ void    RecorderShared::initialize()
         _config->_clip_combo << "0s" << "2s" << "5s" << "10s" ;
 
     if(_config->_type_combo.isEmpty())
-        _config->_type_combo << "会议录音列表" << "个人录音列表" ;
+        _config->_type_combo<<"全部录音"<< "会议录音列表" << "个人录音列表"<< "移动会议" ;
 
     if(_config->_file_extention.isEmpty())
         _config->_file_extention = ".wav";

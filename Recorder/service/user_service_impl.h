@@ -1,8 +1,8 @@
 #ifndef USERSERVICEIMPL_H
 #define USERSERVICEIMPL_H
 
+#include <QObject>
 #include "include/user_service.h"
-
 
 class ServiceThreadPrivate;
 

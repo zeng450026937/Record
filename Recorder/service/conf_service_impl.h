@@ -8,7 +8,7 @@ class ServiceThreadPrivate;
 
 class ConfServiceImpl : public ConfService
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
     explicit ConfServiceImpl(ServiceThreadPrivate* shared, QObject *parent = 0);
     ~ConfServiceImpl(){}

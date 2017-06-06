@@ -5,7 +5,7 @@
 
 class UserService : public QObject
 {
-    Q_OBJECT
+	Q_OBJECT
 signals:
     void connectOpened();
     void connectFailed();

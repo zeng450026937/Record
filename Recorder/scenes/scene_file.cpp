@@ -326,10 +326,7 @@ void Scene_File::syntaxChange(QString text,QRegExp::PatternSyntax psyntax)
     //QRegExp::Wildcard //通配符
     //QRegExp::FixedString //字符串匹配
     //QRegExp::RegExp //正则表达式
-    QRegExp::PatternSyntax Psyntax=QRegExp::PatternSyntax(QRegExp::FixedString);
-    //将QVirant数据转换成int型的，该参数为QRegExp构造函数的第三个参数
-    Psyntax = psyntax;
-    QRegExp syntax=QRegExp(text,Qt::CaseInsensitive,Psyntax);
+    QRegExp syntax= QRegExp(text,Qt::CaseInsensitive, psyntax);
     sortFilter_proxyModel->setFilterRegExp(syntax);  //设置过滤语法
 }
 

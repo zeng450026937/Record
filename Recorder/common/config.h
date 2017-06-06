@@ -53,7 +53,7 @@ inline Config::Config()
     _clip_prev = settings.value("clip_prev",QString("5s")).toString();
     _clip_next = settings.value("clip_next",QString("5s")).toString();
 
-    _type_combo = settings.value("type_combo",QStringList()<<"会议录音"<<"个人录音").toStringList();
+    _type_combo = settings.value("type_combo",QStringList()<<"全部录音"<<"会议录音"<<"个人录音"<<"移动会议").toStringList();
     _clip_combo = settings.value("clip_combo").toStringList();
 
     _file_extention = settings.value("file_extention",QString(".wav")).toString();

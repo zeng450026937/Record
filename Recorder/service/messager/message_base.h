@@ -12,6 +12,7 @@ public:
     explicit MessageBase(QObject *parent = 0);
     ~MessageBase();
 
+	bool sendMessage(const QString &qstrMode,const QString &qstrAction, const QVariantMap &qvmData);
     enum CommandList{
         //common command
         CreateConference = 0,

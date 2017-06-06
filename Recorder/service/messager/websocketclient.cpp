@@ -54,7 +54,7 @@ void WebSocketClient::run()
 
     // add some header for server to validate the client.
     //con->append_header("id", "pc");
-    con->append_header("json_header", m_header);
+    con->append_header("Authorizetion", m_header);
 
     // Queue the connection. No DNS queries or network connections will be
     // made until the io_service event loop is run.

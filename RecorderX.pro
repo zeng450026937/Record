@@ -1,5 +1,4 @@
 TEMPLATE = subdirs
 
 SUBDIRS += \
-    Recorder \
-#    QtAV
+    Recorder QtAV

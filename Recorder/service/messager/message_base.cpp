@@ -1,11 +1,13 @@
+
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QDebug>
 #include "message_base.h"
 #include "message_base_private.h"
 
 #include "websocketclient.h"
 #include "network_info.h"
 
-#include <QJsonDocument>
-#include <QDebug>
 
 MessageBase::MessageBase(QObject *parent) :
     QObject(parent),
@@ -22,6 +24,21 @@ MessageBase::MessageBase(QObject *parent) :
 MessageBase::~MessageBase()
 {
     delete d;
+}
+
+bool MessageBase::sendMessage(const QString &qstrMode, const QString &qstrAction, const QVariantMap &qvmData)
+{
+	QJsonObject jsObj;
+	jsObj.insert("mode", qstrMode);
+	jsObj.insert("action", qstrAction);
+	jsObj.insert("data", QJsonObject::fromVariantMap(qvmData));
+
+	QJsonDocument jsonDocument;
+	jsonDocument.setObject(jsObj);	
+	QString qstrJson = QString::fromUtf8(jsonDocument.toJson(QJsonDocument::Compact));
+	d->_client->sendText(qstrJson.toLocal8Bit().data());
+
+	return true;
 }
 
 void MessageBase::on_connect_open()

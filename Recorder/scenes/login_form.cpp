@@ -18,6 +18,7 @@ LoginForm::LoginForm(RecorderShared* shared, QWidget *parent) :
     //this->setModal(true);
 
     this->connect(_shared,SIGNAL(connection_notify(int,QString)),this,SLOT(receive_connection_notify(int,QString)));
+
 }
 
 LoginForm::~LoginForm()
@@ -68,6 +69,8 @@ void LoginForm::receive_connection_notify(int state, QString text)
 
 void LoginForm::userLogin(QString user, QString password)
 {
+	user = "301255";
+	password = "20170224";
     _shared->UserLogin(user, password);
     ui->loginPushButton->setEnabled(false);
 }

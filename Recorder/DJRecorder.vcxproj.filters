@@ -1,0 +1,857 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{b5068f88-68db-401e-83ae-81a504c2e0f7}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{746e5268-4e58-4478-9899-3232b2362e5b}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Source Files\service">
+      <UniqueIdentifier>{2c1e0435-ffc8-4ffa-8dff-fd7030d39d95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scenes">
+      <UniqueIdentifier>{b1d1d413-a722-4330-a1d3-6f3ccefa4f79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\notification">
+      <UniqueIdentifier>{b1a30e02-6854-4076-ba50-36242e10689a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\model">
+      <UniqueIdentifier>{fc295c6a-8ea4-4df7-8ef9-233a7f2f2e16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common">
+      <UniqueIdentifier>{e40cd021-4ca4-49f1-ae43-7172bb6cb930}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\service\account">
+      <UniqueIdentifier>{2b3bc2d2-b4c5-4d6e-bdaf-2021ab3ca862}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\service\messager">
+      <UniqueIdentifier>{a5084727-0788-46d0-93d0-66a3703996d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\service\storage">
+      <UniqueIdentifier>{df8819f8-b81c-4f19-a08a-ab2695c7fb08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\service\include">
+      <UniqueIdentifier>{91fb1fd2-b0dd-485b-b7f5-6e165834173d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="resource.qrc">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="recorder.h">
+      <Filter>Source Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="recorder.ui">
+      <Filter>Source Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="recorder_shared.h">
+      <Filter>Source Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="service\conf_service_impl.h">
+      <Filter>Source Files\service</Filter>
+    </CustomBuild>
+    <CustomBuild Include="service\service_thread.h">
+      <Filter>Source Files\service</Filter>
+    </CustomBuild>
+    <CustomBuild Include="service\user_service_impl.h">
+      <Filter>Source Files\service</Filter>
+    </CustomBuild>
+    <CustomBuild Include="notification\notification_center.h">
+      <Filter>Source Files\notification</Filter>
+    </CustomBuild>
+    <CustomBuild Include="notification\notification_center.ui">
+      <Filter>Source Files\notification</Filter>
+    </CustomBuild>
+    <CustomBuild Include="common\ffmpeg_wrapper.h">
+      <Filter>Source Files\common</Filter>
+    </CustomBuild>
+    <CustomBuild Include="common\recorder_splash.h">
+      <Filter>Source Files\common</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\scene_record_finish.ui">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\scene_record_addinfo.ui">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\scene_record.ui">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\scene_file_dl.ui">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\scene_file_clip.ui">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\scene_file.ui">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\notify_dialog.ui">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\login_form.ui">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\list_form.ui">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\device_list_item_a.ui">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\device_list_item.ui">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\template_list_item_a.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\template_list_item.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\template_list_delegate_a.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\template_list_delegate.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\scene_setting.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\scene_record_warning.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\scene_record_modellist.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\scene_record_finish.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\scene_record_addinfo.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\scene_record.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\scene_file_dl.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\scene_file_clip.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\scene_file.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\scene_buttondelegate.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\qqslider.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\qqgroupbox.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\notify_dialog.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\login_form.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\listitem_delegate.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\list_form.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\device_list_item_a.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\device_list_item.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\device_list_delegate_a.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\device_list_delegate.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\template_list_item_a.ui">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\template_list_item.ui">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\scene_setting.ui">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\scene_record_warning.ui">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\scene_record_modellist.ui">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="service\account\account_center.h">
+      <Filter>Source Files\service\account</Filter>
+    </CustomBuild>
+    <CustomBuild Include="service\messager\message_base.h">
+      <Filter>Source Files\service\messager</Filter>
+    </CustomBuild>
+    <CustomBuild Include="service\messager\websocketclient.h">
+      <Filter>Source Files\service\messager</Filter>
+    </CustomBuild>
+    <CustomBuild Include="service\include\conf_service.h">
+      <Filter>Source Files\service\include</Filter>
+    </CustomBuild>
+    <CustomBuild Include="service\include\user_service.h">
+      <Filter>Source Files\service\include</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resource\close.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\delete.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\edit.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\folder.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\icon.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\max.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\min.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u152.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u154.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u579.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u581.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u620.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u622.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u1364.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u1378.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u1405.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u1412.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u1418.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u1640.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u1643.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u1645.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u1762.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u1764.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u1766.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u1610.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u1768.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\u2136.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\loading.gif">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\loading2.gif">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\keyword.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resource\location.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GeneratedFiles\qrc_resource.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="recorder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_recorder.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_recorder.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="recorder_shared.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_recorder_shared.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_recorder_shared.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="service\conf_service_impl.cpp">
+      <Filter>Source Files\service</Filter>
+    </ClCompile>
+    <ClCompile Include="service\service_thread.cpp">
+      <Filter>Source Files\service</Filter>
+    </ClCompile>
+    <ClCompile Include="service\service_thread_private.cpp">
+      <Filter>Source Files\service</Filter>
+    </ClCompile>
+    <ClCompile Include="service\user_service_impl.cpp">
+      <Filter>Source Files\service</Filter>
+    </ClCompile>
+    <ClCompile Include="notification\notification_center.cpp">
+      <Filter>Source Files\notification</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_notification_center.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_notification_center.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="model\model_editorfactory.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\model_textdelegate.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\model_updater.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="model\model_editor.cpp">
+      <Filter>Source Files\model</Filter>
+    </ClCompile>
+    <ClCompile Include="common\ffmpeg_wrapper.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ffmpeg_wrapper.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ffmpeg_wrapper.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="common\recorder_splash.cpp">
+      <Filter>Source Files\common</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_recorder_splash.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_recorder_splash.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\template_list_item_a.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\template_list_item.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\template_list_delegate_a.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\template_list_delegate.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\scene_setting.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\scene_record_warning.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\scene_record_modellist.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\scene_record_finish.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\scene_record_addinfo.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\scene_record.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\scene_file_dl.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\scene_file_clip.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\scene_file.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\scene_buttondelegate.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\qqslider.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\qqgroupbox.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\notify_dialog.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\login_form.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\listitem_delegate.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\list_form.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\device_list_item_a.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\device_list_item.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\device_list_delegate_a.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\device_list_delegate.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_template_list_item_a.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_template_list_item_a.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_template_list_item.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_template_list_item.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_template_list_delegate_a.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_template_list_delegate_a.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_template_list_delegate.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_template_list_delegate.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_scene_setting.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_scene_setting.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_scene_record_warning.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_scene_record_warning.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_scene_record_modellist.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_scene_record_modellist.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_scene_record_finish.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_scene_record_finish.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_scene_record_addinfo.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_scene_record_addinfo.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_scene_record.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_scene_record.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_scene_file_dl.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_scene_file_dl.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_scene_file_clip.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_scene_file_clip.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_scene_file.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_scene_file.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_scene_buttondelegate.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_scene_buttondelegate.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_qqslider.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_qqslider.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_qqgroupbox.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_qqgroupbox.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_notify_dialog.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_notify_dialog.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_login_form.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_login_form.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_listitem_delegate.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_listitem_delegate.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_list_form.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_list_form.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_device_list_item_a.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_device_list_item_a.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_device_list_item.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_device_list_item.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_device_list_delegate_a.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_device_list_delegate_a.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_device_list_delegate.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_device_list_delegate.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_conf_service_impl.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_conf_service_impl.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_service_thread.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_service_thread.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_user_service_impl.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_user_service_impl.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="service\account\account_center.cpp">
+      <Filter>Source Files\service\account</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_account_center.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_account_center.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="service\messager\binary_reader.cpp">
+      <Filter>Source Files\service\messager</Filter>
+    </ClCompile>
+    <ClCompile Include="service\messager\message_base.cpp">
+      <Filter>Source Files\service\messager</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_message_base.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_message_base.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="service\messager\message_base_private.cpp">
+      <Filter>Source Files\service\messager</Filter>
+    </ClCompile>
+    <ClCompile Include="service\messager\network_info.cpp">
+      <Filter>Source Files\service\messager</Filter>
+    </ClCompile>
+    <ClCompile Include="service\messager\wavheader.cpp">
+      <Filter>Source Files\service\messager</Filter>
+    </ClCompile>
+    <ClCompile Include="service\messager\websocketclient.cpp">
+      <Filter>Source Files\service\messager</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_websocketclient.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_websocketclient.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="service\storage\clip_file_database_impl.cpp">
+      <Filter>Source Files\service\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="service\storage\conferencedatabase_impl.cpp">
+      <Filter>Source Files\service\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="service\storage\database_impl.cpp">
+      <Filter>Source Files\service\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="service\storage\device_database_impl.cpp">
+      <Filter>Source Files\service\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="service\storage\download_database_impl.cpp">
+      <Filter>Source Files\service\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="service\storage\filedatabase_impl.cpp">
+      <Filter>Source Files\service\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="service\storage\markdatabase_impl.cpp">
+      <Filter>Source Files\service\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="service\storage\personal_database_impl.cpp">
+      <Filter>Source Files\service\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="service\storage\shareddata.cpp">
+      <Filter>Source Files\service\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="service\storage\templatedatabase_impl.cpp">
+      <Filter>Source Files\service\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="service\storage\user_database_impl.cpp">
+      <Filter>Source Files\service\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_conf_service.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_conf_service.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_user_service.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_user_service.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GeneratedFiles\ui_recorder.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="service\service_thread_private.h">
+      <Filter>Source Files\service</Filter>
+    </ClInclude>
+    <ClInclude Include="service\white_list.h">
+      <Filter>Source Files\service</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_notification_center.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="model\model_editorfactory.h">
+      <Filter>Source Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\model_textdelegate.h">
+      <Filter>Source Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\model_updater.h">
+      <Filter>Source Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="model\model_editor.h">
+      <Filter>Source Files\model</Filter>
+    </ClInclude>
+    <ClInclude Include="common\common_types.h">
+      <Filter>Source Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\config.h">
+      <Filter>Source Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\threadrun.h">
+      <Filter>Source Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_scene_record_finish.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_scene_record_addinfo.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_scene_record.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_scene_file_dl.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_scene_file_clip.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_scene_file.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_notify_dialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_login_form.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_list_form.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_device_list_item_a.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_device_list_item.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_template_list_item_a.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_template_list_item.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_scene_setting.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_scene_record_warning.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_scene_record_modellist.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="service\messager\binary_reader.h">
+      <Filter>Source Files\service\messager</Filter>
+    </ClInclude>
+    <ClInclude Include="service\messager\message_base_private.h">
+      <Filter>Source Files\service\messager</Filter>
+    </ClInclude>
+    <ClInclude Include="service\messager\network_info.h">
+      <Filter>Source Files\service\messager</Filter>
+    </ClInclude>
+    <ClInclude Include="service\messager\wavheader.h">
+      <Filter>Source Files\service\messager</Filter>
+    </ClInclude>
+    <ClInclude Include="service\storage\clip_file_database_impl.h">
+      <Filter>Source Files\service\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="service\storage\conferencedatabase_impl.h">
+      <Filter>Source Files\service\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="service\storage\database_impl.h">
+      <Filter>Source Files\service\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="service\storage\device_database_impl.h">
+      <Filter>Source Files\service\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="service\storage\download_database_impl.h">
+      <Filter>Source Files\service\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="service\storage\filedatabase_impl.h">
+      <Filter>Source Files\service\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="service\storage\markdatabase_impl.h">
+      <Filter>Source Files\service\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="service\storage\personal_database_impl.h">
+      <Filter>Source Files\service\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="service\storage\shareddata.h">
+      <Filter>Source Files\service\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="service\storage\templatedatabase_impl.h">
+      <Filter>Source Files\service\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="service\storage\user_database_impl.h">
+      <Filter>Source Files\service\storage</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

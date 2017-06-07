@@ -3,7 +3,9 @@
 
 #include <QDialog>
 
+class ServiceThread;
 class RecorderShared;
+class UserServiceImpl;
 
 namespace Ui {
 class LoginForm;
@@ -25,19 +27,22 @@ signals:
     void aboutToExitApp();
 
 private slots:
-    void receive_connection_notify(int state, QString text);
+	void on_login_result(QString qstrResultInfo);
 
-    void userLogin(QString user, QString password);
+    void receive_connection_notify(int state, QString text);
 
     void on_loginPushButton_clicked();
 
     void on_exitPushButton_clicked();
 
+	void on_service_is_readied();
+
 private:
     Ui::LoginForm *ui;
+	ServiceThread *_service;
     RecorderShared* _shared;
-    QString _user;
-    QString _password;
+
+	UserServiceImpl	*_user_service;
 };
 
 #endif // LOGIN_FORM_H

@@ -6,16 +6,45 @@
 
 class AccountCenter : public QObject
 {
+public:
+//	struct USER_INFO {
+//		QString user_id;
+//		QString user_name;
+// 		QString nick_name;
+// 		QString nick_name_full;
+// 		QString nick_name_short;
+// 		QString realm_exinfo;
+//		int region;
+//	};
+
+	struct USER 
+	{
+		QString user_id;
+		QString user_name;
+		QString access_token;
+		QString user_group;
+		//         QString expires_at;
+		//         QString refresh_token;
+		QString mac_key;
+		//         QString mac_algorithm;
+		//         QString server_time;
+		//         QString warning_code;
+	};
+
     Q_OBJECT
 public:
     explicit AccountCenter(QObject *parent = 0);
     ~AccountCenter();
 
+	USER &GetUser();
+	//USER_INFO &GetUserInfo();
+
+	const QString &GetDeviceUuid();
+
 signals:
-    void loginResult(QString account, bool ok, QString reason);
+    void loginResult(bool ok,const QString &reason);
     void logoutResult(QString account, bool ok, QString reason);
 
-    void userLogin(QString account, QString password);
     void userLogout();
 
 public slots:
@@ -61,8 +90,11 @@ private:
     QNetworkAccessManager manager;
     QMap<QNetworkReply *, int> currentRequest;
 
-    const QString HOST = "https://aqapi.101.com";
+	const QString PROTOCOL = "https://";
+    const QString HOST = "aqapi.101.com";
     const QString ORG_NAME = "ND";
+
+	const QString _device_uuid;
 
     struct SESSION{
         QString session_id;
@@ -70,16 +102,7 @@ private:
         int     op_count;
     }_session;
 
-    struct USER{
-        QString user_id;
-        QString access_token;
-        QString expires_at;
-        QString refresh_token;
-        QString mac_key;
-        QString mac_algorithm;
-        QString server_time;
-        QString warning_code;
-    }_user;
+	struct USER _user;
 
     struct AUTHORIZATION{
         QString mac_id;
@@ -106,15 +129,7 @@ private:
         }
     }_authorization;
 
-    struct USER_INFO{
-        QString user_id;
-        QString user_name;
-        QString nick_name;
-        QString nick_name_full;
-        QString nick_name_short;
-        QString realm_exinfo;
-        int region;
-    }_user_info;
+ //   struct USER_INFO _user_info;
 };
 
 #endif // ACCOUNTCENTER_H

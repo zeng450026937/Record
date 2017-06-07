@@ -1,24 +1,34 @@
-#include "login_form.h"
-#include "ui_login_form.h"
-#include "Recorder/recorder_shared.h"
-#include "scenes/scene_record_warning.h"
 
 #include <QShowEvent>
 #include <QTimerEvent>
 
+#include "login_form.h"
+#include "ui_login_form.h"
+#include "Recorder/recorder_shared.h"
+#include "scenes/scene_record_warning.h"
+#include "service/white_list.h"
+#include "service/service_thread.h"
+#include "service/account/account_center.h"
+#include "service/user_service_impl.h"
+#include "common/config.h"
+#include "service/white_list.h"
+
 LoginForm::LoginForm(RecorderShared* shared, QWidget *parent) :
     _shared(shared),
     QDialog(parent),
-    ui(new Ui::LoginForm)
+    ui(new Ui::LoginForm),
+	_service(ServiceThread::GetInstance())
 {
     ui->setupUi(this);
-    //this->setWindowModality(Qt::ApplicationModal);
+    this->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);//去掉标题栏
 
-    this->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);//去掉标题栏
-    //this->setModal(true);
+	ui->loginPushButton->setEnabled(false);
+	ui->passwordLineEdit->setEnabled(false);
+	ui->userLineEdit->setEnabled(false);
 
+	_service->start();
+	this->connect(_service, SIGNAL(service_ready()), this, SLOT(on_service_is_readied()), Qt::QueuedConnection);
     this->connect(_shared,SIGNAL(connection_notify(int,QString)),this,SLOT(receive_connection_notify(int,QString)));
-
 }
 
 LoginForm::~LoginForm()
@@ -39,9 +49,23 @@ void LoginForm::timerEvent(QTimerEvent *e)
     Q_UNUSED(e);
 }
 
+void LoginForm::on_login_result(QString qstrResultInfo)
+{
+	if (qstrResultInfo.isEmpty())
+	{
+		accept();
+	}
+	else
+	{
+		QPoint pos = this->geometry().center();
+		Scene_Record_Warning::ShowMessage(pos, qstrResultInfo);
+	}
+}
+
 void LoginForm::receive_connection_notify(int state, QString text)
 {
-    switch(state){
+    switch(state)
+	{
     case RecorderShared::kConnectOpened:
         break;
     case RecorderShared::kConnectFailed:
@@ -65,28 +89,52 @@ void LoginForm::receive_connection_notify(int state, QString text)
         ui->loginPushButton->setEnabled(false);
         break;
     }
-}
 
-void LoginForm::userLogin(QString user, QString password)
-{
-	user = "301255";
-	password = "20170224";
-    _shared->UserLogin(user, password);
-    ui->loginPushButton->setEnabled(false);
+	ui->loginPushButton->setEnabled(true);
+	ui->passwordLineEdit->setEnabled(true);
+	ui->loginPushButton->setEnabled(true);
 }
 
 void LoginForm::on_loginPushButton_clicked()
 {
-    _user = ui->userLineEdit->text();
-    _password = ui->passwordLineEdit->text();
+	ui->userLineEdit->setText("301255");
+	ui->passwordLineEdit->setText("20170224");
 
-    this->userLogin(_user, _password);
+	QString qstrUserId = ui->userLineEdit->text().trimmed();
+	ui->userLineEdit->setText(qstrUserId);
+
+	QStringList lsUserId = _service->GetLoginWhiteList()->whiteList();
+
+	Config *pConfig = _shared->GetConfig();
+	if (pConfig->_hackers)
+		lsUserId << ui->userLineEdit->text();
+
+	if (!lsUserId.contains(qstrUserId))
+	{
+		QPoint pos = this->geometry().center();
+		Scene_Record_Warning::ShowMessage(pos, "您暂时无权限使用");
+		return;
+	}
+
+	ui->userLineEdit->setEnabled(false);
+	ui->passwordLineEdit->setEnabled(false);
+	ui->loginPushButton->setEnabled(false);
+
+	_user_service->userLogin(ui->userLineEdit->text(), ui->passwordLineEdit->text());
 }
 
 void LoginForm::on_exitPushButton_clicked()
 {
-    emit aboutToExitApp();
-    this->hide();
-
+	emit aboutToExitApp();
+	this->hide();
     this->reject();
+}
+
+void LoginForm::on_service_is_readied()
+{
+	ui->loginPushButton->setEnabled(true);
+	ui->passwordLineEdit->setEnabled(true);
+	ui->userLineEdit->setEnabled(true);
+	_user_service = _service->GetUserService();
+	connect(_user_service, SIGNAL(loginResult(QString)), this, SLOT(on_login_result(QString)));
 }

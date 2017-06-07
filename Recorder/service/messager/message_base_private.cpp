@@ -41,8 +41,8 @@ MessageBasePrivate::MessageBasePrivate():
     _command_map.insert("DownloadFile",MessageBase::DownloadFile);
     _command_map.insert("DownloadFileAck",MessageBase::DownloadFileAck);
     _command_map.insert("NotifyNewDataRecv",MessageBase::NotifyNewDataRecv);
-    _command_map.insert("LoginDevice",MessageBase::LoginDevice);
-    _command_map.insert("HeartBeat",MessageBase::HeartBeat);
+//     _command_map.insert("LoginDevice",MessageBase::LoginDevice);
+//     _command_map.insert("HeartBeat",MessageBase::HeartBeat);
     _command_map.insert("NotifyDeviceInfoChange",MessageBase::NotifyDeviceInfoChange);
     _command_map.insert("DeviceEnvironmentException",MessageBase::DeviceEnvironmentException);
 }

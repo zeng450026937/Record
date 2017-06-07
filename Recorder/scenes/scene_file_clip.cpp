@@ -5,7 +5,7 @@
 #include "ffmpeg_wrapper.h"
 #include "recorder_shared.h"
 #include "config.h"
-
+#include <QFile>
 #include <QMessageBox>
 
 Scene_File_Clip::Scene_File_Clip(RecorderShared *sharedData, QWidget *parent) :

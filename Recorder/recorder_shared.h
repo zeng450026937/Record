@@ -5,6 +5,7 @@
 #include "model/model_updater.h"
 
 class Config;
+class WhiteList;
 class ServiceThread;
 
 class RecorderShared : public QObject, public ModelUpdater
@@ -77,11 +78,11 @@ signals:
 private slots:
     void receive_service_ready();
 
-    void receive_connectOpened();
-    void receive_connectFailed();
-    void receive_connectClosed();
+//     void receive_connectOpened();
+//     void receive_connectFailed();
+//     void receive_connectClosed();
     void receive_userLogined(bool result, QString error);
-    void receive_userLogouted(bool result, QString error);
+   // void receive_userLogouted(bool result, QString error);
 
     void receive_conferenceCreated(bool result, QVariantMap info);
     void receive_conferenceStarted(bool result, QVariantMap info);
@@ -128,7 +129,6 @@ private:
     QStringList         _selected_device;
     QStringList         _conf_uuid_list;
     QStringList         _personal_uuid_list;
-
 };
 
 #endif // RECORDERSHARED_H

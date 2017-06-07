@@ -65,6 +65,9 @@
     <Filter Include="Source Files\service\include">
       <UniqueIdentifier>{91fb1fd2-b0dd-485b-b7f5-6e165834173d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\service\command">
+      <UniqueIdentifier>{d439fa15-5dfb-4a5e-9c7f-10ba3599039d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="resource.qrc">
@@ -719,11 +722,11 @@
     <ClCompile Include="GeneratedFiles\Release\moc_conf_service.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_user_service.cpp">
-      <Filter>Generated Files\Debug</Filter>
+    <ClCompile Include="common\config.cpp">
+      <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_user_service.cpp">
-      <Filter>Generated Files\Release</Filter>
+    <ClCompile Include="service\command\info_mode.cpp">
+      <Filter>Source Files\service\command</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -852,6 +855,9 @@
     </ClInclude>
     <ClInclude Include="service\storage\user_database_impl.h">
       <Filter>Source Files\service\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="service\command\info_mode.h">
+      <Filter>Source Files\service\command</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

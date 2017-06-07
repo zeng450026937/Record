@@ -1,9 +1,11 @@
-#include "recorder_shared.h"
-#include "config.h"
-#include "service/service_thread.h"
-#include "service/include/user_service.h"
-#include "service/include/conf_service.h"
 
+#include "service/service_thread.h"
+#include "service/user_service_impl.h"
+#include "service/include/conf_service.h"
+#include "common/config.h"
+#include "recorder_shared.h"
+
+#include <QDir>
 #include <QDebug>
 #include <QDateTime>
 #include <QFile>
@@ -40,12 +42,12 @@ void RecorderShared::customMessageHandler(QtMsgType type, const QMessageLogConte
 
 RecorderShared::RecorderShared(QObject* parent) :
     QObject(parent),
-    _service(new ServiceThread(this)),
-    _config(new Config),
+    _service(ServiceThread::GetInstance()),
+    _config(Config::GetInstance()),
     _service_ready(false)
 {
     //init debug output
-    gDebugLogInstance = new QFile;
+    gDebugLogInstance = new QFile();
     gDebugLogInstance->setFileName("debugLog.txt");
     gDebugLogInstance->open(QIODevice::WriteOnly | QIODevice::Append);
     QTextStream ts(gDebugLogInstance);
@@ -56,11 +58,6 @@ RecorderShared::RecorderShared(QObject* parent) :
 
 RecorderShared::~RecorderShared()
 {
-    if(_service->isRunning()){
-        _service->quit();
-        _service->wait();
-    }
-
     delete _config;
 
     if(gDebugLogInstance){
@@ -230,7 +227,7 @@ QVariantList RecorderShared::GetTemplateList()
         return QVariantList();
 }
 
-void     RecorderShared::UserLogin(QString account, QString password)
+void RecorderShared::UserLogin(QString account, QString password)
 {
     _service->GetUserService()->userLogin(account, password);
 }
@@ -239,12 +236,12 @@ void RecorderShared::receive_service_ready()
 { 
     _service_ready = true;
 
-    QObject::connect(_service->GetUserService(),SIGNAL(connectOpened()),
-                     this,SLOT(receive_connectOpened()),Qt::QueuedConnection);
-    QObject::connect(_service->GetUserService(),SIGNAL(connectFailed()),
-                     this,SLOT(receive_connectFailed()),Qt::QueuedConnection);
-    QObject::connect(_service->GetUserService(),SIGNAL(connectClosed()),
-                     this,SLOT(receive_connectClosed()),Qt::QueuedConnection);
+//     QObject::connect(_service->GetUserService(),SIGNAL(connectOpened()),
+//                      this,SLOT(receive_connectOpened()),Qt::QueuedConnection);
+//     QObject::connect(_service->GetUserService(),SIGNAL(connectFailed()),
+//                      this,SLOT(receive_connectFailed()),Qt::QueuedConnection);
+//     QObject::connect(_service->GetUserService(),SIGNAL(connectClosed()),
+//                      this,SLOT(receive_connectClosed()),Qt::QueuedConnection);
     QObject::connect(_service->GetUserService(),SIGNAL(userLogined(bool,QString)),
                      this,SLOT(receive_userLogined(bool,QString)),Qt::QueuedConnection);
 
@@ -293,29 +290,30 @@ void RecorderShared::receive_service_ready()
     QObject::connect(_service->GetConfService(),SIGNAL(templateListGot(bool,QVariantList)),
                      this,SLOT(receive_templateListGot(bool,QVariantList)),Qt::QueuedConnection);
 
-    _service->GetUserService()->connectTo(_config->_server_address);
-
-    if(_config->_output_dir.isEmpty())
-        _config->_output_dir = _service->GetConfService()->downloadFolder();
-
-    if(QDir(_config->_output_dir).isReadable())
-        _service->GetConfService()->setDownloadFolder(_config->_output_dir);
-    else
-        _config->_output_dir = _service->GetConfService()->downloadFolder();
+	// TODO: 暂时注释，by wangzezhou
+//     _service->GetUserService()->connectTo(_config->_server_address);
+// 
+//     if(_config->_output_dir.isEmpty())
+//         _config->_output_dir = _service->GetConfService()->downloadFolder();
+// 
+//     if(QDir(_config->_output_dir).isReadable())
+//         _service->GetConfService()->setDownloadFolder(_config->_output_dir);
+//     else
+//         _config->_output_dir = _service->GetConfService()->downloadFolder();
 }
 
-void RecorderShared::receive_connectOpened()
-{
-    emit connection_notify(kConnectOpened, QObject::tr("连接成功"));
-}
-void RecorderShared::receive_connectFailed()
-{
-    emit connection_notify(kConnectFailed, QObject::tr("连接服务失败"));
-}
-void RecorderShared::receive_connectClosed()
-{
-    emit connection_notify(kConnectClosed, QObject::tr("服务器断开连接"));
-}
+// void RecorderShared::receive_connectOpened()
+// {
+//     emit connection_notify(kConnectOpened, QObject::tr("连接成功"));
+// }
+// void RecorderShared::receive_connectFailed()
+// {
+//     emit connection_notify(kConnectFailed, QObject::tr("连接服务失败"));
+// }
+// void RecorderShared::receive_connectClosed()
+// {
+//     emit connection_notify(kConnectClosed, QObject::tr("服务器断开连接"));
+// }
 void RecorderShared::receive_userLogined(bool result, QString error)
 {
     QString text;
@@ -334,18 +332,18 @@ void RecorderShared::receive_userLogined(bool result, QString error)
 
     this->request_data();
 }
-void RecorderShared::receive_userLogouted(bool result, QString error)
-{
-    QString text;
-    if(result){
-        text = QObject::tr("登出成功");
-        emit connection_notify(kLogoutOk, text);
-    }
-    else{
-        text = QObject::tr("登出失败") + ":" + error;
-        emit connection_notify(kLogoutFailed, text);
-    }
-}
+//void RecorderShared::receive_userLogouted(bool result, QString error)
+//{
+//    QString text;
+//    if(result){
+//        text = QObject::tr("登出成功");
+//        emit connection_notify(kLogoutOk, text);
+//    }
+//    else{
+//        text = QObject::tr("登出失败") + ":" + error;
+//        emit connection_notify(kLogoutFailed, text);
+//    }
+//}
 
 void RecorderShared::receive_conferenceCreated(bool result, QVariantMap info)
 {
@@ -671,8 +669,7 @@ void    RecorderShared::initialize()
         _config->_file_extention = ".wav";
 
     if(_config->_output_dir.isEmpty() || !QDir(_config->_output_dir).isReadable()){
-        QDir dir;
-        dir.setPath("./OUT");
+        QDir dir("./OUT");
         _config->_output_dir = dir.absolutePath();
     }
 

@@ -2,7 +2,7 @@
 #define SERVICETHREADPRIVATE_H
 
 class ConfService;
-class UserService;
+class UserServiceImpl;
 class MessageBase;
 class AccountCenter;
 class WhiteList;
@@ -17,8 +17,11 @@ class ClipFileDatabase;
 class DownloadDatabase;
 class PersonalDatabase;
 
+class InfoMode;
+
 class ServiceThreadPrivate
 {
+	friend class ServiceThread;
 public:
     ServiceThreadPrivate();
     ~ServiceThreadPrivate();
@@ -28,7 +31,7 @@ public:
     WhiteList*     AppUser()     { return _white_list; }
 
     ConfService* GetConfService() { return _conf_service; }
-    UserService* GetUserService() { return _user_service; }
+	UserServiceImpl* GetUserService() { return _user_service; }
 
     ConferenceDatabase* ConferenceDB() { return _conf_db; }
     DeviceDatabase*     DeviceDB() { return _device_db; }
@@ -41,7 +44,7 @@ public:
 
 private:
     ConfService*    _conf_service;
-    UserService*    _user_service;
+	UserServiceImpl*    _user_service;
     MessageBase*    _messager;
     AccountCenter*  _account;
     WhiteList*      _white_list;
@@ -56,6 +59,10 @@ private:
     MarkDatabase*       _mark_db;
     UserDatabase*       _user_db;
     PersonalDatabase*   _personal_db;
+
+	InfoMode	*_info_mode;
+
+	static ServiceThread *s_pServiceSingleton;
 };
 
 #endif // SERVICETHREADPRIVATE_H

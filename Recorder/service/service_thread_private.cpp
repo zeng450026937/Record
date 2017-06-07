@@ -1,6 +1,4 @@
 #include "service_thread_private.h"
-#include "conf_service_impl.h"
-#include "user_service_impl.h"
 #include "messager/message_base.h"
 #include "account/account_center.h"
 #include "white_list.h"
@@ -14,6 +12,8 @@
 #include "storage/include/clip_file_database.h"
 #include "storage/include/download_database.h"
 #include "storage/include/personal_database.h"
+
+#include "../command/info_mode.h"
 
 ServiceThreadPrivate::ServiceThreadPrivate():
     _conf_service(nullptr),
@@ -32,8 +32,7 @@ ServiceThreadPrivate::ServiceThreadPrivate():
     _user_db = UserDatabase::GetInterface(_db);
     _personal_db = PersonalDatabase::GetInterface(_db);
 
-    _conf_service = new ConfServiceImpl(this, _messager);
-    _user_service = new UserServiceImpl(this, _messager);
+	_info_mode = new InfoMode(_messager);
 }
 
 ServiceThreadPrivate::~ServiceThreadPrivate()

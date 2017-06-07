@@ -31,8 +31,7 @@ ConfServiceImpl::ConfServiceImpl(ServiceThreadPrivate* shared, QObject *parent) 
 
     this->setDownloadFolder("./OUT");
 
-    QScopedPointer<Config> config(new Config);
-    auto_download = config->_auto_download;
+    auto_download = Config::GetInstance()->_auto_download;
 }
 
 void ConfServiceImpl::timerEvent(QTimerEvent *e)
@@ -173,9 +172,7 @@ void ConfServiceImpl::getPersonalList(QString user_id)
 }
 void ConfServiceImpl::getAllPersonalList()
 {
-    QVariantMap param;
-
-    this->Execute(MessageBase::GetAllPersonalList, param);
+	_shared->Messager()->sendMessage("getAllPersonalList", "personal");
 }
 QVariantList ConfServiceImpl::conferenceList() const
 {

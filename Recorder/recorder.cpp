@@ -13,10 +13,10 @@
 #include "service/service_thread.h"
 #include "service/include/user_service.h"
 
-Recorder::Recorder(QWidget *parent) :
+Recorder::Recorder(RecorderShared *pRecorderShared, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Recorder),
-    _sharedData(new RecorderShared),
+    _sharedData(pRecorderShared),
     _scene_file(nullptr),
     _scene_record(nullptr),
     _scene_setting(nullptr),

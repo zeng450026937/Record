@@ -20,7 +20,7 @@ class Recorder : public QWidget
     Q_OBJECT
 
 public:
-    explicit Recorder(QWidget *parent = 0);
+    explicit Recorder(RecorderShared *pRecorderShared,QWidget *parent = 0);
     ~Recorder();
 
     bool event(QEvent *event);

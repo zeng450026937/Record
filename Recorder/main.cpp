@@ -23,11 +23,12 @@ int main(int argc, char *argv[])
     //禁止休眠
     ::SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED);
 
-	RecorderShared *pRecorderShared = new RecorderShared();
+    RecorderShared pRecorderShared;
 	{
-		LoginForm login(pRecorderShared);
+        LoginForm login(&pRecorderShared);
 		if (login.exec() != QDialog::Accepted)
 			return -1;
+	}
 	}
 
     Recorder w(pRecorderShared);

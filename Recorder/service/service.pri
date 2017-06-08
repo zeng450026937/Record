@@ -38,7 +38,8 @@ HEADERS += \
     $$PWD/storage/personal_database_impl.h \
     $$PWD/account/account_center.h \
     $$PWD/white_list.h \
-    $$PWD/messager/wavheader.h
+    $$PWD/messager/wavheader.h \
+    $$PWD/command/info_mode.h
 
 
 SOURCES += \
@@ -63,5 +64,6 @@ SOURCES += \
     $$PWD/storage/clip_file_database_impl.cpp \
     $$PWD/storage/personal_database_impl.cpp \
     $$PWD/account/account_center.cpp \
-    $$PWD/messager/wavheader.cpp
+    $$PWD/messager/wavheader.cpp \
+    $$PWD/command/info_mode.cpp
 

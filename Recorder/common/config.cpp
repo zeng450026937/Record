@@ -26,7 +26,7 @@ Config::Config()
 	_clip_prev = settings.value("clip_prev", QString("5s")).toString();
 	_clip_next = settings.value("clip_next", QString("5s")).toString();
 
-	_type_combo = settings.value("type_combo", QStringList() << "È«²¿Â¼Òô" << "»áÒéÂ¼Òô" << "¸öÈËÂ¼Òô" << "ÒÆ¶¯»áÒé").toStringList();
+	_type_combo = settings.value("type_combo", QStringList() << "å…¨éƒ¨å½•éŸ³" << "ä¼šè®®å½•éŸ³" << "ä¸ªäººå½•éŸ³" << "ç§»åŠ¨ä¼šè®®").toStringList();
 	_clip_combo = settings.value("clip_combo").toStringList();
 
 	_file_extention = settings.value("file_extention", QString(".wav")).toString();

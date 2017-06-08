@@ -12,4 +12,5 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/ffmpeg_wrapper.cpp \
-    $$PWD/recorder_splash.cpp
+    $$PWD/recorder_splash.cpp \
+    $$PWD/config.cpp

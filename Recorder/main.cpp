@@ -29,11 +29,10 @@ int main(int argc, char *argv[])
 		if (login.exec() != QDialog::Accepted)
 			return -1;
 	}
-	{
-		Recorder w(pRecorderShared);
-		w.setFont(QFont("Consolas"));
-		w.show();
-	}
+
+    Recorder w(pRecorderShared);
+	w.setFont(QFont("Consolas"));
+	w.show();
 
     return a.exec();
 }

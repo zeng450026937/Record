@@ -2,6 +2,7 @@
 #include "conf_service_impl.h"
 #include "user_service_impl.h"
 #include "service_thread_private.h"
+#include "command/info_mode.h"
 
 ServiceThread *ServiceThreadPrivate::s_pServiceSingleton = nullptr;
 
@@ -70,6 +71,7 @@ void ServiceThread::run()
 {
 	_private = new ServiceThreadPrivate(); // 在这里初始化是为了让对象的槽在这个线程中处理。
 
+    _private->_info_mode = new InfoMode(_private->_messager);
 	_private->_conf_service = new ConfServiceImpl(_private);
 	_private->_user_service = new UserServiceImpl(this);
 

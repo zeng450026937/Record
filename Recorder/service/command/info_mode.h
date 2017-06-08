@@ -1,10 +1,10 @@
 #pragma once
 
 #include <QString>
-#include "../messager/message_base.h"
+#include "../messager/CommandModeBase.h"
 
 class MessageBase;
-class InfoMode : ICommandMode
+class InfoMode : public CommandModeBase
 {
 public:
 	InfoMode(MessageBase *pMessager);
@@ -12,10 +12,13 @@ public:
 
 	void ConnectToServer(const QString &qstrHeader,const QString &qstrServerAddress);
 protected:
-	virtual void on_action_trigger(QJsonObject jsRoot) override;
+    
+private:
 
+    void HandleHeartBeat(bool bResult,const QJsonObject &jsData);
+
+    void SendAction(const char *pAction, const QJsonObject &jsData);
 
 private:
-	MessageBase  *_messager;
 };
 

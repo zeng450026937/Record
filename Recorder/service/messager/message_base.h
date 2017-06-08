@@ -4,30 +4,21 @@
 #include <QObject>
 #include <QVariantMap>
 #include <QJsonObject>
+#include <map>
 
 #define MB_MESSAGE_VERSION 1
-
-class ICommandMode : public QObject
-{
-	Q_OBJECT
-signals:
-	void action_trigger(QJsonObject);
-
-protected slots:
-	virtual void on_action_trigger(QJsonObject jsRoot) = 0;
-};
 
 class MessageBasePrivate;
 class MessageBase : public QObject
 {
+    friend class CommandModeBase;
 	Q_OBJECT
 public:
     explicit MessageBase(QObject *parent = 0);
     ~MessageBase();
 
-	bool AddMode(const QString &qstrModeName,ICommandMode &msgMode);
 
-	bool sendMessage(const QString &qstrAction, const QString &qstrMode, const QVariantMap &qvmData = QVariantMap());
+	bool sendMessage(const QString &qstrMode, const QString &qstrAction, const QJsonObject &jsData = QJsonObject());
     enum CommandList{
         //common command
         CreateConference = 0,
@@ -82,9 +73,7 @@ signals:
 
 public slots:
     void connectTo(const QString &qstrHeader,QString uri);
-    void stopConnection();
-   // void heartBeat();
-    // void userLogin(QString account, QString password);  
+    void stopConnection(); 
     void sendCommand(CommandList command, QString receiver, const QVariantMap& data);
 
 private slots:
@@ -93,6 +82,9 @@ private slots:
     void on_connect_close();
     void on_message_reply(QString qstrMessage);
     void on_binary_message(unsigned int size,QByteArray content);
+
+private:
+    void AddMode(const QString &qstrModeName, CommandModeBase &commandMode);
 
 private:
     MessageBasePrivate* d;

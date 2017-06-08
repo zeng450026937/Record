@@ -101,6 +101,11 @@ Config * Config::Config::GetInstance()
 	return s_pSinglton;
 }
 
+Config::USER & Config::GetUser()
+{
+    return _user;
+}
+
 inline void Config::Reset()
 {
 	_ffmpeg_path = "";

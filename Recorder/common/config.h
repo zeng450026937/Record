@@ -6,9 +6,22 @@ class Config
 {
 	Config();
 public:
+
+    struct USER
+    {
+        QString user_id;
+        QString user_name;
+        QString access_token;
+        QString user_group;
+        QString mac_key;
+    };
+
+public:
     ~Config();
 
 	static Config *GetInstance();
+
+    USER & GetUser();
 
     void Reset();
 
@@ -40,6 +53,9 @@ public:
 	const char *const  TEST_SERVER = "ws://192.168.85.31:9008";
 
 	static const QString s_DEFAULT_SERVER;
+
+private:
+    struct USER _user;
 
 private:
 	static Config *s_pSinglton;

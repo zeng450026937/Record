@@ -13,7 +13,6 @@
 #include "storage/include/download_database.h"
 #include "storage/include/personal_database.h"
 
-#include "../command/info_mode.h"
 
 ServiceThreadPrivate::ServiceThreadPrivate():
     _conf_service(nullptr),
@@ -31,8 +30,6 @@ ServiceThreadPrivate::ServiceThreadPrivate():
     _mark_db = MarkDatabase::GetInterface(_db);
     _user_db = UserDatabase::GetInterface(_db);
     _personal_db = PersonalDatabase::GetInterface(_db);
-
-	_info_mode = new InfoMode(_messager);
 }
 
 ServiceThreadPrivate::~ServiceThreadPrivate()

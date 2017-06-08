@@ -7,7 +7,7 @@
 #include <map>
 #include <QList>
 
-class ICommandMode;
+class CommandModeBase;
 class NetworkInfo;
 class WebSocketClient;
 
@@ -22,7 +22,7 @@ public:
 
     QMap<QString, MessageBase::CommandList> _command_map;
 
-	std::map<QString, ICommandMode *> mapMode;
+	std::map<QString, CommandModeBase *> mapMode;
 };
 
 #endif // MESSAGE_BASE_PRIVATE_H

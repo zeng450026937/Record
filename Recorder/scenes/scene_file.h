@@ -15,6 +15,7 @@ namespace Ui {
 class Scene_File;
 }
 
+class Personal;
 class Scene_File : public QGroupBox
 {
     Q_OBJECT
@@ -131,6 +132,8 @@ private:
     int             _offset;
     QTime           _current_time;
     QTime           _total_time;
+
+    Personal *m_pPersonal;
 };
 
 #endif // SCENE_FILE_H

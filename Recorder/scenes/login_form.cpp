@@ -97,9 +97,6 @@ void LoginForm::receive_connection_notify(int state, QString text)
 
 void LoginForm::on_loginPushButton_clicked()
 {
-	ui->userLineEdit->setText("301255");
-	ui->passwordLineEdit->setText("20170224");
-
 	QString qstrUserId = ui->userLineEdit->text().trimmed();
 	ui->userLineEdit->setText(qstrUserId);
 

@@ -8,8 +8,6 @@
 #include "scenes/scene_setting.h"
 #include "scenes/scene_record.h"
 #include "scenes/scene_file.h"
-#include "scenes/login_form.h"
-
 #include "service/service_thread.h"
 #include "service/include/user_service.h"
 
@@ -19,8 +17,7 @@ Recorder::Recorder(RecorderShared *pRecorderShared, QWidget *parent) :
     _sharedData(pRecorderShared),
     _scene_file(nullptr),
     _scene_record(nullptr),
-    _scene_setting(nullptr),
-    _scene_login(nullptr)
+    _scene_setting(nullptr)
 {
     ui->setupUi(this);
 
@@ -36,7 +33,6 @@ Recorder::Recorder(RecorderShared *pRecorderShared, QWidget *parent) :
     _scene_file = new Scene_File(_sharedData,this);
     _scene_record = new Scene_Record(_sharedData,this);
     _scene_setting = new Scene_Setting(_sharedData,this);
-    _scene_login = new LoginForm(_sharedData,this);
 
     _scene_record->setEnabled(false);
 
@@ -56,7 +52,7 @@ Recorder::Recorder(RecorderShared *pRecorderShared, QWidget *parent) :
     //this->setAttribute(Qt::WA_TranslucentBackground );
 
     this->connect(_sharedData,SIGNAL(connection_notify(int,QString)),this,SLOT(receive_connection_notify(int,QString)));
-    this->connect(_scene_login,SIGNAL(aboutToExitApp()),this,SLOT(on_close_btn_clicked()));
+    
 /*
     QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(this);
     shadow_effect->setOffset(0);
@@ -127,9 +123,6 @@ void Recorder::receive_connection_notify(int state, QString text)
     QPoint pos = this->geometry().center();
 
     switch(state){
-    case RecorderShared::kConnectOpened:
-        _scene_login->show();
-        break;
     case RecorderShared::kConnectFailed:
         _scene_record->setEnabled(false);
         break;
@@ -225,9 +218,4 @@ void Recorder::on_setting_btn_clicked(bool checked)
         ui->file_btn->setChecked(false);
         ui->setting_btn->setChecked(true);
     }
-}
-
-void Recorder::on_loginPushButton_clicked()
-{
-    _scene_login->show();
 }

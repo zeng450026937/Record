@@ -238,6 +238,9 @@
     <CustomBuild Include="service\include\user_service.h">
       <Filter>Source Files\service\include</Filter>
     </CustomBuild>
+    <CustomBuild Include="service\messager\CommandModeBase.h">
+      <Filter>Source Files\service\messager</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resource\close.png">
@@ -722,10 +725,25 @@
     <ClCompile Include="GeneratedFiles\Release\moc_conf_service.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="service\command\info_mode.cpp">
+      <Filter>Source Files\service\command</Filter>
+    </ClCompile>
     <ClCompile Include="common\config.cpp">
       <Filter>Source Files\common</Filter>
     </ClCompile>
-    <ClCompile Include="service\command\info_mode.cpp">
+    <ClCompile Include="service\messager\CommandModeBase.cpp">
+      <Filter>Source Files\service\messager</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_CommandModeBase.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_CommandModeBase.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="service\command\Personal.cpp">
+      <Filter>Source Files\service\command</Filter>
+    </ClCompile>
+    <ClCompile Include="service\command\Conference.cpp">
       <Filter>Source Files\service\command</Filter>
     </ClCompile>
   </ItemGroup>
@@ -857,6 +875,12 @@
       <Filter>Source Files\service\storage</Filter>
     </ClInclude>
     <ClInclude Include="service\command\info_mode.h">
+      <Filter>Source Files\service\command</Filter>
+    </ClInclude>
+    <ClInclude Include="service\command\Personal.h">
+      <Filter>Source Files\service\command</Filter>
+    </ClInclude>
+    <ClInclude Include="service\command\Conference.h">
       <Filter>Source Files\service\command</Filter>
     </ClInclude>
   </ItemGroup>

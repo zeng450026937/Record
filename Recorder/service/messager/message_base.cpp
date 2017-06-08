@@ -1,8 +1,10 @@
 
+#include "message_base.h"
+#include <assert.h>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QDebug>
-#include "message_base.h"
+#include "CommandModeBase.h"
 #include "message_base_private.h"
 
 #include "websocketclient.h"
@@ -25,27 +27,15 @@ MessageBase::~MessageBase()
     delete d;
 }
 
-bool MessageBase::AddMode(const QString &qstrModeName, ICommandMode &msgMode)
-{
-	if (d->mapMode.find(qstrModeName) == d->mapMode.end())
-	{
-		connect(&msgMode,SIGNAL(action_trigger(QJsonObject)),&msgMode,SLOT(on_action_trigger(QJsonObject)),Qt::QueuedConnection);
-		d->mapMode.insert(std::map<QString, ICommandMode *>::value_type(QString(qstrModeName), &msgMode));
-	}
-	return true;
-}
-
-bool MessageBase::sendMessage(const QString &qstrAction,  const QString &qstrMode, const QVariantMap &qvmData)
+bool MessageBase::sendMessage(const QString &qstrMode, const QString &qstrAction, const QJsonObject &jsData)
 {
 	QJsonObject jsRoot;
 	jsRoot.insert("version", MB_MESSAGE_VERSION);
-	jsRoot.insert("from", "account");
+	jsRoot.insert("data", jsData);
 
-	jsRoot.insert("data", QJsonObject::fromVariantMap(qvmData));
-
-	QJsonObject jsCommand;
+    QJsonObject jsCommand;
+    jsCommand.insert("mode", qstrMode);
 	jsCommand.insert("action", qstrAction);
-	jsCommand.insert("mode", qstrMode);
 	jsRoot.insert("command", jsCommand);
 
 	QJsonDocument jsonDocument(jsRoot);
@@ -73,29 +63,27 @@ void MessageBase::on_message_reply(QString qstrMessage)
 	QJsonParseError error;
 	QJsonDocument jsonDocument = QJsonDocument::fromJson(qstrMessage.toUtf8(), &error);
 	if (error.error == QJsonParseError::NoError) 
-	{
-		if (jsonDocument.isObject()) 
-		{
-			QJsonObject jsRoot = jsonDocument.object();
-			QJsonObject jsCommand = jsRoot["command"].toObject();
-			auto itrFound = d->mapMode.find(jsCommand["mode"].toString());
-			if (itrFound == d->mapMode.end())
-			{
-				qDebug() << jsRoot["mode"].toString() << " command mode is not found." << error.errorString();
-				return;
-			}
+    {
+        QJsonObject jsRoot = jsonDocument.object();
+        if (jsRoot["version"].toInt() == MB_MESSAGE_VERSION)
+        {
+            QJsonObject jsCommand = jsRoot["command"].toObject();
+            auto itrFound = d->mapMode.find(jsCommand["mode"].toString());
+            if (itrFound == d->mapMode.end())
+            {
+                // 所有不符合规则的响应都会在这里结束，包括 不存在"command" json对象时。
+                qDebug() << jsCommand["mode"].toString() << " command mode is not found." << error.errorString();
+                return;
+            }
 
-			emit itrFound->second->action_trigger(jsRoot);
-
-			//TODO： 删除
-// 			QVariantMap content = jsonDocument.toVariant().toMap();
-// 			QString result = content.value("RESULT").toString();
-// 			QVariant data = content.value("DATA");
-// 
-// 			MessageBase::CommandList command = (MessageBase::CommandList)(-1);
-// 			command = d->_command_map.value(content.value("COMMAND").toString(), (MessageBase::CommandList)(-1));
-// 			emit notify_command(command, (result == "true") ? true : false, data.toMap());
-		}
+           emit itrFound->second->action_trigger(jsCommand["action"].toString(),
+                                                   jsRoot["result"].toBool(),
+                                                   jsRoot["data"].toObject());
+        }
+        else
+        {
+            // TODO: 提示协议与服务端通讯协议版本不匹配。
+        }
 	}
 	else {
 		qDebug() << "json command parse failed" << error.errorString();
@@ -114,32 +102,6 @@ void MessageBase::stopConnection()
 {
     d->_client->stop_connect();
 }
-//void MessageBase::userLogin(QString account, QString password)
-//{
-//    QVariantMap param;
-//    param.insert("user_id",account);
-//    param.insert("user_name",d->_info->HOSTNAME());
-//    param.insert("user_nick_name",d->_info->HOSTNAME());
-//    param.insert("user_pass",password);
-//    param.insert("device_mac",d->_info->MAC());
-//    param.insert("device_type","PC");
-//    param.insert("device_name",d->_info->HOSTNAME());
-//    param.insert("battery",(int)-1);
-//    param.insert("battery_time",(int)-1);
-//    param.insert("status","online");
-//    param.insert("display_name",d->_info->HOSTNAME());
-//
-//    this->sendCommand(MessageBase::LoginDevice, "", param);
-//}
-
-// void MessageBase::heartBeat()
-// {
-//     QVariantMap param;
-// 
-//     param.insert("device_mac",d->_info->MAC());
-// 
-//     this->sendCommand(MessageBase::HeartBeat, "", param);
-// }
 
 void MessageBase::sendCommand(CommandList command, QString receiver, const QVariantMap& data)
 {
@@ -155,3 +117,9 @@ void MessageBase::sendCommand(CommandList command, QString receiver, const QVari
     d->_client->sendText( jsonDocument.toJson().toStdString() );
 }
 
+
+void MessageBase::AddMode(const QString &qstrModeName, CommandModeBase &commandMode)
+{
+    assert(d->mapMode.find(qstrModeName) == d->mapMode.end());
+    d->mapMode.insert(std::map<QString, CommandModeBase *>::value_type(QString(qstrModeName), &commandMode));
+}

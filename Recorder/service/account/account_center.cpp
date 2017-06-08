@@ -5,14 +5,14 @@
 #include <QSslError>
 #include <QUrl>
 #include <QCryptographicHash>
-
 #include <QJsonObject>
 #include <QJsonDocument>
-
 #include <QDebug>
+#include "common/config.h"
+
 
 AccountCenter::AccountCenter(QObject *parent)
-    :QObject(parent)
+    :QObject(parent), m_pConfig(Config::GetInstance())
 {
 
     QObject::connect(&manager, SIGNAL(finished(QNetworkReply*)),
@@ -26,25 +26,17 @@ AccountCenter::~AccountCenter()
 
 }
 
-AccountCenter::USER & AccountCenter::GetUser()
-{
-	return _user;
-}
 
 // AccountCenter::USER_INFO & AccountCenter::GetUserInfo()
 // {
 // 	return _user_info;
 // }
 
-const QString & AccountCenter::GetDeviceUuid()
-{
-	return QString();
-}
-
 void AccountCenter::UserLogin(QString account, QString password)
 {
-	_user.user_id = account;
-	_user.user_group = "ND"; // 对这个字段暂完明确的目的，接口文档中体现的是该值，暂时写死。
+    Config::USER &user = m_pConfig->GetUser();
+	user.user_id = account;
+	user.user_group = "ND"; // 对这个字段暂完明确的目的，接口文档中体现的是该值，暂时写死。
 
 	QJsonObject  content_type;
 
@@ -103,6 +95,7 @@ QUrl AccountCenter::commandToUrl(int command)
 {
     QUrl uri;
     QString url;
+    Config::USER &user = m_pConfig->GetUser();
 
     switch(command){
     case Session:
@@ -122,10 +115,10 @@ QUrl AccountCenter::commandToUrl(int command)
         url = QString("/v0.93/tokens");
         break;
     case Logout:
-        url = QString("/v0.93/tokens/%1").arg(_user.access_token);
+        url = QString("/v0.93/tokens/%1").arg(user.access_token);
         break;
     case UserInfo:
-        url = QString("/v0.93/users/%1?realm=uc.sdp.nd").arg(_user.user_id);
+        url = QString("/v0.93/users/%1?realm=uc.sdp.nd").arg(user.user_id);
         this->encryptAuthorization(AccountCenter::GET, url);
         break;
     }
@@ -192,9 +185,12 @@ void AccountCenter::parseResult(bool error, int command, const QJsonDocument& js
     case Login:
 
 		jsRoot = jsDoc.object();
-		if (!error) {
-			_user.access_token = jsRoot.value("access_token").toString();
-			_user.mac_key = jsRoot.value("mac_key").toString();
+		if (!error) 
+        {
+
+            Config::USER &user = m_pConfig->GetUser();
+			user.access_token = jsRoot.value("access_token").toString();
+			user.mac_key = jsRoot.value("mac_key").toString();
 
 			 // TODO:待确定是否需要删除
 //             _user.expires_at = content.value("expires_at").toString();
@@ -212,18 +208,19 @@ void AccountCenter::parseResult(bool error, int command, const QJsonDocument& js
 
         break;
     case Logout:
-		//qDebug()<<jsonDocument;
-		jsRoot = jsDoc.object();
+        {
+            jsRoot = jsDoc.object();
+            if (!error) {
+                //nothing
+            }
+            else {
+                reason = jsRoot.value("message").toString();
+            }
 
-        if(!error){
-            //nothing
+            // emit logoutResult(_user.user_id, !error, reason);
+            Config::USER &user = m_pConfig->GetUser();
+            user.user_id.clear();
         }
-        else{
-            reason = jsRoot.value("message").toString();
-        }
-
-       // emit logoutResult(_user.user_id, !error, reason);
-        _user.user_id.clear();
         break;
     case UserInfo:
         //qDebug()<<jsonDocument;
@@ -233,9 +230,10 @@ void AccountCenter::parseResult(bool error, int command, const QJsonDocument& js
 			reason = jsRoot.value("message").toString();
         }
 		else 
-		{
+        {
+            Config::USER &user = m_pConfig->GetUser();
 			QJsonObject jsRealmExinfo = jsRoot["org_exinfo"].toObject();
-			_user.user_name = jsRealmExinfo["org_exinfo"].toString();
+			user.user_name = jsRealmExinfo["username"].toString();
 			// TODO:待确定是否需要删除
 // 			_user_info.nick_name = content.value("nick_name").toString();
 // 			_user_info.nick_name_full = content.value("nick_name_full").toString();
@@ -266,7 +264,8 @@ void AccountCenter::encryptAuthorization(int method, QString uri)
         break;
     }
 
-    _authorization.mac_id = _user.access_token;
+    Config::USER &user = m_pConfig->GetUser();
+    _authorization.mac_id = user.access_token;
     _authorization.nonce = this->makeNonce();
 
     QString mac;
@@ -278,7 +277,7 @@ void AccountCenter::encryptAuthorization(int method, QString uri)
     mac += "\n";
     mac += HOST;
     mac += "\n";
-    _authorization.mac = this->hmacSha1(_user.mac_key.toUtf8(), mac.toUtf8());
+    _authorization.mac = this->hmacSha1(user.mac_key.toUtf8(), mac.toUtf8());
 
     qDebug()<<_authorization.mac;
     qDebug()<<_authorization.nonce;

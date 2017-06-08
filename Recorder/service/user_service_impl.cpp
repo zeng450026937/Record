@@ -28,16 +28,12 @@ UserServiceImpl::UserServiceImpl(ServiceThread* pService, QObject *parent) :
     // QObject::connect(_account,SIGNAL(logoutResult(QString,bool,QString)),this,SLOT(logouted(QString,bool,QString)),Qt::DirectConnection);
 }
 
-// void UserServiceImpl::connectTo(QString uri)
-// {
-//     _uri = uri;
-//     _message->connectTo(_uri);
-// }
 void UserServiceImpl::stopConnection()
 {
     _message->stopConnection();
     _uri.clear();
 }
+
 void UserServiceImpl::userLogin(QString account, QString password)
 {
     _account->UserLogin(account, password);
@@ -114,8 +110,8 @@ void UserServiceImpl::timerEvent(QTimerEvent *e)
 
 void UserServiceImpl::DoWebsocketConnect()
 {
-	AccountCenter::USER &user = _account->GetUser();
-	Config *pConfig = Config::GetInstance();
+    Config *pConfig = Config::GetInstance();
+    Config::USER &user = pConfig->GetUser();
 
 	QJsonObject jsCommand;
 	jsCommand.insert("mode", "auth");
@@ -130,7 +126,7 @@ void UserServiceImpl::DoWebsocketConnect()
 
 	QJsonObject jsRoot;
 	jsRoot.insert("version", MB_MESSAGE_VERSION);
-	// jsRoot.insert("authorization", "");
+
 	jsRoot.insert("from", user.user_id);
 	jsRoot.insert("command", jsCommand);
 	jsRoot.insert("data", jsData);

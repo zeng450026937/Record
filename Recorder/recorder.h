@@ -9,7 +9,6 @@ class Scene_Record_Warning;
 class Scene_Setting;
 class Scene_Record;
 class Scene_File;
-class LoginForm;
 
 namespace Ui {
 class Recorder;
@@ -48,15 +47,12 @@ private slots:
 
     void on_setting_btn_clicked(bool checked);
 
-    void on_loginPushButton_clicked();
-
 private:
     Ui::Recorder *ui;
 
     Scene_File      *_scene_file;
     Scene_Record    *_scene_record;
     Scene_Setting   *_scene_setting;
-    LoginForm       *_scene_login;
 
     QPoint  _movePos;
 

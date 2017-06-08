@@ -31,7 +31,8 @@ Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent) :
     _time_unit(1000),
     _duration(0),
     _offset(0),
-    _type(1)
+    _type(1),
+    m_pPersonal(NULL)
 {
     ui->setupUi(this);
 

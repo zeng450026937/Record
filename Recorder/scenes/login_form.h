@@ -21,15 +21,9 @@ public:
 
 protected:
     virtual void showEvent(QShowEvent *event) override;
-    virtual void timerEvent(QTimerEvent *e) override;
-
-signals:
-    void aboutToExitApp();
 
 private slots:
 	void on_login_result(QString qstrResultInfo);
-
-    void receive_connection_notify(int state, QString text);
 
     void on_loginPushButton_clicked();
 
@@ -38,9 +32,9 @@ private slots:
 	void on_service_is_readied();
 
 private:
-    Ui::LoginForm *ui;
-	ServiceThread *_service;
-    RecorderShared* _shared;
+    Ui::LoginForm  *ui;
+	ServiceThread  *_service;
+    RecorderShared *_record_shared;
 
 	UserServiceImpl	*_user_service;
 };

@@ -24,25 +24,19 @@ public:
     explicit UserServiceImpl(ServiceThread* pService, QObject *parent = 0);
     ~UserServiceImpl() {}
 
+    void userLogin(QString account, QString password);
 
 signals:
-	void loginResult(QString qstrResultInfo);
-	void connectOpened();
-	void connectFailed();
-	void connectClosed();
-	void userLogined(bool result, QString error);
-	void userLogouted(bool result, QString error);
+    void loginResult(QString qstrResultInfo);
 	
 public slots:
    // void connectTo(QString uri = "") override;
     void stopConnection();
-    void userLogin(QString account = "", QString password = "");
 
 protected slots:
-    void parseCommand(int command, bool result, QVariantMap& info);
+    void on_connection_status(int iStatus);
 
     void logined(bool bOk, const QString & reason);
-    // void logouted(QString account, bool ok, QString reason);
 
 protected:
     virtual void timerEvent(QTimerEvent *e);

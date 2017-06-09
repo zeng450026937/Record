@@ -32,9 +32,6 @@ public:
     void closeEvent(QCloseEvent *event);
 
 private slots:
-    void receive_connection_notify(int state, QString text);
-
-private slots:
     void on_close_btn_clicked();
 
     void on_max_btn_clicked();

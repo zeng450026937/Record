@@ -54,9 +54,7 @@ void AccountCenter::UserLogout()
 {
     emit userLogout();
 }
-void AccountCenter::on_user_login(QString account, QString password)
-{
-}
+
 void AccountCenter::on_user_logout()
 {
     this->doRequest(AccountCenter::DELETE, AccountCenter::Logout, QByteArray());
@@ -187,18 +185,10 @@ void AccountCenter::parseResult(bool error, int command, const QJsonDocument& js
 		jsRoot = jsDoc.object();
 		if (!error) 
         {
-
             Config::USER &user = m_pConfig->GetUser();
 			user.access_token = jsRoot.value("access_token").toString();
 			user.mac_key = jsRoot.value("mac_key").toString();
 
-			 // TODO:待确定是否需要删除
-//             _user.expires_at = content.value("expires_at").toString();
-//             _user.mac_algorithm = content.value("mac_algorithm").toString();
-//             _user.refresh_token = content.value("refresh_token").toString();
-//             _user.server_time = content.value("server_time").toString();
-//            _user.user_id = QString::number(jsRoot.value("user_id").toInt());
-//            _user.warning_code = content.value("warning_code").toString();
 			this->doRequest(GET, UserInfo, QByteArray());
 		}
         else{
@@ -217,13 +207,12 @@ void AccountCenter::parseResult(bool error, int command, const QJsonDocument& js
                 reason = jsRoot.value("message").toString();
             }
 
-            // emit logoutResult(_user.user_id, !error, reason);
             Config::USER &user = m_pConfig->GetUser();
             user.user_id.clear();
         }
         break;
     case UserInfo:
-        //qDebug()<<jsonDocument;
+
 		jsRoot = jsDoc.object();
 		if (error) 
 		{
@@ -234,14 +223,6 @@ void AccountCenter::parseResult(bool error, int command, const QJsonDocument& js
             Config::USER &user = m_pConfig->GetUser();
 			QJsonObject jsRealmExinfo = jsRoot["org_exinfo"].toObject();
 			user.user_name = jsRealmExinfo["username"].toString();
-			// TODO:待确定是否需要删除
-// 			_user_info.nick_name = content.value("nick_name").toString();
-// 			_user_info.nick_name_full = content.value("nick_name_full").toString();
-// 			_user_info.nick_name_short = content.value("nick_name_short").toString();
-// 			_user_info.realm_exinfo = content.value("realm_exinfo").toString();
-// 			_user_info.region = content.value("region").toInt();
-// 			_user_info.user_id = content.value("user_id").toString();
-// 			_user_info.user_name = content.value("user_name").toString();
         }
 
 		emit loginResult(!error, reason);
@@ -340,9 +321,7 @@ QString AccountCenter::encryptMD5_Salt(QString content)
     QByteArray md5;
     md5 = QCryptographicHash::hash(b, QCryptographicHash::Md5);
 
-    md5 = md5.toHex();
-
-    return QString(md5);
+    return QString(md5.toHex());
 }
 
 QString AccountCenter::hmacSha1(QByteArray key, QByteArray baseString)

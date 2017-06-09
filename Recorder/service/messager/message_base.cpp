@@ -6,7 +6,7 @@
 #include <QDebug>
 #include "CommandModeBase.h"
 #include "message_base_private.h"
-
+#include "common/config.h"
 #include "websocketclient.h"
 #include "network_info.h"
 
@@ -17,9 +17,8 @@ MessageBase::MessageBase(QObject *parent) :
     qRegisterMetaType<QByteArray>();
     connect(d->_client,SIGNAL(binary_message(uint,QByteArray)),this,SLOT(on_binary_message(uint,QByteArray)),Qt::QueuedConnection);
     connect(d->_client,SIGNAL(text_message(QString)),this,SLOT(on_message_reply(QString)),Qt::QueuedConnection);
-    connect(d->_client,SIGNAL(connect_open()),this,SLOT(on_connect_open()),Qt::QueuedConnection);
-    connect(d->_client,SIGNAL(connect_fail()),this,SLOT(on_connect_fail()),Qt::QueuedConnection);
-    connect(d->_client,SIGNAL(connect_close()),this,SLOT(on_connect_close()),Qt::QueuedConnection);
+    bool bRes = connect(d->_client,SIGNAL(connection_status(int)),this,SIGNAL(connection_status(int)));
+
 }
 
 MessageBase::~MessageBase()
@@ -29,35 +28,26 @@ MessageBase::~MessageBase()
 
 bool MessageBase::sendMessage(const QString &qstrMode, const QString &qstrAction, const QJsonObject &jsData)
 {
-	QJsonObject jsRoot;
-	jsRoot.insert("version", MB_MESSAGE_VERSION);
-	jsRoot.insert("data", jsData);
+    QJsonObject jsRoot;
+    jsRoot.insert("version", MB_MESSAGE_VERSION);
+    jsRoot.insert("authorization", "");
+    jsRoot.insert("from", Config::GetInstance()->GetUser().user_id);
+    jsRoot.insert("to", "");
 
     QJsonObject jsCommand;
     jsCommand.insert("mode", qstrMode);
 	jsCommand.insert("action", qstrAction);
-	jsRoot.insert("command", jsCommand);
+
+    jsRoot.insert("command", jsCommand);
+    jsRoot.insert("data", jsData);
 
 	QJsonDocument jsonDocument(jsRoot);
 	jsonDocument.setObject(jsRoot);	
-	QString qstrJson = QString::fromUtf8(jsonDocument.toJson(QJsonDocument::Compact));
-	d->_client->sendText(qstrJson.toLocal8Bit().data());
+	d->_client->sendText(jsonDocument.toJson(QJsonDocument::Compact).toStdString());
 
 	return true;
 }
 
-void MessageBase::on_connect_open()
-{
-    emit notify_command(ConnectOpen, true, QVariantMap());
-}
-void MessageBase::on_connect_fail()
-{
-    emit notify_command(ConnectFail, true, QVariantMap());
-}
-void MessageBase::on_connect_close()
-{
-    emit notify_command(ConnectClose, true, QVariantMap());
-}
 void MessageBase::on_message_reply(QString qstrMessage)
 {
 	QJsonParseError error;
@@ -82,6 +72,7 @@ void MessageBase::on_message_reply(QString qstrMessage)
         }
         else
         {
+            int i = 0;
             // TODO: 提示协议与服务端通讯协议版本不匹配。
         }
 	}
@@ -116,7 +107,6 @@ void MessageBase::sendCommand(CommandList command, QString receiver, const QVari
 
     d->_client->sendText( jsonDocument.toJson().toStdString() );
 }
-
 
 void MessageBase::AddMode(const QString &qstrModeName, CommandModeBase &commandMode)
 {

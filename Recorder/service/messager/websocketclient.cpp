@@ -127,21 +127,22 @@ bool WebSocketClient::sendBinary(void* data, long size) {
 }
 
 // The open handler will signal that we are ready to start sending telemetry
-void WebSocketClient::on_open(websocketpp::connection_hdl) {
+void WebSocketClient::on_open(websocketpp::connection_hdl)
+{
     m_client.get_alog().write(websocketpp::log::alevel::app,
         "Connection opened, starting telemetry!");
-    //scoped_lock guard(m_lock);
 
-    emit connect_open();
+    emit connection_status(CS_OPENED);
 }
 
 // The close handler will signal that we should stop sending telemetry
-void WebSocketClient::on_close(websocketpp::connection_hdl) {
+void WebSocketClient::on_close(websocketpp::connection_hdl)
+{
     m_client.get_alog().write(websocketpp::log::alevel::app,
         "Connection closed, stopping telemetry!");
     //scoped_lock guard(m_lock);
 
-    emit connect_close();
+    emit connection_status(CS_CLOSED);
 
 }
 
@@ -151,15 +152,12 @@ void WebSocketClient::on_fail(websocketpp::connection_hdl) {
         "Connection failed, stopping telemetry!");
     //scoped_lock guard(m_lock);
 
-    emit connect_fail();
+    emit connection_status(CS_FAILED);
 
 }
 
-
 // Define a callback to handle incoming messages
 void WebSocketClient::on_message(websocketpp::connection_hdl hdl, client::message_ptr msg) {
-
-    //scoped_lock guard(m_lock);
 
     if (msg->get_opcode() == websocketpp::frame::opcode::text) {
         emit text_message(QString::fromStdString(msg->get_payload()));

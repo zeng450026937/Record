@@ -5,7 +5,7 @@
 class Config
 {
 	Config();
-public:
+public:    
 
     struct USER
     {

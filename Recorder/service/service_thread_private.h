@@ -18,6 +18,8 @@ class DownloadDatabase;
 class PersonalDatabase;
 
 class InfoMode;
+class PersonalMode;
+class ConferenceMode;
 
 class ServiceThreadPrivate
 {
@@ -43,11 +45,11 @@ public:
     PersonalDatabase*   PersonalDB() { return _personal_db; }
 
 private:
-    ConfService*    _conf_service;
+    ConfService*        _conf_service;
 	UserServiceImpl*    _user_service;
-    MessageBase*    _messager;
-    AccountCenter*  _account;
-    WhiteList*      _white_list;
+    MessageBase*        _messager;
+    AccountCenter*      _account;
+    WhiteList*           _white_list;
 
     DataBase*           _db;
 
@@ -60,7 +62,9 @@ private:
     UserDatabase*       _user_db;
     PersonalDatabase*   _personal_db;
 
-	InfoMode	*_info_mode;
+    InfoMode	*_info_mode;
+    PersonalMode *_pPersonalMode;
+    ConferenceMode *_pConferenceMode;
 
 	static ServiceThread *s_pServiceSingleton;
 };

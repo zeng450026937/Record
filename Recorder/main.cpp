@@ -16,22 +16,19 @@ int main(int argc, char *argv[])
 
     QApplication a(argc, argv);
 
-    //QScopedPointer<RecorderSplash> s(new RecorderSplash);
-    //QTime time = QTime::currentTime();
 
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
     //禁止休眠
     ::SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED);
 
-    RecorderShared pRecorderShared;
+    RecorderShared recorderShared;
 	{
-        LoginForm login(&pRecorderShared);
+        LoginForm login(&recorderShared);
 		if (login.exec() != QDialog::Accepted)
 			return -1;
 	}
-	}
 
-    Recorder w(pRecorderShared);
+    Recorder w(&recorderShared);
 	w.setFont(QFont("Consolas"));
 	w.show();
 

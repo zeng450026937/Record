@@ -49,9 +49,6 @@ Recorder::Recorder(RecorderShared *pRecorderShared, QWidget *parent) :
     ui->stackedWidget->installEventFilter(this);
 
     this->setWindowFlags(Qt::FramelessWindowHint);//去掉标题栏
-    //this->setAttribute(Qt::WA_TranslucentBackground );
-
-    this->connect(_sharedData,SIGNAL(connection_notify(int,QString)),this,SLOT(receive_connection_notify(int,QString)));
     
 /*
     QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(this);
@@ -64,8 +61,8 @@ Recorder::Recorder(RecorderShared *pRecorderShared, QWidget *parent) :
 
 Recorder::~Recorder()
 {
-    delete ui;
     delete _sharedData;
+    delete ui;
 }
 
 bool Recorder::event(QEvent *event)
@@ -118,42 +115,6 @@ void Recorder::closeEvent(QCloseEvent *event)
     QWidget::closeEvent(event);
 }
 
-void Recorder::receive_connection_notify(int state, QString text)
-{
-    QPoint pos = this->geometry().center();
-
-    switch(state){
-    case RecorderShared::kConnectFailed:
-        _scene_record->setEnabled(false);
-        break;
-    case RecorderShared::kConnectClosed:
-        _scene_record->setEnabled(false);
-        break;
-    case RecorderShared::kLoginOk:
-        _scene_record->setEnabled(true);
-        ui->loginPushButton->hide();
-        ui->hello_lable->show();
-        ui->user_lable->show();
-        this->show();
-        this->activateWindow();
-        break;
-    case RecorderShared::kLoginFailed:
-        _scene_record->setEnabled(false);
-        break;
-    case RecorderShared::kLogoutOk:
-        _scene_record->setEnabled(false);
-        ui->loginPushButton->show();
-        ui->hello_lable->hide();
-        ui->user_lable->hide();
-        break;
-    case RecorderShared::kLogoutFailed:
-        _scene_record->setEnabled(true);
-        break;
-    }
-
-    if(state != RecorderShared::kConnectOpened)
-        Scene_Record_Warning::ShowMessage(pos, text);
-}
 
 void Recorder::on_close_btn_clicked()
 {

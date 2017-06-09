@@ -3,6 +3,8 @@
 #include "user_service_impl.h"
 #include "service_thread_private.h"
 #include "command/info_mode.h"
+#include "command/ConferenceMode.h"
+#include "command/PersonalMode.h"
 
 ServiceThread *ServiceThreadPrivate::s_pServiceSingleton = nullptr;
 
@@ -23,11 +25,33 @@ ServiceThread::~ServiceThread()
 		delete _private;
 }
 
+ConferenceMode * ServiceThread::GetConferenceMode()
+{
+    if (_private->_pConferenceMode == nullptr)
+    {
+        _private->_pConferenceMode = new ConferenceMode(GetMessager());
+        _private->_pConferenceMode->moveToThread(this);
+    }
+
+    return _private->_pConferenceMode;
+}
+
+PersonalMode * ServiceThread::GetPersonalMode()
+{
+    if (_private->_pPersonalMode == nullptr)
+    {
+        _private->_pPersonalMode = new PersonalMode(GetMessager());
+        _private->_pPersonalMode->moveToThread(this);
+    }
+
+    return _private->_pPersonalMode;
+}
+
 ServiceThread * ServiceThread::ServiceThread::GetInstance()
 {
 	if (nullptr == ServiceThreadPrivate::s_pServiceSingleton)
 	{
-		ServiceThreadPrivate::s_pServiceSingleton = new ServiceThread();
+        ServiceThreadPrivate::s_pServiceSingleton = new ServiceThread();
 	}
 
 	return ServiceThreadPrivate::s_pServiceSingleton;
@@ -35,6 +59,12 @@ ServiceThread * ServiceThread::ServiceThread::GetInstance()
 
 InfoMode * ServiceThread::GetInfoMode()
 {
+    if (nullptr == _private->_info_mode)
+    {
+        _private->_info_mode = new InfoMode(GetMessager());
+        _private->_info_mode->moveToThread(this);
+    }
+
 	return _private->_info_mode;
 }
 
@@ -63,20 +93,14 @@ UserServiceImpl* ServiceThread::GetUserService()
     return _private->_user_service;
 }
 
-void ServiceThread::ThreadRelease()
-{
-}
-
 void ServiceThread::run()
 {
 	_private = new ServiceThreadPrivate(); // 在这里初始化是为了让对象的槽在这个线程中处理。
 
-    _private->_info_mode = new InfoMode(_private->_messager);
 	_private->_conf_service = new ConfServiceImpl(_private);
 	_private->_user_service = new UserServiceImpl(this);
-
-    QObject::connect(this,SIGNAL(finished()),this,SLOT(ThreadRelease()),Qt::DirectConnection);
-	if(_private != nullptr)
+    
+    if(_private != nullptr)
 		emit service_ready();
 
     this->exec();

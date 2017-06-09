@@ -19,7 +19,10 @@ ServiceThreadPrivate::ServiceThreadPrivate():
     _user_service(nullptr),
     _messager(new MessageBase),
     _account(new AccountCenter),
-    _white_list(new WhiteList)
+    _white_list(new WhiteList),
+    _info_mode(nullptr),
+    _pConferenceMode(nullptr),
+    _pPersonalMode(nullptr)
 {
     _db = DataBase::CreateDB();
     _conf_db = ConferenceDatabase::GetInterface(_db);

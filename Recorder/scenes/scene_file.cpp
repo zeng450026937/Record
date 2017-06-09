@@ -6,6 +6,9 @@
 #include <QMessageBox>
 #include <QListView>
 
+#include <service/command/ConferenceMode.h>
+#include <service/command/PersonalMode.h>
+#include <service/command/info_mode.h>
 #include "recorder_shared.h"
 #include "config.h"
 #include "scene_buttondelegate.h"
@@ -13,6 +16,7 @@
 #include "scene_file_dl.h"
 #include "scene_record_warning.h"
 #include "listitem_delegate.h"
+#include "service/service_thread.h"
 
 
 Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent) :
@@ -32,7 +36,7 @@ Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent) :
     _duration(0),
     _offset(0),
     _type(1),
-    m_pPersonal(NULL)
+    m_pPersonalMode(NULL)
 {
     ui->setupUi(this);
 
@@ -79,6 +83,18 @@ Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent) :
     connect(_player,SIGNAL(stateChanged(QtAV::AVPlayer::State)),this, SLOT(statusChanged(QtAV::AVPlayer::State)));
     connect(_player,SIGNAL(startPositionChanged(qint64)),this,SLOT(startPositionChanged(qint64)));
     connect(_player,SIGNAL(stopPositionChanged(qint64)),this,SLOT(stopPositionChanged(qint64)));
+
+    ServiceThread *pService = ServiceThread::GetInstance();
+
+    m_pPersonalMode = pService->GetPersonalMode();
+    m_pInfoMode = pService->GetInfoMode();
+    m_pConferenceMode = pService->GetConferenceMode();
+
+
+    m_pInfoMode->GetDeviceList();
+     m_pPersonalMode->GetAllPersoanlList();
+     m_pConferenceMode->GetConferenceList();
+     m_pConferenceMode->GetTemplateList();
 }
 
 Scene_File::~Scene_File()

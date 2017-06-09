@@ -14,7 +14,7 @@
 #include "service/white_list.h"
 
 LoginForm::LoginForm(RecorderShared* shared, QWidget *parent) :
-    _shared(shared),
+    _record_shared(shared),
     QDialog(parent),
     ui(new Ui::LoginForm),
 	_service(ServiceThread::GetInstance())
@@ -28,13 +28,13 @@ LoginForm::LoginForm(RecorderShared* shared, QWidget *parent) :
 
 	_service->start();
 	this->connect(_service, SIGNAL(service_ready()), this, SLOT(on_service_is_readied()), Qt::QueuedConnection);
-    this->connect(_shared,SIGNAL(connection_notify(int,QString)),this,SLOT(receive_connection_notify(int,QString)));
 }
 
 LoginForm::~LoginForm()
 {
     delete ui;
 }
+
 void LoginForm::showEvent(QShowEvent *event)
 {
     Q_UNUSED(event);
@@ -44,68 +44,33 @@ void LoginForm::showEvent(QShowEvent *event)
         this->activateWindow();
     }
 }
-void LoginForm::timerEvent(QTimerEvent *e)
-{
-    Q_UNUSED(e);
-}
 
 void LoginForm::on_login_result(QString qstrResultInfo)
 {
 	if (qstrResultInfo.isEmpty())
-	{
+	{        
 		accept();
 	}
 	else
 	{
 		QPoint pos = this->geometry().center();
-		Scene_Record_Warning::ShowMessage(pos, qstrResultInfo);
+        Scene_Record_Warning::ShowMessage(pos, qstrResultInfo);
+        ui->loginPushButton->setEnabled(true);
+        ui->passwordLineEdit->setEnabled(true);
+        ui->userLineEdit->setEnabled(true);
 	}
-}
-
-void LoginForm::receive_connection_notify(int state, QString text)
-{
-    switch(state)
-	{
-    case RecorderShared::kConnectOpened:
-        break;
-    case RecorderShared::kConnectFailed:
-        ui->loginPushButton->setEnabled(false);
-        break;
-    case RecorderShared::kConnectClosed:
-        ui->loginPushButton->setEnabled(false);
-        break;
-    case RecorderShared::kLoginOk:
-        ui->loginPushButton->setEnabled(false);
-        this->hide();
-        this->accept();
-        break;
-    case RecorderShared::kLoginFailed:
-        ui->loginPushButton->setEnabled(true);
-        break;
-    case RecorderShared::kLogoutOk:
-        ui->loginPushButton->setEnabled(true);
-        break;
-    case RecorderShared::kLogoutFailed:
-        ui->loginPushButton->setEnabled(false);
-        break;
-    }
-
-	ui->loginPushButton->setEnabled(true);
-	ui->passwordLineEdit->setEnabled(true);
-	ui->loginPushButton->setEnabled(true);
 }
 
 void LoginForm::on_loginPushButton_clicked()
 {
-    //ui->userLineEdit->setText("301255");
-    //ui->passwordLineEdit->setText("20170224");
+    ui->userLineEdit->setText("301255");
+    ui->passwordLineEdit->setText("20170224");
 
 	QString qstrUserId = ui->userLineEdit->text().trimmed();
-    //ui->userLineEdit->setText(qstrUserId);
 
 	QStringList lsUserId = _service->GetLoginWhiteList()->whiteList();
 
-	Config *pConfig = _shared->GetConfig();
+	Config *pConfig = _record_shared->GetConfig();
 	if (pConfig->_hackers)
 		lsUserId << ui->userLineEdit->text();
 
@@ -125,7 +90,6 @@ void LoginForm::on_loginPushButton_clicked()
 
 void LoginForm::on_exitPushButton_clicked()
 {
-	emit aboutToExitApp();
 	this->hide();
     this->reject();
 }

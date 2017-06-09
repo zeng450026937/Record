@@ -44,7 +44,7 @@ QStandardItemModel* ModelUpdater::GetModel(ModelType type)
     return model;
 }
 
-int             ModelUpdater::ListToModel(ModelType type, QVariantList& list)
+int ModelUpdater::ListToModel(ModelType type, QVariantList& list)
 {
     Model_Editor* editor(NULL);
     QStandardItemModel* model(NULL);
@@ -77,7 +77,7 @@ int             ModelUpdater::ClearModel(ModelType type)
     return 0;
 }
 
-int             ModelUpdater::UpdateRow(ModelType type, int row, QVariantMap& info)
+int ModelUpdater::UpdateRow(ModelType type, int row, QVariantMap& info)
 {
     Model_Editor* editor(NULL);
     QStandardItemModel* model(NULL);
@@ -92,7 +92,7 @@ int             ModelUpdater::UpdateRow(ModelType type, int row, QVariantMap& in
 
     return 0;
 }
-int             ModelUpdater::AppendRow(ModelType type, QVariantMap& info)
+int ModelUpdater::AppendRow(ModelType type, QVariantMap& info)
 {
     Model_Editor* editor(NULL);
     QStandardItemModel* model(NULL);
@@ -108,7 +108,7 @@ int             ModelUpdater::AppendRow(ModelType type, QVariantMap& info)
     return 0;
 }
 
-int             ModelUpdater::AppendList(ModelType type, QVariantList& list)
+int ModelUpdater::AppendList(ModelType type, QVariantList& list)
 {
     Model_Editor* editor(NULL);
     QStandardItemModel* model(NULL);
@@ -125,7 +125,7 @@ int             ModelUpdater::AppendList(ModelType type, QVariantList& list)
 
     return 0;
 }
-int             ModelUpdater::RemoveRow(ModelType type, int row)
+int ModelUpdater::RemoveRow(ModelType type, int row)
 {
     Model_Editor* editor(NULL);
     QStandardItemModel* model(NULL);
@@ -140,7 +140,7 @@ int             ModelUpdater::RemoveRow(ModelType type, int row)
 
     return 0;
 }
-int             ModelUpdater::InsertRow(ModelType type, int row, QVariantMap& info)
+int ModelUpdater::InsertRow(ModelType type, int row, QVariantMap& info)
 {
     Model_Editor* editor(NULL);
     QStandardItemModel* model(NULL);
@@ -156,7 +156,7 @@ int             ModelUpdater::InsertRow(ModelType type, int row, QVariantMap& in
     return 0;
 }
 
-int             ModelUpdater::RowCount(ModelType type)
+int ModelUpdater::RowCount(ModelType type)
 {
     int count(0);
 

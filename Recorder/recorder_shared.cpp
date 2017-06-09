@@ -130,11 +130,11 @@ QVariantList RecorderShared::GetFileList(QString uuid)
     return QVariantList();
 }
 
-void     RecorderShared::DownLoadConference(int type, QString uuid)
+void RecorderShared::DownLoadConference(int type, QString uuid)
 {
     _service->GetConfService()->downloadConference(type, uuid);
 }
-void     RecorderShared::CheckConferenceFile(QVariantMap &conf)
+void RecorderShared::CheckConferenceFile(QVariantMap &conf)
 {
     QString uuid = conf.value("uuid").toString();
 
@@ -170,7 +170,7 @@ QVariantList RecorderShared::GetMark(QString conf_uuid)
 
     return QVariantList();
 }
-void     RecorderShared::AddMark(ModelType type, QString conf_uuid,QVariantMap& mark)
+void RecorderShared::AddMark(ModelType type, QString conf_uuid,QVariantMap& mark)
 {
     if(_service_ready){
         _service->GetConfService()->addMarkInfo(conf_uuid, mark);
@@ -179,12 +179,12 @@ void     RecorderShared::AddMark(ModelType type, QString conf_uuid,QVariantMap& 
 }
 
 //device interface
-void     RecorderShared::RefreshDeviceList()
+void RecorderShared::RefreshDeviceList()
 {
     if(_service_ready)
         _service->GetConfService()->getDeviceInfoList();
 }
-void     RecorderShared::SelectDevice(bool selected, QVariantMap& device)
+void RecorderShared::SelectDevice(bool selected, QVariantMap& device)
 {
     if(selected)
         _selected_device << device.value("device_mac").toString();
@@ -227,24 +227,9 @@ QVariantList RecorderShared::GetTemplateList()
         return QVariantList();
 }
 
-void RecorderShared::UserLogin(QString account, QString password)
-{
-    _service->GetUserService()->userLogin(account, password);
-}
-
 void RecorderShared::receive_service_ready()
 { 
     _service_ready = true;
-
-//     QObject::connect(_service->GetUserService(),SIGNAL(connectOpened()),
-//                      this,SLOT(receive_connectOpened()),Qt::QueuedConnection);
-//     QObject::connect(_service->GetUserService(),SIGNAL(connectFailed()),
-//                      this,SLOT(receive_connectFailed()),Qt::QueuedConnection);
-//     QObject::connect(_service->GetUserService(),SIGNAL(connectClosed()),
-//                      this,SLOT(receive_connectClosed()),Qt::QueuedConnection);
-    QObject::connect(_service->GetUserService(),SIGNAL(userLogined(bool,QString)),
-                     this,SLOT(receive_userLogined(bool,QString)),Qt::QueuedConnection);
-
     QObject::connect(_service->GetConfService(),SIGNAL(conferenceCreated(bool,QVariantMap)),
                      this,SLOT(receive_conferenceCreated(bool,QVariantMap)),Qt::QueuedConnection);
     QObject::connect(_service->GetConfService(),SIGNAL(conferenceStarted(bool,QVariantMap)),
@@ -290,60 +275,15 @@ void RecorderShared::receive_service_ready()
     QObject::connect(_service->GetConfService(),SIGNAL(templateListGot(bool,QVariantList)),
                      this,SLOT(receive_templateListGot(bool,QVariantList)),Qt::QueuedConnection);
 
-	// TODO: 暂时注释，by wangzezhou
-//     _service->GetUserService()->connectTo(_config->_server_address);
 // 
 //     if(_config->_output_dir.isEmpty())
-//         _config->_output_dir = _service->GetConfService()->downloadFolder();
+         // _config->_output_dir = _service->GetConfService()->downloadFolder();
 // 
 //     if(QDir(_config->_output_dir).isReadable())
 //         _service->GetConfService()->setDownloadFolder(_config->_output_dir);
 //     else
 //         _config->_output_dir = _service->GetConfService()->downloadFolder();
 }
-
-// void RecorderShared::receive_connectOpened()
-// {
-//     emit connection_notify(kConnectOpened, QObject::tr("连接成功"));
-// }
-// void RecorderShared::receive_connectFailed()
-// {
-//     emit connection_notify(kConnectFailed, QObject::tr("连接服务失败"));
-// }
-// void RecorderShared::receive_connectClosed()
-// {
-//     emit connection_notify(kConnectClosed, QObject::tr("服务器断开连接"));
-// }
-void RecorderShared::receive_userLogined(bool result, QString error)
-{
-    QString text;
-    if(result){
-        text = QObject::tr("登录成功");
-        emit connection_notify(kLoginOk, text);
-
-        _server_available = true;
-    }
-    else{
-        text = QObject::tr("登录失败") + ":" + error;
-        emit connection_notify(kLoginFailed, text);
-
-        _server_available = false;
-    }
-
-    this->request_data();
-}
-//void RecorderShared::receive_userLogouted(bool result, QString error)
-//{
-//    QString text;
-//    if(result){
-//        text = QObject::tr("登出成功");
-//        emit connection_notify(kLogoutOk, text);
-//    }
-//    else{
-//        text = QObject::tr("登出失败") + ":" + error;
-//        emit connection_notify(kLogoutFailed, text);
-//    }
-//}
 
 void RecorderShared::receive_conferenceCreated(bool result, QVariantMap info)
 {
@@ -372,6 +312,7 @@ void RecorderShared::receive_conferenceStarted(bool result, QVariantMap info)
         qDebug()<<"start conference failed";
     emit conference_notify(kConfStarted, result, info);
 }
+
 void RecorderShared::receive_conferencePaused(bool result, QVariantMap info)
 {
     if(!result)
@@ -417,7 +358,6 @@ void RecorderShared::receive_conferenceListGot(bool result, QVariantList list)
             _service->GetConfService()->getMarkInfo( conf.toMap().value("uuid").toString() );
         }
         ModelUpdater::ListToModel(ModelUpdater::ConferenceModel, list);
-        //ModelUpdater::AppendList(ModelUpdater::AllConferenceModel, list);
     }
     else{
         qDebug()<<"get conference list failed";
@@ -463,11 +403,13 @@ void RecorderShared::receive_personalConfCreated(bool result, QVariantMap info)
     if(result){
         int index = _personal_uuid_list.indexOf( uuid );
 
-        if(index == -1){
+        if(index == -1)
+        {
             _personal_uuid_list << uuid;
             ModelUpdater::AppendRow(ModelUpdater::PersonalModel, info);
         }
-        else{
+        else
+        {
             ModelUpdater::UpdateRow(ModelUpdater::PersonalModel, index, info);
         }
     }
@@ -484,7 +426,8 @@ void RecorderShared::receive_personalConfSetted(bool result, QVariantMap info)
     if(result){
         int index = _personal_uuid_list.indexOf( uuid );
 
-        if(index == -1){
+        if(index == -1)
+        {
             _personal_uuid_list << uuid;
             ModelUpdater::AppendRow(ModelUpdater::PersonalModel, info);
         }
@@ -521,7 +464,8 @@ void RecorderShared::receive_personalListGot(bool result, QVariantList list)
 
     if(result){
         _personal_uuid_list.clear();
-        foreach (QVariant conf, list) {
+        foreach (QVariant conf, list) 
+        {
             _personal_uuid_list << conf.toMap().value("conference_uuid").toString();
         }
         ModelUpdater::ListToModel(ModelUpdater::PersonalModel, list);

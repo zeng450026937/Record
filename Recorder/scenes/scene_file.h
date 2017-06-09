@@ -15,7 +15,9 @@ namespace Ui {
 class Scene_File;
 }
 
-class Personal;
+class InfoMode;
+class ConferenceMode;
+class PersonalMode;
 class Scene_File : public QGroupBox
 {
     Q_OBJECT
@@ -133,7 +135,9 @@ private:
     QTime           _current_time;
     QTime           _total_time;
 
-    Personal *m_pPersonal;
+    InfoMode        *m_pInfoMode;
+    ConferenceMode  *m_pConferenceMode;
+    PersonalMode    *m_pPersonalMode;
 };
 
 #endif // SCENE_FILE_H

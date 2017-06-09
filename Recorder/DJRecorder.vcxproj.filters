@@ -740,10 +740,10 @@
     <ClCompile Include="GeneratedFiles\Release\moc_CommandModeBase.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="service\command\Personal.cpp">
+    <ClCompile Include="service\command\PersonalMode.cpp">
       <Filter>Source Files\service\command</Filter>
     </ClCompile>
-    <ClCompile Include="service\command\Conference.cpp">
+    <ClCompile Include="service\command\ConferenceMode.cpp">
       <Filter>Source Files\service\command</Filter>
     </ClCompile>
   </ItemGroup>
@@ -877,10 +877,10 @@
     <ClInclude Include="service\command\info_mode.h">
       <Filter>Source Files\service\command</Filter>
     </ClInclude>
-    <ClInclude Include="service\command\Personal.h">
+    <ClInclude Include="service\command\PersonalMode.h">
       <Filter>Source Files\service\command</Filter>
     </ClInclude>
-    <ClInclude Include="service\command\Conference.h">
+    <ClInclude Include="service\command\ConferenceMode.h">
       <Filter>Source Files\service\command</Filter>
     </ClInclude>
   </ItemGroup>

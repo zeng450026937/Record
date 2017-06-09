@@ -10,10 +10,13 @@ public:
 	InfoMode(MessageBase *pMessager);
 	~InfoMode();
 
-	void ConnectToServer(const QString &qstrHeader,const QString &qstrServerAddress);
+    void ConnectToServer();
+
+    void GetDeviceList();
 protected:
     
 private:
+    void GetDeviceListReply(bool bResult, const QJsonObject &jsData);
 
     void HandleHeartBeat(bool bResult,const QJsonObject &jsData);
 

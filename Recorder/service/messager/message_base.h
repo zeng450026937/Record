@@ -17,7 +17,6 @@ public:
     explicit MessageBase(QObject *parent = 0);
     ~MessageBase();
 
-
 	bool sendMessage(const QString &qstrMode, const QString &qstrAction, const QJsonObject &jsData = QJsonObject());
     enum CommandList{
         //common command
@@ -55,9 +54,7 @@ public:
         DownloadFile,
         DownloadFileAck,
         NotifyNewDataRecv,
-        //special command
-//         LoginDevice,
-//         HeartBeat,
+
         NotifyDeviceInfoChange,
         DeviceEnvironmentException,
         //costumer command
@@ -67,19 +64,23 @@ public:
         CommandCount
     };
 
+    enum ConnectionStatus
+    {
+        CS_CONNECTION_OPENED,
+        CS_CONNECTION_CLOSED,
+        CS_CONNECTION_FAILED
+    };
+
+    void connectTo(const QString &qstrHeader, QString uri);
 signals:
-    void notify_command(int command, bool result, QVariantMap& data);
+    void connection_status(int iStatus);
     void notify_binary(unsigned int size, QByteArray& content);
 
 public slots:
-    void connectTo(const QString &qstrHeader,QString uri);
     void stopConnection(); 
     void sendCommand(CommandList command, QString receiver, const QVariantMap& data);
 
 private slots:
-    void on_connect_open();
-    void on_connect_fail();
-    void on_connect_close();
     void on_message_reply(QString qstrMessage);
     void on_binary_message(unsigned int size,QByteArray content);
 

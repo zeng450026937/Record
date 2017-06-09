@@ -23,7 +23,6 @@ public slots:
     void UserLogout();
 
 private slots:
-    void on_user_login(QString account, QString password);
     void on_user_logout();
     void requestFinished(QNetworkReply* reply);
 

@@ -37,6 +37,14 @@ class WebSocketClient : public QThread
 {
     Q_OBJECT
 public:
+    enum ConnectionStatus
+    {
+        CS_OPENED,
+        CS_CLOSED,
+        CS_FAILED
+    };
+
+public:
     typedef websocketpp::client<websocketpp::config::asio_client> client;
     typedef websocketpp::lib::lock_guard<websocketpp::lib::mutex> scoped_lock;
 
@@ -57,11 +65,7 @@ protected:
     void on_message(websocketpp::connection_hdl hdl, client::message_ptr msg);
 
 signals:
-    void connect_open();
-
-    void connect_close();
-
-    void connect_fail();
+    void connection_status(int iStatus);
 
     void text_message(QString text);
     void binary_message(unsigned int size,QByteArray content);
@@ -70,7 +74,7 @@ public slots:
     // This method will complete the connection
     void stop_connect();
 
-    void connect_to(std::string header = "",std::string uri = "ws://localhost:9002");
+    void connect_to(std::string header,std::string uri);
 
     bool sendText(std::string text);
 

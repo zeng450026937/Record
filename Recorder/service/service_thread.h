@@ -8,6 +8,8 @@ class MessageBase;
 class AccountCenter;
 class ConfService;
 class UserServiceImpl;
+class PersonalMode;
+class ConferenceMode;
 class InfoMode;
 
 class ServiceThreadPrivate;
@@ -24,6 +26,8 @@ public:
 
 	static ServiceThread * GetInstance();
 
+    ConferenceMode  *GetConferenceMode();
+    PersonalMode    *GetPersonalMode();
 	InfoMode		*GetInfoMode();
 	AccountCenter *GetAccountCenter();
 
@@ -38,8 +42,6 @@ public:
 signals:
     void service_ready();
 
-protected slots:
-    void ThreadRelease();
 
 protected:
     void run() override;

@@ -3,11 +3,11 @@
 #include <service/messager/CommandModeBase.h>
 
 class MessageBase;
-class Conference : public CommandModeBase
+class ConferenceMode : public CommandModeBase
 {
 public:
-    Conference(MessageBase *pMessage);
-    ~Conference();
+    ConferenceMode(MessageBase *pMessage);
+    ~ConferenceMode();
 
     void GetConferenceList();
     void GetConferenceListReply(QString qstrAction, bool bResult, QJsonObject jsData);

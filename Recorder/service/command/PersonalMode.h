@@ -3,11 +3,11 @@
 #include <service/messager/CommandModeBase.h>
 
 class MessageBase;
-class Personal : public CommandModeBase
+class PersonalMode : public CommandModeBase
 {
 public:
-    Personal(MessageBase *pMessage);
-    ~Personal();
+    PersonalMode(MessageBase *pMessage);
+    ~PersonalMode();
 
     void GetPersonalList();
     void GetPersonalListReply(QString qstrAction, bool bResult, QJsonObject jsData);

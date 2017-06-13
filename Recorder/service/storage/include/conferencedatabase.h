@@ -11,7 +11,7 @@ public:
     virtual int Release() = 0;
 
     virtual int AddConference(QVariantMap& conference) = 0;
-    virtual QVariantMap ConferenceInfo(QString& uuid) = 0;
+    virtual QVariantMap ConferenceInfo(const QString& uuid) = 0;
     virtual QVariantMap ConferenceInfo(int row) = 0;
 
     virtual QVariantList ConfList() = 0;

@@ -5,6 +5,7 @@
 #include "command/info_mode.h"
 #include "command/ConferenceMode.h"
 #include "command/PersonalMode.h"
+#include "storage/database_impl.h"
 
 ServiceThread *ServiceThreadPrivate::s_pServiceSingleton = nullptr;
 
@@ -21,8 +22,8 @@ ServiceThread::~ServiceThread()
         this->wait();
     }
 
-	if (_private)
-		delete _private;
+    if (_private)
+        delete _private;
 }
 
 ConferenceMode * ServiceThread::GetConferenceMode()
@@ -31,6 +32,7 @@ ConferenceMode * ServiceThread::GetConferenceMode()
     {
         _private->_pConferenceMode = new ConferenceMode(GetMessager());
         _private->_pConferenceMode->moveToThread(this);
+        _private->_pConferenceMode->SetDataBase(static_cast<DataBase_Impl*>(_private->_db));
     }
 
     return _private->_pConferenceMode;
@@ -41,6 +43,8 @@ PersonalMode * ServiceThread::GetPersonalMode()
     if (_private->_pPersonalMode == nullptr)
     {
         _private->_pPersonalMode = new PersonalMode(GetMessager());
+        _private->_pPersonalMode->m_pConfService = _private->_conf_service;
+        _private->_pPersonalMode->SetDataBase(static_cast<DataBase_Impl*>(_private->_db));
         _private->_pPersonalMode->moveToThread(this);
     }
 
@@ -83,7 +87,7 @@ MessageBase * ServiceThread::GetMessager()
 	return _private->_messager;
 }
 
-ConfService* ServiceThread::GetConfService()
+ConfServiceImpl* ServiceThread::GetConfService()
 {
     return _private->_conf_service;
 }

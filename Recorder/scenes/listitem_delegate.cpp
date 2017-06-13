@@ -34,6 +34,7 @@ void ListItemDelegate::paint(QPainter *painter,
                    const QModelIndex &index) const
 {
     QVariantMap info = index.data(Qt::UserRole).toMap();
+    
 
     QListView *view = qobject_cast<QListView*>(option.styleObject);
 

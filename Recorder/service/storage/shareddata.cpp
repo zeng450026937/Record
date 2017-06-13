@@ -22,7 +22,6 @@ bool SharedData::InitDb()
     //init db
     _db = QSqlDatabase::addDatabase("QSQLITE");
 
-    //_db.setDatabaseName(":memory:");
     _db.setDatabaseName("local.db");
 
     if (!_db.open()) {

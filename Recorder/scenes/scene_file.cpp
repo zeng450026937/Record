@@ -87,14 +87,18 @@ Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent) :
     ServiceThread *pService = ServiceThread::GetInstance();
 
     m_pPersonalMode = pService->GetPersonalMode();
+    connect(m_pPersonalMode,SIGNAL(personal_list_got_trigger(bool)),
+        _sharedData,SLOT(on_personal_list_got_trigger(bool)), Qt::QueuedConnection);
+
     m_pInfoMode = pService->GetInfoMode();
     m_pConferenceMode = pService->GetConferenceMode();
 
 
-    m_pInfoMode->GetDeviceList();
+//     m_pInfoMode->GetDeviceList();
      m_pPersonalMode->GetAllPersoanlList();
-     m_pConferenceMode->GetConferenceList();
-     m_pConferenceMode->GetTemplateList();
+     m_pPersonalMode->GetPersonalList();
+ //    m_pConferenceMode->GetConferenceList();
+ /*    m_pConferenceMode->GetTemplateList();*/
 }
 
 Scene_File::~Scene_File()
@@ -1143,18 +1147,13 @@ void Scene_File::on_sortBtn_clicked(bool checked)
 void Scene_File::on_typeComboBox_currentIndexChanged(int index)
 {
     switch(index){
-    /*
-    case 0:
-        sortFilter_proxyModel->setSourceModel( _sharedData->GetModel(ModelUpdater::AllConferenceModel) );
-        break;
-        */
-    case 0:
+    case 1:
         sortFilter_proxyModel->setSourceModel( _sharedData->GetModel(ModelUpdater::ConferenceModel) );
         _type = 1;
         break;
-    case 1:
+    case 2:
         sortFilter_proxyModel->setSourceModel( _sharedData->GetModel(ModelUpdater::PersonalModel) );
-        _type = 0;
+        _type = 2;
         break;
     default:
         break;

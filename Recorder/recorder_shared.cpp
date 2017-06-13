@@ -1,7 +1,7 @@
 
 #include "service/service_thread.h"
 #include "service/user_service_impl.h"
-#include "service/include/conf_service.h"
+#include "service/conf_service_impl.h"
 #include "common/config.h"
 #include "recorder_shared.h"
 
@@ -249,8 +249,7 @@ void RecorderShared::receive_service_ready()
                      this,SLOT(receive_personalConfSetted(bool,QVariantMap)),Qt::QueuedConnection);
     QObject::connect(_service->GetConfService(),SIGNAL(personalConfDeleted(bool,QVariantMap)),
                      this,SLOT(receive_personalConfDeleted(bool,QVariantMap)),Qt::QueuedConnection);
-    QObject::connect(_service->GetConfService(),SIGNAL(personalListGot(bool,QVariantList)),
-                     this,SLOT(receive_personalListGot(bool,QVariantList)),Qt::QueuedConnection);
+   
     QObject::connect(_service->GetConfService(),SIGNAL(allPersonalListGot(bool,QVariantList)),
                      this,SLOT(receive_allPersonalListGot(bool,QVariantList)),Qt::QueuedConnection);
 
@@ -439,6 +438,7 @@ void RecorderShared::receive_personalConfSetted(bool result, QVariantMap info)
         qDebug()<<"set personal conference failed";
     }
 }
+
 void RecorderShared::receive_personalConfDeleted(bool result, QVariantMap info)
 {
     QString uuid = info.value("conference_uuid").toString();
@@ -458,20 +458,21 @@ void RecorderShared::receive_personalConfDeleted(bool result, QVariantMap info)
     }
 }
 
-void RecorderShared::receive_personalListGot(bool result, QVariantList list)
+void RecorderShared::on_personal_list_got_trigger(bool result)
 {
-    list = _service->GetConfService()->personalConfList();
+    QVariantList list = _service->GetConfService()->personalConfList();
 
-    if(result){
+    if(result)
+    {
         _personal_uuid_list.clear();
-        foreach (QVariant conf, list) 
+        foreach (const QVariant &conf, list) 
         {
             _personal_uuid_list << conf.toMap().value("conference_uuid").toString();
         }
         ModelUpdater::ListToModel(ModelUpdater::PersonalModel, list);
-        //ModelUpdater::AppendList(ModelUpdater::AllConferenceModel, list);
     }
-    else{
+    else
+    {
         qDebug()<<"get personal list failed";
     }
 }
@@ -636,7 +637,7 @@ void RecorderShared::request_data()
     else{
         this->receive_conferenceListGot(true, QVariantList());
         this->receive_templateListGot(true, QVariantList());
-        this->receive_personalListGot(true, QVariantList());
+        this->on_personal_list_got_trigger(true);
     }
 }
 

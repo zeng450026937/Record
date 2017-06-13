@@ -15,6 +15,13 @@ public:
     RecorderShared(QObject* parent = 0);
     ~RecorderShared();
 
+    enum RecordType
+    {
+        RT_PERSONAL,
+        RT_CONFERENCE,
+        RT_MOBILE
+    };
+
     enum{
         kConnectOpened = 0,
         kConnectFailed,
@@ -73,7 +80,7 @@ signals:
 
     void download_notify(int type, QString uuid, int percentage, bool completed);
 
-private slots:
+public slots:
     void receive_service_ready();
 
     void receive_conferenceCreated(bool result, QVariantMap info);
@@ -89,7 +96,7 @@ private slots:
     void receive_personalConfCreated(bool result, QVariantMap info);
     void receive_personalConfSetted(bool result, QVariantMap info);
     void receive_personalConfDeleted(bool result, QVariantMap info);
-    void receive_personalListGot(bool result, QVariantList list);
+    void on_personal_list_got_trigger(bool result);
     void receive_allPersonalListGot(bool result, QVariantList list);
 
     void receive_deviceInfoUpdate(QVariantMap info);

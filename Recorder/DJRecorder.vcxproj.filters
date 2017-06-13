@@ -62,9 +62,6 @@
     <Filter Include="Source Files\service\storage">
       <UniqueIdentifier>{df8819f8-b81c-4f19-a08a-ab2695c7fb08}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\service\include">
-      <UniqueIdentifier>{91fb1fd2-b0dd-485b-b7f5-6e165834173d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\service\command">
       <UniqueIdentifier>{d439fa15-5dfb-4a5e-9c7f-10ba3599039d}</UniqueIdentifier>
     </Filter>
@@ -232,14 +229,11 @@
     <CustomBuild Include="service\messager\websocketclient.h">
       <Filter>Source Files\service\messager</Filter>
     </CustomBuild>
-    <CustomBuild Include="service\include\conf_service.h">
-      <Filter>Source Files\service\include</Filter>
-    </CustomBuild>
-    <CustomBuild Include="service\include\user_service.h">
-      <Filter>Source Files\service\include</Filter>
-    </CustomBuild>
     <CustomBuild Include="service\messager\CommandModeBase.h">
       <Filter>Source Files\service\messager</Filter>
+    </CustomBuild>
+    <CustomBuild Include="service\command\PersonalMode.h">
+      <Filter>Source Files\service\command</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -719,12 +713,6 @@
     <ClCompile Include="service\storage\user_database_impl.cpp">
       <Filter>Source Files\service\storage</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_conf_service.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_conf_service.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="service\command\info_mode.cpp">
       <Filter>Source Files\service\command</Filter>
     </ClCompile>
@@ -745,6 +733,12 @@
     </ClCompile>
     <ClCompile Include="service\command\ConferenceMode.cpp">
       <Filter>Source Files\service\command</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_PersonalMode.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_PersonalMode.cpp">
+      <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -875,9 +869,6 @@
       <Filter>Source Files\service\storage</Filter>
     </ClInclude>
     <ClInclude Include="service\command\info_mode.h">
-      <Filter>Source Files\service\command</Filter>
-    </ClInclude>
-    <ClInclude Include="service\command\PersonalMode.h">
       <Filter>Source Files\service\command</Filter>
     </ClInclude>
     <ClInclude Include="service\command\ConferenceMode.h">

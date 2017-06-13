@@ -1,7 +1,7 @@
 #ifndef SERVICETHREADPRIVATE_H
 #define SERVICETHREADPRIVATE_H
 
-class ConfService;
+class ConfServiceImpl;
 class UserServiceImpl;
 class MessageBase;
 class AccountCenter;
@@ -32,7 +32,7 @@ public:
     AccountCenter* Account()  { return _account; }
     WhiteList*     AppUser()     { return _white_list; }
 
-    ConfService* GetConfService() { return _conf_service; }
+    ConfServiceImpl* GetConfService() { return _conf_service; }
 	UserServiceImpl* GetUserService() { return _user_service; }
 
     ConferenceDatabase* ConferenceDB() { return _conf_db; }
@@ -45,7 +45,7 @@ public:
     PersonalDatabase*   PersonalDB() { return _personal_db; }
 
 private:
-    ConfService*        _conf_service;
+    ConfServiceImpl*        _conf_service;
 	UserServiceImpl*    _user_service;
     MessageBase*        _messager;
     AccountCenter*      _account;

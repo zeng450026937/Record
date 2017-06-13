@@ -63,8 +63,8 @@ void LoginForm::on_login_result(QString qstrResultInfo)
 
 void LoginForm::on_loginPushButton_clicked()
 {
-    ui->userLineEdit->setText("301255");
-    ui->passwordLineEdit->setText("20170224");
+    ui->userLineEdit->setText("311715");
+    ui->passwordLineEdit->setText("123456");
 
 	QString qstrUserId = ui->userLineEdit->text().trimmed();
 
@@ -101,4 +101,7 @@ void LoginForm::on_service_is_readied()
 	ui->userLineEdit->setEnabled(true);
 	_user_service = _service->GetUserService();
 	connect(_user_service, SIGNAL(loginResult(QString)), this, SLOT(on_login_result(QString)));
+
+    // 自动登录，测试时使用。
+    on_loginPushButton_clicked();
 }

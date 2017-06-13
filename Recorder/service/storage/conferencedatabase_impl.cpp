@@ -49,7 +49,7 @@ int ConferenceDatabase_Impl::AddConference(QVariantMap& conference)
 
     return 0;
 }
-QVariantMap ConferenceDatabase_Impl::ConferenceInfo(QString& uuid)
+QVariantMap ConferenceDatabase_Impl::ConferenceInfo(const QString& uuid)
 {
     QMutexLocker locker(_shared->_apiLock);
 

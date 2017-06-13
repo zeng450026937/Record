@@ -9,7 +9,6 @@
 #include "scenes/scene_record.h"
 #include "scenes/scene_file.h"
 #include "service/service_thread.h"
-#include "service/include/user_service.h"
 
 Recorder::Recorder(RecorderShared *pRecorderShared, QWidget *parent) :
     QWidget(parent),

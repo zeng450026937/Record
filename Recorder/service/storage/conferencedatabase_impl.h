@@ -9,7 +9,7 @@ class ConferenceDatabase_Impl : public ConferenceDatabase
 {
 public:
     int AddConference(QVariantMap& conference) override;
-    QVariantMap ConferenceInfo(QString& uuid) override;
+    QVariantMap ConferenceInfo(const QString& uuid) override;
     QVariantMap ConferenceInfo(int row) override;
 
     QVariantList ConfList() override;

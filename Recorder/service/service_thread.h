@@ -6,7 +6,7 @@
 class WhiteList;
 class MessageBase;
 class AccountCenter;
-class ConfService;
+class ConfServiceImpl;
 class UserServiceImpl;
 class PersonalMode;
 class ConferenceMode;
@@ -33,7 +33,7 @@ public:
 
 	WhiteList	*	GetLoginWhiteList();
 	MessageBase *	GetMessager();
-	ConfService*    GetConfService();
+	ConfServiceImpl*    GetConfService();
 	UserServiceImpl*    GetUserService();
 
 

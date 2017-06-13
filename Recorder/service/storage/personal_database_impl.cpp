@@ -19,7 +19,7 @@ int PersonalDatabaseImpl::AddConference(QVariantMap& conference)
     QString text;
     QDateTime dateTime;
 
-    text = conference.value("create_time").toString();
+    text = conference.value("createTime").toString();
     dateTime = QDateTime::fromString(text, "yyyy-MM-dd hh:mm:ss");
 
     conference.insert("date",dateTime.date().toString("yyyyMMdd"));
@@ -31,24 +31,25 @@ int PersonalDatabaseImpl::AddConference(QVariantMap& conference)
                   "device_name, state, create_time, update_time, date, time, completed) "
                   "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    query.addBindValue( conference.value("conference_uuid").toString() );
+    query.addBindValue( conference.value("conferenceUuid").toString() );
     query.addBindValue( conference.value("title").toString() );
-    query.addBindValue( conference.value("user_id").toString() );
-    query.addBindValue( conference.value("user_name").toString() );
+    query.addBindValue( conference.value("userId").toString() );
+    query.addBindValue( conference.value("userName").toString() );
     query.addBindValue( conference.value("type").toString() );
     query.addBindValue( conference.value("gps").toString() );
-    query.addBindValue( conference.value("gps_address").toString() );
+    query.addBindValue( conference.value("gpsAddress").toString() );
     query.addBindValue( conference.value("tag").toString() );
-    query.addBindValue( conference.value("device_mac").toString() );
-    query.addBindValue( conference.value("device_name").toString() );
+    query.addBindValue( conference.value("deviceUuid").toString() );
+    query.addBindValue( conference.value("deviceName").toString() );
     query.addBindValue( conference.value("state").toString() );
-    query.addBindValue( conference.value("create_time").toString() );
-    query.addBindValue( conference.value("update_time").toString() );
+    query.addBindValue( conference.value("createTime").toString() );
+    query.addBindValue( conference.value("updateTime").toString() );
     query.addBindValue( conference.value("date").toString() );
     query.addBindValue( conference.value("time").toString() );
     query.addBindValue( conference.value("completed").toInt() );
 
-    if(!query.exec()){
+    if(!query.exec())
+    {
         qDebug()<<query.executedQuery();
         qDebug()<<query.lastError();
         return -1;

@@ -2,7 +2,6 @@
 #define USERSERVICEIMPL_H
 
 #include <QObject>
-#include "include/user_service.h"
 
 class InfoMode;
 class AccountCenter;

@@ -1,4 +1,4 @@
-
+ï»¿
 #include "PersonalMode.h"
 #include <QJsonArray>
 #include "service/messager/message_base.h"
@@ -10,6 +10,7 @@
 #define PM_GET_PERSONAL_LIST        "getPersonalList"
 #define PM_GET_ALL_PERSONAL_LIST    "getAllPersonalList"
 #define PM_DOWNLOAD_FILE            "downloadFile"
+
 
 PersonalMode::PersonalMode(MessageBase *pMessage) : 
     CommandModeBase(pMessage,"personal"),
@@ -72,7 +73,7 @@ void PersonalMode::DownloadFileReply(bool bResult, QJsonObject jsData)
             m_mapConferenceRecordTotalSize.insert(qstrConferenceUuid,
                 iConferenceTotalSize);
 
-            // TODO : ÓÅ»¯¹ý³ÌÖÐ£¬ÔÝ²»ÖªµÀ½âÎö³öÀ´µÄÊý¾ÝÒª¸ÉÂï£¬ÔÝ²»´¦Àí¡£
+            // TODO : ä¼˜åŒ–è¿‡ç¨‹ä¸­ï¼Œæš‚ä¸çŸ¥é“è§£æžå‡ºæ¥çš„æ•°æ®è¦å¹²å˜›ï¼Œæš‚ä¸å¤„ç†ã€‚
         }
         else
         {
@@ -127,7 +128,7 @@ void PersonalMode::checkPersonal(QVariantMap& vmRecordInfo)
 
     if (!completed && Config::GetInstance()->_auto_download)
     {  
-        // TODO:´ý²âÊÔÐ§¹û
+        // TODO:å¾…æµ‹è¯•æ•ˆæžœ
         DownloadFile(qstrConferenceUuid,
             vmRecordInfo["deviceUuid"].toString(),
             vmRecordInfo["startpos"].toInt());

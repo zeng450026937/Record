@@ -28,6 +28,7 @@ int ConferenceDatabase_Impl::AddConference(QVariantMap& conference)
     query.prepare("insert or replace into tb_conference (uuid, title, content, members, "
                   "devices, create_time, update_time, date, time, completed) "
                 "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
     // TODO id 和 status 两个字段没有记录
     query.addBindValue( conference.value("uuid").toString() );
     query.addBindValue( conference.value("title").toString() );
@@ -127,7 +128,9 @@ QVariantList ConferenceDatabase_Impl::ConfList()
             list<<conf;
         }
 
-    }else{
+    }
+    else
+    {
         qDebug()<<query.executedQuery();
         qDebug()<<query.lastError();
     }
@@ -144,12 +147,15 @@ int ConferenceDatabase_Impl::ConfCount()
     QSqlQuery query(_shared->SqlDatabase());
 
     query.prepare("select count(*) from tb_conference");
-
-    if(query.exec()){
-        while(query.next()){
+    if(query.exec())
+    {
+        while(query.next())
+        {
             count = query.size();
         }
-    }else{
+    }
+    else
+    {
         qDebug()<<query.executedQuery();
         qDebug()<<query.lastError();
     }
@@ -172,7 +178,9 @@ int ConferenceDatabase_Impl::ConfCount(QString uuid)
         while(query.next()){
             count = query.size();
         }
-    }else{
+    }
+    else
+    {
         qDebug()<<query.executedQuery();
         qDebug()<<query.lastError();
     }

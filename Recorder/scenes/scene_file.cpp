@@ -99,14 +99,11 @@ Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent) :
 
     m_pInfoMode = pService->GetInfoMode();
 
- //   m_pConferenceMode->GetConferenceList();
-
-
-//     m_pInfoMode->GetDeviceList();
- //    m_pPersonalMode->GetAllPersoanlList();
-//    m_pPersonalMode->GetPersonalList();
- //    m_pConferenceMode->GetConferenceList();
-     m_pConferenceMode->GetTemplateList();
+    // m_pInfoMode->GetDeviceList();
+    m_pPersonalMode->GetAllPersoanlList();
+    m_pPersonalMode->GetPersonalList();
+    m_pConferenceMode->GetConferenceList();
+    m_pConferenceMode->GetTemplateList();
 }
 
 Scene_File::~Scene_File()

@@ -1,4 +1,4 @@
-
+﻿
 #include "info_mode.h"
 #include <QJsonDocument>
 #include <QJsonObject>

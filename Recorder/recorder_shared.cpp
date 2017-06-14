@@ -625,8 +625,8 @@ void    RecorderShared::initialize()
 
 void RecorderShared::request_data()
 {
-    if(_server_available)
-    {
+    
+    if(_server_available){
         _service->GetConfService()->getDeviceInfoList();
         _service->GetConfService()->getTemplateList();
         _service->GetConfService()->getConferenceList();

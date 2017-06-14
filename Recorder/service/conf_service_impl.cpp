@@ -666,7 +666,8 @@ void ConfServiceImpl::parseBinary(unsigned int size, QByteArray& content)
 
         this->monitorDownload(reader->type, reader->file_uuid, reader->sender, reader->data_size);
     }
-    else{
+    else
+    {
         //remove download buffer
         _shared->DownloadDB()->RemoveConf(reader->type, reader->file_uuid);
     }

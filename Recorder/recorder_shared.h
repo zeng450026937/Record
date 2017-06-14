@@ -89,7 +89,7 @@ public slots:
     void receive_conferenceStoped(bool result, QVariantMap info);
 
     void receive_conferenceInfoSetted(bool result, QVariantMap info);
-    void receive_conferenceListGot(bool result, QVariantList list);
+    void on_conference_list_got_trigger(bool result);
 
     void receive_downloadConferenceCompleted(int type, QString uuid, int percentage, int speed, int completed);
 
@@ -97,7 +97,7 @@ public slots:
     void receive_personalConfSetted(bool result, QVariantMap info);
     void receive_personalConfDeleted(bool result, QVariantMap info);
     void on_personal_list_got_trigger(bool result);
-    void receive_allPersonalListGot(bool result, QVariantList list);
+    void on_all_personal_list_got_trigger(bool result);
 
     void receive_deviceInfoUpdate(QVariantMap info);
     void receive_deviceInfoListGetted(bool result, QVariantList list);
@@ -110,7 +110,7 @@ public slots:
     void receive_templateInfoSetted(bool result, QVariantMap info);
     void receive_templateInfoDeleted(bool result, QVariantMap info);
     void receive_templateInfoGot(bool result, QVariantMap info);
-    void receive_templateListGot(bool result, QVariantList list);
+    void on_template_list_got_trigger(bool result);
 
 private:
     void initialize();

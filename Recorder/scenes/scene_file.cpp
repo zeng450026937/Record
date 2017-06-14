@@ -35,8 +35,7 @@ Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent) :
     _time_unit(1000),
     _duration(0),
     _offset(0),
-    _type(1),
-    m_pPersonalMode(NULL)
+    _type(1)
 {
     ui->setupUi(this);
 
@@ -87,18 +86,27 @@ Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent) :
     ServiceThread *pService = ServiceThread::GetInstance();
 
     m_pPersonalMode = pService->GetPersonalMode();
-    connect(m_pPersonalMode,SIGNAL(personal_list_got_trigger(bool)),
-        _sharedData,SLOT(on_personal_list_got_trigger(bool)), Qt::QueuedConnection);
+    connect(m_pPersonalMode, SIGNAL(personal_list_got_trigger(bool)),
+        _sharedData, SLOT(on_personal_list_got_trigger(bool)), Qt::QueuedConnection);
+    connect(m_pPersonalMode, SIGNAL(all_personal_list_got_trigger(bool)),
+        _sharedData, SLOT(on_all_personal_list_got_trigger(bool)), Qt::QueuedConnection);
+
+    m_pConferenceMode = pService->GetConferenceMode();
+    connect(m_pConferenceMode, SIGNAL(conference_list_got_trigger(bool)),
+        _sharedData, SLOT(on_conference_list_got_trigger(bool)), Qt::QueuedConnection);
+    connect(m_pConferenceMode, SIGNAL(template_list_got_trigger(bool)),
+        _sharedData, SLOT(on_template_list_got_trigger(bool)), Qt::QueuedConnection);
 
     m_pInfoMode = pService->GetInfoMode();
-    m_pConferenceMode = pService->GetConferenceMode();
+
+ //   m_pConferenceMode->GetConferenceList();
 
 
 //     m_pInfoMode->GetDeviceList();
-     m_pPersonalMode->GetAllPersoanlList();
-     m_pPersonalMode->GetPersonalList();
+ //    m_pPersonalMode->GetAllPersoanlList();
+//    m_pPersonalMode->GetPersonalList();
  //    m_pConferenceMode->GetConferenceList();
- /*    m_pConferenceMode->GetTemplateList();*/
+     m_pConferenceMode->GetTemplateList();
 }
 
 Scene_File::~Scene_File()

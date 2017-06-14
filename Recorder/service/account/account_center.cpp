@@ -26,12 +26,6 @@ AccountCenter::~AccountCenter()
 
 }
 
-
-// AccountCenter::USER_INFO & AccountCenter::GetUserInfo()
-// {
-// 	return _user_info;
-// }
-
 void AccountCenter::UserLogin(QString account, QString password)
 {
     Config::USER &user = m_pConfig->GetUser();

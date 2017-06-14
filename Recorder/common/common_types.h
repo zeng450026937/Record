@@ -200,10 +200,10 @@ struct TaskInst{
     int             status;
 };
 
-typedef std::list<DeviceInst> DeviceList;
-typedef std::list<ConfInst> ConferenceList;
-typedef std::list<FileInst> FileList;
-typedef std::list<MarkInst> MarkList;
-typedef std::list<TaskInst> TaskList;
+typedef std::lsRecordInfoes<DeviceInst> DeviceList;
+typedef std::lsRecordInfoes<ConfInst> ConferenceList;
+typedef std::lsRecordInfoes<FileInst> FileList;
+typedef std::lsRecordInfoes<MarkInst> MarkList;
+typedef std::lsRecordInfoes<TaskInst> TaskList;
 
 #endif // COMMON_TYPES_H

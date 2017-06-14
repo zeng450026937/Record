@@ -235,6 +235,9 @@
     <CustomBuild Include="service\command\PersonalMode.h">
       <Filter>Source Files\service\command</Filter>
     </CustomBuild>
+    <CustomBuild Include="service\command\ConferenceMode.h">
+      <Filter>Source Files\service\command</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resource\close.png">
@@ -349,12 +352,6 @@
     </ClCompile>
     <ClCompile Include="recorder_shared.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_recorder_shared.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_recorder_shared.cpp">
-      <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="service\conf_service_impl.cpp">
       <Filter>Source Files\service</Filter>
@@ -740,6 +737,18 @@
     <ClCompile Include="GeneratedFiles\Release\moc_PersonalMode.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_ConferenceMode.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_ConferenceMode.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_recorder_shared.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_recorder_shared.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_recorder.h">
@@ -869,9 +878,6 @@
       <Filter>Source Files\service\storage</Filter>
     </ClInclude>
     <ClInclude Include="service\command\info_mode.h">
-      <Filter>Source Files\service\command</Filter>
-    </ClInclude>
-    <ClInclude Include="service\command\ConferenceMode.h">
       <Filter>Source Files\service\command</Filter>
     </ClInclude>
   </ItemGroup>

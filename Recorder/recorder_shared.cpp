@@ -60,7 +60,8 @@ RecorderShared::~RecorderShared()
 {
     delete _config;
 
-    if(gDebugLogInstance){
+    if(gDebugLogInstance)
+    {
         gDebugLogInstance->flush();
         gDebugLogInstance->close();
         delete gDebugLogInstance;
@@ -240,9 +241,7 @@ void RecorderShared::receive_service_ready()
                      this,SLOT(receive_conferenceStoped(bool,QVariantMap)),Qt::QueuedConnection);
     QObject::connect(_service->GetConfService(),SIGNAL(conferenceInfoSetted(bool,QVariantMap)),
                      this,SLOT(receive_conferenceInfoSetted(bool,QVariantMap)),Qt::QueuedConnection);
-    QObject::connect(_service->GetConfService(),SIGNAL(conferenceListGot(bool,QVariantList)),
-                     this,SLOT(receive_conferenceListGot(bool,QVariantList)),Qt::QueuedConnection);
-
+    
     QObject::connect(_service->GetConfService(),SIGNAL(personalConfCreated(bool,QVariantMap)),
                      this,SLOT(receive_personalConfCreated(bool,QVariantMap)),Qt::QueuedConnection);
     QObject::connect(_service->GetConfService(),SIGNAL(personalConfSetted(bool,QVariantMap)),
@@ -250,9 +249,7 @@ void RecorderShared::receive_service_ready()
     QObject::connect(_service->GetConfService(),SIGNAL(personalConfDeleted(bool,QVariantMap)),
                      this,SLOT(receive_personalConfDeleted(bool,QVariantMap)),Qt::QueuedConnection);
    
-    QObject::connect(_service->GetConfService(),SIGNAL(allPersonalListGot(bool,QVariantList)),
-                     this,SLOT(receive_allPersonalListGot(bool,QVariantList)),Qt::QueuedConnection);
-
+    
     QObject::connect(_service->GetConfService(),SIGNAL(downloadConferenceCompleted(int,QString,int,int,int)),
                      this,SLOT(receive_downloadConferenceCompleted(int,QString,int,int,int)),Qt::QueuedConnection);
 
@@ -271,8 +268,8 @@ void RecorderShared::receive_service_ready()
                      this,SLOT(receive_templateInfoGot(bool,QVariantMap)),Qt::QueuedConnection);
     QObject::connect(_service->GetConfService(),SIGNAL(templateInfoSetted(bool,QVariantMap)),
                      this,SLOT(receive_templateInfoSetted(bool,QVariantMap)),Qt::QueuedConnection);
-    QObject::connect(_service->GetConfService(),SIGNAL(templateListGot(bool,QVariantList)),
-                     this,SLOT(receive_templateListGot(bool,QVariantList)),Qt::QueuedConnection);
+//     QObject::connect(_service->GetConfService(),SIGNAL(templateListGot(bool,QVariantList)),
+//                      this,SLOT(receive_templateListGot(bool,QVariantList)),Qt::QueuedConnection);
 
 // 
 //     if(_config->_output_dir.isEmpty())
@@ -346,13 +343,13 @@ void RecorderShared::receive_conferenceInfoSetted(bool result, QVariantMap info)
     }
     emit conference_notify(kConfCreated, result, info);
 }
-void RecorderShared::receive_conferenceListGot(bool result, QVariantList list)
+void RecorderShared::on_conference_list_got_trigger(bool result)
 {
-    list = _service->GetConfService()->conferenceList();
+    QVariantList list = _service->GetConfService()->conferenceList();
 
     if(result){
         _conf_uuid_list.clear();
-        foreach (QVariant conf, list) {
+        foreach (const QVariant &conf, list) {
             _conf_uuid_list << conf.toMap().value("uuid").toString();
             _service->GetConfService()->getMarkInfo( conf.toMap().value("uuid").toString() );
         }
@@ -477,9 +474,9 @@ void RecorderShared::on_personal_list_got_trigger(bool result)
     }
 }
 
-void RecorderShared::receive_allPersonalListGot(bool result, QVariantList list)
+void RecorderShared::on_all_personal_list_got_trigger(bool result)
 {
-    list = _service->GetConfService()->personalConfList();
+    QVariantList list = _service->GetConfService()->personalConfList();
 
     if(result){
         _personal_uuid_list.clear();
@@ -582,9 +579,9 @@ void RecorderShared::receive_templateInfoGot(bool result, QVariantMap info)
     Q_UNUSED(result);
     Q_UNUSED(info);
 }
-void RecorderShared::receive_templateListGot(bool result, QVariantList list)
+void RecorderShared::on_template_list_got_trigger(bool result)
 {
-    list = _service->GetConfService()->templateList();
+    QVariantList list = _service->GetConfService()->templateList();
 
     if(result){
         _template_uuid_list.clear();
@@ -628,15 +625,16 @@ void    RecorderShared::initialize()
 
 void RecorderShared::request_data()
 {
-    if(_server_available){
+    if(_server_available)
+    {
         _service->GetConfService()->getDeviceInfoList();
         _service->GetConfService()->getTemplateList();
         _service->GetConfService()->getConferenceList();
         _service->GetConfService()->getAllPersonalList();
     }
     else{
-        this->receive_conferenceListGot(true, QVariantList());
-        this->receive_templateListGot(true, QVariantList());
+        this->on_conference_list_got_trigger(true);
+        this->on_template_list_got_trigger(true);
         this->on_personal_list_got_trigger(true);
     }
 }

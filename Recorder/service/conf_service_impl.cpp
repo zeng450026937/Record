@@ -439,7 +439,8 @@ void ConfServiceImpl::parseCommand(int command, bool result, QVariantMap& info)
         emit conferenceInfoGot(result, info);
         break;
     case MessageBase::GetConferenceList:
-        if(result){
+        if(result)
+        {
             QVariantMap conf_map;
             foreach (QVariant conf, info.value("list").toList()) {
                 conf_map = conf.toMap();

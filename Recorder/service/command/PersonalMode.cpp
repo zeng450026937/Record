@@ -22,7 +22,6 @@ PersonalMode::PersonalMode(MessageBase *pMessage) :
     AddActionProc(PM_DOWNLOAD_FILE, &PersonalMode::DownloadFileReply);
 }
 
-
 PersonalMode::~PersonalMode()
 {
 }
@@ -63,11 +62,7 @@ void PersonalMode::DownloadFileReply(bool bResult, QJsonObject jsData)
 {
     if (bResult)
     {
-        if (jsData.value("result").toInt() != 0) {
-
-            qDebug() << "downlad file error response:" << jsData;
-        }
-        else
+        if (jsData.value("result").toInt() == 0) 
         {
             QString qstrConferenceUuid = jsData.value("conferenceUuid").toString();
 
@@ -79,20 +74,33 @@ void PersonalMode::DownloadFileReply(bool bResult, QJsonObject jsData)
 
             // TODO : 优化过程中，暂不知道解析出来的数据要干嘛，暂不处理。
         }
+        else
+        {
+            qDebug() << "downlad file error response:" << jsData;
+        }
     }
 }
 
 void PersonalMode::GetAllPersonalListReply(bool bResult, QJsonObject jsData)
 {
+    if (bResult)
+    {
+        QVariantList lsConferenceInfoes = jsData["list"].toVariant().toList();
+        foreach(const auto &varInfo, lsConferenceInfoes)
+        {
+            this->checkPersonal(varInfo.toMap());
+        }
+    }
 
+    emit all_personal_list_got_trigger(bResult);
 }
 
 void PersonalMode::GetPersonalListReply(bool bResult, QJsonObject jsData)
 {
-    QList<QVariant> lsConferenceInfoes;
+
     if (bResult)
     {
-        lsConferenceInfoes = jsData["list"].toVariant().toList();
+        QVariantList lsConferenceInfoes = jsData["list"].toVariant().toList();
         foreach(const auto &varInfo , lsConferenceInfoes)
         {
             this->checkPersonal(varInfo.toMap());
@@ -114,13 +122,14 @@ void PersonalMode::checkPersonal(QVariantMap& vmRecordInfo)
     needed_list << vmRecordInfo.value("userId").toString();
 
     bool completed = m_pConfService->checkConferenceFile(qstrConferenceUuid, needed_list);
-
     vmRecordInfo.insert("completed", completed);
     m_pPersonalDB->AddConference(vmRecordInfo);
 
     if (!completed && Config::GetInstance()->_auto_download)
-    {
-        DownloadFile(qstrConferenceUuid,vmRecordInfo["deviceUuid"].toString(),
+    {  
+        // TODO:待测试效果
+        DownloadFile(qstrConferenceUuid,
+            vmRecordInfo["deviceUuid"].toString(),
             vmRecordInfo["startpos"].toInt());
     }
 }

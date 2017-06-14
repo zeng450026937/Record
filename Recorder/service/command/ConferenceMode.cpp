@@ -8,6 +8,8 @@
 #include "storage/include/clip_file_database.h"
 #include "storage/include/conferencedatabase.h"
 #include "storage/include/download_database.h"
+#include "storage/include/templatedatabase.h"
+#include "service/conf_service_impl.h"
 #include "storage/database_impl.h"
 
 #define PSL_GET_CONFERENCE_LIST "getConferenceList"
@@ -19,7 +21,8 @@ ConferenceMode::ConferenceMode(MessageBase *pMessage) :
     m_pConfig(Config::GetInstance()),
     m_pClipFileDB(NULL),
     m_pConferenceDB(NULL),
-    m_pDownloadDB(NULL)
+    m_pDownloadDB(NULL),
+    m_pTemplateDB(nullptr)
 {
     AddActionProc(PSL_GET_CONFERENCE_LIST, &ConferenceMode::GetConferenceListReply);
     AddActionProc(CM_GET_TEMPLATE_LIST, &ConferenceMode::GetTemplateListReply);
@@ -35,6 +38,7 @@ void ConferenceMode::SetDataBase(DataBase_Impl *pDatabase)
     m_pClipFileDB = ClipFileDatabase::GetInterface(pDatabase);
     m_pDownloadDB = DownloadDatabase::GetInterface(pDatabase);
     m_pConferenceDB = ConferenceDatabase::GetInterface(pDatabase);    
+    m_pTemplateDB = TemplateDatabase::GetInterface(pDatabase);
 }
 
 void ConferenceMode::GetConferenceList()
@@ -61,46 +65,29 @@ void ConferenceMode::GetTemplateListReply(bool bResult, QJsonObject jsData)
 {
     if (bResult)
     {
-
+        QVariantList lsTemplateInfoes = jsData["list"].toVariant().toList();
+        foreach(const auto &varInfo, lsTemplateInfoes)
+        {
+            m_pTemplateDB->AddTemplate(varInfo.toMap());
+        }
     }
-    else
-    {
 
-    }
+    template_list_got_trigger(bResult);
 }
 
-#include <QJsonDocument>
 void ConferenceMode::GetConferenceListReply(bool bResult, QJsonObject jsData)
 {
     if (bResult)
     {
-        QJsonDocument jsDoc(jsData);
-        QString qstr = jsDoc.toJson();
-
-        QJsonObject jsInfo;
-        QJsonArray jsInfoArray = jsData["list"].toArray();
-        foreach(QJsonValue &jsValue, jsInfoArray)
+        QVariantList lsRecordInfoes = jsData["list"].toVariant().toList();
+        foreach(const auto &varInfo, lsRecordInfoes)
         {
-            jsInfo = jsValue.toObject();
- 
-            QString uuid = jsInfo.value("uuid").toString();
-            QStringList needed_list = jsInfo.value("devices").toString().split(",");
-            needed_list.removeDuplicates();
-
-             bool completed = checkConferenceFile(uuid, needed_list);
- 
-             jsInfo.insert("completed", completed);
-             m_pConferenceDB->AddConference(jsInfo.toVariantMap());
-
-            if (!completed && Config::GetInstance()->_auto_download) {
-                this->downloadConference(1, uuid);
-            }
+            this->checkConference(varInfo.toMap());
         }
     }
-    else
-    {
 
-    }
+    emit conference_list_got_trigger(bResult);
+
 }
 
 void ConferenceMode::DownloadFileReply(bool bResult, QJsonObject jsData)
@@ -118,118 +105,30 @@ void ConferenceMode::DownloadFileReply(bool bResult, QJsonObject jsData)
             int total_size = _conf_total_size_map.value(qstrConferenceUuid);
             total_size += (jsData.value("totalSize").toInt() - jsData.value("startpos").toInt());
 
-            _conf_total_size_map.insert(qstrConferenceUuid,
-                total_size);
+            _conf_total_size_map.insert(qstrConferenceUuid, total_size);
 
             // TODO : 优化过程中，暂不知道解析出来的数据要干嘛，暂不处理。
         }
     }
 }
 
-bool ConferenceMode::checkConferenceFile(const QString &uuid, QStringList needed)
+void ConferenceMode::checkConference(QVariantMap& vmRecordInfo)
 {
-    bool completed = false;
+    QString qstrConferenceUuid = vmRecordInfo.value("uuid").toString();
+    QStringList needed_list = vmRecordInfo.value("devices").toString().split(",");
+    needed_list.removeDuplicates();
 
-    if (needed.count() == 0) {
-        completed = true;
-        return completed;
-    }
+    bool completed = m_pConfService->checkConferenceFile(qstrConferenceUuid, needed_list);
+    vmRecordInfo.insert("completed", completed);
+    m_pConferenceDB->AddConference(vmRecordInfo);
 
-    QStringList exist_list;
-    QStringList missing_list;
-
-    this->checkConferenceFile(uuid, exist_list, missing_list);
-
-    if (missing_list.count() > 0) {
-        completed = false;
-        return completed;
-    }
-
-    foreach(QString each, exist_list) {
-
-        if (needed.contains(each)) {
-            needed.removeAll(each);
-        }
-    }
-
-    if (needed.count() == 0) {
-        completed = true;
-        return completed;
-    }
-
-    return completed;
-}
-
-int ConferenceMode::checkConferenceFile(const QString &uuid, QStringList &exists, QStringList &missing)
-{
-    QVariantList list;
-    list = m_pClipFileDB->GetConferenceFile(uuid);
-
-    if (list.count() > 0) {
-        QString path;
-        foreach(QVariant file, list) {
-            path = file.toMap().value("path").toString();
-            if (QFile(path).exists() && QFile(path).size() > 0) {
-                exists << file.toMap().value("identity").toString();
-            }
-            else {
-                missing << file.toMap().value("identity").toString();
-            }
-        }
-    }
-
-    return list.count();
-}
-
-
-void ConferenceMode::downloadConference(int type, const QString &uuid)
-{
-    QStringList exists;
-    QStringList missing;
-    QStringList needed;
-
-    //needed total file
-    if (type == 1) {
-        needed = m_pConferenceDB->ConferenceInfo(uuid).value("devices").toString().split(",");
-    }
-//     else if (type == 0) {
-//         needed << _shared->PersonalDB()->ConferenceInfo(uuid).value("user_id").toString();
-//     }
-
-    needed.removeDuplicates();
-
-    //check exists from file database
-    this->checkConferenceFile(uuid, exists, missing);
-    //check exists from download buffer
-    exists += m_pDownloadDB->GetCompletedIdentity(type, uuid);
-
-    exists.removeDuplicates();
-
-    qDebug() << "download conference for:" << uuid;
-    qDebug() << "needed list:" << needed;
-    qDebug() << "exist file:" << exists;
-
-    foreach(QString item, needed) {
-        if (!exists.contains(item)) {
-
-            this->queryBinary(type, uuid, item);
-        }
+    if (!completed && Config::GetInstance()->_auto_download)
+    {
+        DownloadFile(qstrConferenceUuid,
+            vmRecordInfo["deviceUuid"].toString(),
+            vmRecordInfo["startpos"].toInt());
     }
 }
-
-
-void ConferenceMode::queryBinary(int type, QString uuid, QString identity)
-{
-    int binary_size(0);
-    binary_size = m_pDownloadDB->GetFileSize(type, uuid, identity);
-
-    QVariantMap param;
-
-
-    DownloadFile(uuid, identity, binary_size);
-    // this->Execute(MessageBase::DownloadFile, param);
-}
-
 
 void ConferenceMode::SendAction(const char *pAction, const QJsonObject &jsData)
 {

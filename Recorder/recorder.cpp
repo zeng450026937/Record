@@ -167,13 +167,16 @@ void Recorder::on_file_btn_clicked(bool checked)
 
 void Recorder::on_setting_btn_clicked(bool checked)
 {
-    if(checked){
+    if(checked)
+    {
         ui->record_btn->setChecked(false);
         ui->file_btn->setChecked(false);
         ui->setting_btn->setChecked(true);
 
         ui->stackedWidget->setCurrentWidget(_scene_setting);
-    }else{
+    }
+    else
+    {
         ui->record_btn->setChecked(false);
         ui->file_btn->setChecked(false);
         ui->setting_btn->setChecked(true);

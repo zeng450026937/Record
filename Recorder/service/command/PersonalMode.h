@@ -29,6 +29,7 @@ public:
 
 signals:
     void personal_list_got_trigger(bool);
+    void all_personal_list_got_trigger(bool);
 
 private:
     void GetAllPersonalListReply(bool bResult, QJsonObject jsData);

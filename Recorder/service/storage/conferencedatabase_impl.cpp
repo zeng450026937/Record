@@ -11,7 +11,6 @@ ConferenceDatabase* ConferenceDatabase::GetInterface(DataBase* db)
     return s;
 }
 
-
 int ConferenceDatabase_Impl::AddConference(QVariantMap& conference)
 {
     QMutexLocker locker(_shared->_apiLock);
@@ -19,7 +18,7 @@ int ConferenceDatabase_Impl::AddConference(QVariantMap& conference)
     QString text;
     QDateTime dateTime;
 
-    text = conference.value("create_time").toString();
+    text = conference.value("createTime").toString();
     dateTime = QDateTime::fromString(text, "yyyy-MM-dd hh:mm:ss");
 
     conference.insert("date",dateTime.date().toString("yyyyMMdd"));
@@ -29,14 +28,14 @@ int ConferenceDatabase_Impl::AddConference(QVariantMap& conference)
     query.prepare("insert or replace into tb_conference (uuid, title, content, members, "
                   "devices, create_time, update_time, date, time, completed) "
                 "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
+    // TODO id 和 status 两个字段没有记录
     query.addBindValue( conference.value("uuid").toString() );
     query.addBindValue( conference.value("title").toString() );
     query.addBindValue( conference.value("content").toString() );
     query.addBindValue( conference.value("members").toString() );   
     query.addBindValue( conference.value("devices").toString() );
-    query.addBindValue( conference.value("create_time").toString() );
-    query.addBindValue( conference.value("update_time").toString() );
+    query.addBindValue( conference.value("createTime").toString() );
+    query.addBindValue( conference.value("updateTime").toString() );
     query.addBindValue( conference.value("date").toString() );
     query.addBindValue( conference.value("time").toString() );
     query.addBindValue( conference.value("completed").toInt() );

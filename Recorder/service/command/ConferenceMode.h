@@ -9,11 +9,15 @@ class DataBase_Impl;
 class ConferenceDatabase;
 class DownloadDatabase;
 class ClipFileDatabase;
+class TemplateDatabase;
+class ConfServiceImpl;
 class ConferenceMode : public CommandModeBase
 {
     friend class ServiceThread;
-    ConferenceMode(MessageBase *pMessage);
 
+    Q_OBJECT
+
+    ConferenceMode(MessageBase *pMessage);
 public:
     ~ConferenceMode();
 
@@ -23,7 +27,8 @@ public:
 //    ClipFileDatabase *m_pClipFileDB;
 
 signals:
-    void conferenceInfoGot(bool result, QVariantMap info);
+    void conference_list_got_trigger(bool result);
+    void template_list_got_trigger(bool bResult);
 
 public:
     void GetConferenceList();
@@ -44,10 +49,10 @@ private:
     };
 
 private:
-    bool checkConferenceFile(const QString &uuid,QStringList needed);
-    int checkConferenceFile(const QString &uuid, QStringList &exists, QStringList &missing);
-    void downloadConference(int type,const QString &uuid);
-    void queryBinary(int type, QString uuid, QString identity);
+    void checkConference(QVariantMap& vmRecordInfo);
+//     bool checkConferenceFile(const QString &uuid,QStringList needed);
+//     int checkConferenceFile(const QString &uuid, QStringList &exists, QStringList &missing);
+    
 
     void DownloadFileReply(bool bResult, QJsonObject jsData); 
 
@@ -58,7 +63,9 @@ private:
     DownloadDatabase    *m_pDownloadDB;
     ConferenceDatabase  *m_pConferenceDB;
     ClipFileDatabase    *m_pClipFileDB;
-    Config *m_pConfig;
+    TemplateDatabase    *m_pTemplateDB;
+    Config              *m_pConfig;
+    ConfServiceImpl     *m_pConfService;
 
     QMap<QString, int>  _conf_total_size_map;
 };

@@ -11,8 +11,6 @@ HEADERS += \
     $$PWD/messager/websocketclient.h \
     $$PWD/messager/binary_reader.h \
     $$PWD/service_thread_private.h \
-    $$PWD/include/conf_service.h \
-    $$PWD/include/user_service.h \
     $$PWD/conf_service_impl.h \
     $$PWD/user_service_impl.h \
     $$PWD/storage/conferencedatabase_impl.h \
@@ -39,7 +37,11 @@ HEADERS += \
     $$PWD/account/account_center.h \
     $$PWD/white_list.h \
     $$PWD/messager/wavheader.h \
-    $$PWD/command/info_mode.h
+    $$PWD/command/info_mode.h \
+    $$PWD/command/ConferenceMode.h \
+    $$PWD/command/info_mode.h \
+    $$PWD/command/PersonalMode.h \
+    $$PWD/messager/CommandModeBase.h
 
 
 SOURCES += \
@@ -65,5 +67,9 @@ SOURCES += \
     $$PWD/storage/personal_database_impl.cpp \
     $$PWD/account/account_center.cpp \
     $$PWD/messager/wavheader.cpp \
-    $$PWD/command/info_mode.cpp
+    $$PWD/command/info_mode.cpp \
+    $$PWD/command/ConferenceMode.cpp \
+    $$PWD/command/info_mode.cpp \
+    $$PWD/command/PersonalMode.cpp \
+    $$PWD/messager/CommandModeBase.cpp
 

@@ -13,7 +13,6 @@ Model_Editor::~Model_Editor()
     }
 }
 
-
 void Model_Editor::make_model_from_list(QStandardItemModel* model, QVariantList &list)
 {
     if(model == nullptr)
@@ -74,8 +73,8 @@ void Model_Editor::reset_model_row(QStandardItemModel* model, int row, QVariantM
 }
 void Model_Editor::update_model_row(QStandardItemModel* model, int row, QVariantMap &info)
 {
-    if(row < model->rowCount() && row >= 0){
-
+    if(row < model->rowCount() && row >= 0)
+    {
         QList<QStandardItem *> item_list = this->get_item_list_from_model(row, model);
         _textDelegate->set_text(item_list,info);
     }
@@ -94,7 +93,6 @@ void Model_Editor::append_model_row(QStandardItemModel* model, QVariantMap &info
 {
     QList<QStandardItem *> item_list = this->get_item_list_from_map(info);
     _textDelegate->set_text(item_list,info);
-
     model->appendRow(item_list);
 }
 void Model_Editor::delete_model_row(QStandardItemModel* model, int row)

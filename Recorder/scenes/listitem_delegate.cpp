@@ -34,13 +34,11 @@ void ListItemDelegate::paint(QPainter *painter,
                    const QModelIndex &index) const
 {
     QVariantMap info = index.data(Qt::UserRole).toMap();
-    
-
     QListView *view = qobject_cast<QListView*>(option.styleObject);
 
     if(view){
-        if(view->indexWidget(index) == Q_NULLPTR){
-
+        if(view->indexWidget(index) == Q_NULLPTR)
+        {
             ListForm* widget = new ListForm();
             view->setIndexWidget( index, widget );
             QObject::connect(widget,SIGNAL(button_clicked(QString)),this,SLOT(receive_button_clicked(QString)));

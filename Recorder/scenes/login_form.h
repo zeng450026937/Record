@@ -16,7 +16,7 @@ class LoginForm : public QDialog
     Q_OBJECT
 
 public:
-    explicit LoginForm(RecorderShared* shared, QWidget *parent = 0);
+    explicit LoginForm( QWidget *parent = 0);
     ~LoginForm();
 
 protected:
@@ -34,8 +34,6 @@ private slots:
 private:
     Ui::LoginForm  *ui;
 	ServiceThread  *_service;
-    RecorderShared *_record_shared;
-
 	UserServiceImpl	*_user_service;
 };
 

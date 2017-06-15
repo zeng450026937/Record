@@ -12,7 +12,7 @@ QStandardItemModel* ModelUpdater::GetModel(ModelType type)
 
         model = _device_model;
         break;
-    case ConferenceModel:
+    case ConferenceRecordInfoModel:
 
         model = _conference_model;
         break;
@@ -29,14 +29,14 @@ QStandardItemModel* ModelUpdater::GetModel(ModelType type)
 
         model = _record_mark_model;
         break;
-    case PersonalModel:
-
-        model = _personal_model;
-        break;
-    case AllConferenceModel:
-
-        model = _all_conference_model;
-        break;
+//     case PersonalModel:
+// 
+//         model = _personal_model;
+//         break;
+//     case AllConferenceModel:
+// 
+//         model = _all_conference_model;
+//         break;
     default:
         return NULL;
     }
@@ -46,12 +46,8 @@ QStandardItemModel* ModelUpdater::GetModel(ModelType type)
 
 int ModelUpdater::ListToModel(ModelType type, QVariantList& list)
 {
-    Model_Editor* editor(NULL);
-    QStandardItemModel* model(NULL);
-
-    editor = GetEditor(type);
-    model = GetModel(type);
-
+    Model_Editor* editor = GetEditor(type);
+    QStandardItemModel* model = GetModel(type);
     if(!editor || !model)
         return -1;
 
@@ -180,12 +176,12 @@ Model_Editor*   ModelUpdater::GetEditor(ModelType type)
 
         editor = _device;
         break;
-    case PersonalModel:
-
-        editor = _personal;
-        break;
-    case AllConferenceModel:
-    case ConferenceModel:
+//     case PersonalModel:
+// 
+//         editor = _personal;
+//         break;
+//     case AllConferenceModel:
+    case ConferenceRecordInfoModel:
 
         editor = _conference;
         break;
@@ -210,9 +206,9 @@ ModelUpdater::ModelUpdater():
     _conference_model(new QStandardItemModel()),
     _mark_model(new QStandardItemModel()),
     _template_model(new QStandardItemModel()),
-    _record_mark_model(new QStandardItemModel()),
-    _personal_model(new QStandardItemModel()),
-    _all_conference_model(new QStandardItemModel())
+    _record_mark_model(new QStandardItemModel())
+//     _personal_model(new QStandardItemModel()),
+//     _all_conference_model(new QStandardItemModel())
 {
     _device_header<<"display";
     _device_header<<"used";
@@ -235,7 +231,7 @@ ModelUpdater::ModelUpdater():
     _conference_model->setHorizontalHeaderLabels(_conference_header);
 
     _personal_header = _conference_header;
-    _personal_model->setHorizontalHeaderLabels(_personal_header);
+    // _personal_model->setHorizontalHeaderLabels(_personal_header);
 
     _mark_header<<"index";
     _mark_header<<"mark";
@@ -271,6 +267,4 @@ ModelUpdater::~ModelUpdater()
     delete _conference_model;
     delete _mark_model;
     delete _template_model;
-    delete _personal_model;
-    delete _all_conference_model;
 }

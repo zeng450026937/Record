@@ -22,7 +22,8 @@ ServiceThreadPrivate::ServiceThreadPrivate():
     _white_list(new WhiteList),
     _info_mode(nullptr),
     _pConferenceMode(nullptr),
-    _pPersonalMode(nullptr)
+    _pPersonalMode(nullptr),
+    _record_shared(nullptr)
 {
     _db = DataBase::CreateDB();
     _conf_db = ConferenceDatabase::GetInterface(_db);

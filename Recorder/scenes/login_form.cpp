@@ -13,8 +13,7 @@
 #include "common/config.h"
 #include "service/white_list.h"
 
-LoginForm::LoginForm(RecorderShared* shared, QWidget *parent) :
-    _record_shared(shared),
+LoginForm::LoginForm(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::LoginForm),
 	_service(ServiceThread::GetInstance())
@@ -70,8 +69,7 @@ void LoginForm::on_loginPushButton_clicked()
 
 	QStringList lsUserId = _service->GetLoginWhiteList()->whiteList();
 
-	Config *pConfig = _record_shared->GetConfig();
-	if (pConfig->_hackers)
+	if (Config::GetInstance()->_hackers)
 		lsUserId << ui->userLineEdit->text();
 
 	if (!lsUserId.contains(qstrUserId))

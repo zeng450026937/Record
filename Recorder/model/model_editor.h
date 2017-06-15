@@ -29,7 +29,7 @@ public:
     //内部释放
     QList<QStandardItem *>  get_item_list_from_model(int row, QStandardItemModel* model);
 
-private:
+protected:
     Model_TextDelegate *_textDelegate;
 
 

@@ -23,7 +23,8 @@ public:
     QStringList GetCompletedIdentity(int type, QString uuid) override;
 
 protected:
-    DownloadDatabaseImpl(SharedData* shared):_shared(NULL){ _shared = shared; }
+    DownloadDatabaseImpl(SharedData* shared):_shared(shared)
+    {}
     ~DownloadDatabaseImpl() override {}
 
 private:

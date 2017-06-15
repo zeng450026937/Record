@@ -20,7 +20,7 @@ class PersonalDatabase;
 class InfoMode;
 class PersonalMode;
 class ConferenceMode;
-
+class RecorderShared;
 class ServiceThreadPrivate
 {
 	friend class ServiceThread;
@@ -62,6 +62,7 @@ private:
     UserDatabase*       _user_db;
     PersonalDatabase*   _personal_db;
 
+    RecorderShared *_record_shared;
     InfoMode	*_info_mode;
     PersonalMode *_pPersonalMode;
     ConferenceMode *_pConferenceMode;

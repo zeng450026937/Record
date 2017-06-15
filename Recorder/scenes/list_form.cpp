@@ -28,41 +28,38 @@ ListForm::~ListForm()
 void ListForm::update_display(const QVariantMap& info)
 {
     QString text;
-    QDate date;
-    QTime time;
 
     text = info.value("date").toString();
     if(text != _info.value("date").toString()){
-        date = QDate::fromString(text, "yyyyMMdd");
-        ui->dateLabel->setText(date.toString("yyyy年MM月dd\346\227\245"));
+        ui->dateLabel->setText(QDate::fromString(text, "yyyy-MM-dd")
+            .toString("yyyy年MM月dd\346\227\245"));
     }
 
     text = info.value("time").toString();
     if(text != _info.value("time").toString()){
-        time = QTime::fromString(text, "hhmmss");
-        ui->timeLabel->setText(time.toString("hh:mm:ss"));
+        ui->timeLabel->setText(text);
     }
 
     text = info.value("title").toString();
     if(text != _info.value("title").toString())
         ui->titleLabel->setText(text);
 
-    text = info.value("user_id").toString();
+    text = info.value("userId").toString();
     if(text.isEmpty()){
         ui->userGroupBox->hide();
     }
     else{
-        if(text != _info.value("user_id").toString()){
+        if(text != _info.value("userId").toString()){
 
             if(!ui->userGroupBox->isVisible())
                 ui->userGroupBox->show();
 
-            QString user_name = info.value("user_name").toString();
+            QString user_name = info.value("userName").toString();
             ui->idLabel->setText(user_name+"("+text+")");
         }
 
-        text = info.value("gps_address").toString();
-        if(text != _info.value("gps_address").toString())
+        text = info.value("gpsAddress").toString();
+        if(text != _info.value("gpsAddress").toString())
             ui->locationLabel->setText(text);
 
         text = info.value("tag").toString();

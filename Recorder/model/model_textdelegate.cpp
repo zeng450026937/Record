@@ -153,7 +153,8 @@ void Conference_TextDelegate::set_text(QList<QStandardItem *> list, QVariantMap 
 
         item->setTextAlignment(Qt::AlignCenter);
 
-        if(_header.at(j) == "search"){
+        if(_header.at(j) == "search")
+        {
             text += info.value("title").toString();
             text += info.value("content").toString();
             text += info.value("members").toString();
@@ -167,7 +168,8 @@ void Conference_TextDelegate::set_text(QList<QStandardItem *> list, QVariantMap 
 
             item->setText(text);
         }
-        else{
+        else
+        {
 
             text = info.value(_header.at(j)).toString();
             item->setText(text);

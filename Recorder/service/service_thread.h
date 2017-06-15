@@ -11,6 +11,7 @@ class UserServiceImpl;
 class PersonalMode;
 class ConferenceMode;
 class InfoMode;
+class RecorderShared;
 
 class ServiceThreadPrivate;
 class ServiceThread : public QThread
@@ -36,7 +37,7 @@ public:
 	ConfServiceImpl*    GetConfService();
 	UserServiceImpl*    GetUserService();
 
-
+    RecorderShared  *GetRecordShared();
 
 	ServiceThreadPrivate* _private;
 signals:

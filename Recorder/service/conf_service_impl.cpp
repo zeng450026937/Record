@@ -352,10 +352,9 @@ void ConfServiceImpl::checkConference(QVariantMap& conf)
     bool completed = checkConferenceFile(qstrConferenceUuid, needed_list);
 
     conf.insert("completed",completed);
-    _shared->ConferenceDB()->AddConference(conf);
-
-    if(!completed && auto_download){
-        this->downloadConference(1, qstrConferenceUuid);
+    if(!completed && auto_download)
+    {
+      //  this->downloadConference(1, qstrConferenceUuid);
     }
 }
 void ConfServiceImpl::checkPersonal(QVariantMap& conf)
@@ -370,8 +369,9 @@ void ConfServiceImpl::checkPersonal(QVariantMap& conf)
     conf.insert("completed",completed);
     _shared->PersonalDB()->AddConference(conf);
 
-    if(!completed && auto_download){
-        this->downloadConference(0, qstrConferenceUuid);
+    if(!completed && auto_download)
+    {
+    //    this->downloadConference(0, qstrConferenceUuid);
     }
 }
 
@@ -953,7 +953,7 @@ bool ConfServiceImpl::checkConferenceFile(QString qstrConferenceUuid, QStringLis
         return completed;
     }
 
-    foreach (QString each, exist_list) {
+    foreach (const QString &each, exist_list) {
 
         if(needed.contains(each)){
             needed.removeAll(each);
@@ -970,17 +970,18 @@ bool ConfServiceImpl::checkConferenceFile(QString qstrConferenceUuid, QStringLis
 
 int ConfServiceImpl::checkConferenceFile(QString qstrConferenceUuid, QStringList &exists, QStringList &missing)
 {
-    QVariantList list;
-    list = _shared->ClipDB()->GetConferenceFile(qstrConferenceUuid);
+    QVariantList list = _shared->ClipDB()->GetConferenceFile(qstrConferenceUuid);
 
     if(list.count() > 0){
         QString path;
-        foreach (QVariant file, list) {
-            path = file.toMap().value("path").toString();
-            if(QFile(path).exists() && QFile(path).size() > 0){
-                exists << file.toMap().value("identity").toString();
+        QFile file;
+        foreach (QVariant fileInfo, list) {
+            path = fileInfo.toMap().value("path").toString();
+            file.setFileName(path);
+            if(file.exists() && file.size() > 0){
+                exists << fileInfo.toMap().value("identity").toString();
             }else{
-                missing << file.toMap().value("identity").toString();
+                missing << fileInfo.toMap().value("identity").toString();
             }
         }
     }

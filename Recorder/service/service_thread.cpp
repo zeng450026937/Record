@@ -6,6 +6,7 @@
 #include "command/ConferenceMode.h"
 #include "command/PersonalMode.h"
 #include "storage/database_impl.h"
+#include <recorder_shared.h>
 
 ServiceThread *ServiceThreadPrivate::s_pServiceSingleton = nullptr;
 
@@ -31,6 +32,7 @@ ConferenceMode * ServiceThread::GetConferenceMode()
     if (_private->_pConferenceMode == nullptr)
     {
         _private->_pConferenceMode = new ConferenceMode(GetMessager());
+        _private->_pConferenceMode->m_pRecrodShared = GetRecordShared();
         _private->_pConferenceMode->moveToThread(this);
         _private->_pConferenceMode->SetDataBase(static_cast<DataBase_Impl*>(_private->_db));
     }
@@ -43,8 +45,9 @@ PersonalMode * ServiceThread::GetPersonalMode()
     if (_private->_pPersonalMode == nullptr)
     {
         _private->_pPersonalMode = new PersonalMode(GetMessager());
-        _private->_pPersonalMode->m_pConfService = _private->_conf_service;
-        _private->_pPersonalMode->SetDataBase(static_cast<DataBase_Impl*>(_private->_db));
+        _private->_pPersonalMode->m_pConfService = GetConfService();
+        _private->_pPersonalMode->m_pRecordShared = GetRecordShared();
+        _private->_pPersonalMode->SetDataBase(static_cast<DataBase_Impl*>(_private->_db));        
         _private->_pPersonalMode->moveToThread(this);
     }
 
@@ -95,6 +98,16 @@ ConfServiceImpl* ServiceThread::GetConfService()
 UserServiceImpl* ServiceThread::GetUserService()
 {
     return _private->_user_service;
+}
+
+RecorderShared * ServiceThread::GetRecordShared()
+{
+    if (nullptr == _private->_record_shared)
+    {
+        _private->_record_shared = new RecorderShared();
+    }
+
+    return _private->_record_shared;
 }
 
 void ServiceThread::run()

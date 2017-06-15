@@ -7,7 +7,7 @@
 class Config;
 class WhiteList;
 class ServiceThread;
-
+class ConfServiceImpl;
 class RecorderShared : public QObject, public ModelUpdater
 {
     Q_OBJECT
@@ -58,6 +58,9 @@ public:
     void     CheckConferenceFile(QVariantMap& conf);
     void     CheckPersonalFile(QVariantMap& conf);
 
+    void     AddPersonalRecordInfo(QVariantMap &vmRecordInfo);
+    void     AddConferenceRecordInfo(QVariantMap &vmRecordInfo);
+    
     //mark interface
     QVariantList GetMark(QString conf_uuid);
     void     AddMark(ModelType type, QString conf_uuid,QVariantMap& mark);
@@ -96,7 +99,7 @@ public slots:
     void receive_personalConfCreated(bool result, QVariantMap info);
     void receive_personalConfSetted(bool result, QVariantMap info);
     void receive_personalConfDeleted(bool result, QVariantMap info);
-    void on_personal_list_got_trigger(bool result);
+    void ReciveRecordInfoes(QVariantList &lsRecordInfoes);
     void on_all_personal_list_got_trigger(bool result);
 
     void receive_deviceInfoUpdate(QVariantMap info);
@@ -127,7 +130,9 @@ private:
     QStringList         _device_mac_list;
     QStringList         _selected_device;
     QStringList         _conf_uuid_list;
-    QStringList         _personal_uuid_list;
+    QStringList         _conference_uuid_list;
+
+    ConfServiceImpl     *_conf_service;
 };
 
 #endif // RECORDERSHARED_H

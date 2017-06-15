@@ -3,7 +3,6 @@
 #include <QTextCodec>
 #include <QStyleFactory>
 #include <QStyle>
-#include "recorder_shared.h"
 #include "scenes/login_form.h"
 
 # pragma execution_character_set("utf-8")
@@ -21,14 +20,13 @@ int main(int argc, char *argv[])
     //禁止休眠
     ::SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED);
 
-    RecorderShared recorderShared;
 	{
-        LoginForm login(&recorderShared);
+        LoginForm login;
 		if (login.exec() != QDialog::Accepted)
 			return -1;
 	}
 
-    Recorder w(&recorderShared);
+    Recorder w;
 	w.setFont(QFont("Consolas"));
 	w.show();
 

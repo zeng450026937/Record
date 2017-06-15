@@ -32,20 +32,19 @@ bool SharedData::InitDb()
     QSqlQuery query(_db);
     bool ret(false);
 
-    ret = query.exec("CREATE TABLE IF NOT EXISTS tb_conference ("
-                     "id INTEGER PRIMARY KEY NOT NULL, "
-                     "uuid varchar(255) UNIQUE NOT NULL, "
-                     "title varchar(255) DEFAULT '', "
-                     "content varchar(255) DEFAULT '', "
-                     "members varchar(255) DEFAULT '', "
-                     "devices varchar NOT NULL,"
-                     "create_time varchar(255) NOT NULL DEFAULT '', "
-                     "update_time varchar(255) NOT NULL DEFAULT '', "
-                     "date varchar(255) DEFAULT '', "
-                     "time varchar(255) DEFAULT '', "
-                     "completed int DEFAULT '0' "
-                      ")");
-
+//     ret = query.exec("CREATE TABLE IF NOT EXISTS tb_conference ("
+//                      "id INTEGER PRIMARY KEY NOT NULL, "
+//                      "uuid varchar(255) UNIQUE NOT NULL, "
+//                      "title varchar(255) DEFAULT '', "
+//                      "content varchar(255) DEFAULT '', "
+//                      "members varchar(255) DEFAULT '', "
+//                      "devices varchar NOT NULL,"
+//                      "create_time varchar(255) NOT NULL DEFAULT '', "
+//                      "update_time varchar(255) NOT NULL DEFAULT '', "
+//                      "date varchar(255) DEFAULT '', "
+//                      "time varchar(255) DEFAULT '', "
+//                      "completed int DEFAULT '0' "
+//                       ")");
 
     ret = query.exec("CREATE TABLE IF NOT EXISTS tb_download ("
                      "type int DEFAULT '0', "
@@ -66,13 +65,14 @@ bool SharedData::InitDb()
                      "path varchar(255) UNIQUE NOT NULL "
                      ")");
 
-    ret = query.exec("CREATE TABLE IF NOT EXISTS tb_personal ("
+    ret = query.exec("CREATE TABLE IF NOT EXISTS tb_record_info ("
                      "id INTEGER PRIMARY KEY NOT NULL, "
+                     "record_type TEXT,"
                      "conference_uuid varchar(255) UNIQUE NOT NULL, "
                      "title varchar(255) NOT NULL, "
                      "user_id varchar(255) NOT NULL, "
                      "user_name varchar(255) NOT NULL, "
-                     "type varchar(255) DEFAULT '', "
+                     // "type varchar(255) DEFAULT '', "
                      "gps varchar(255) DEFAULT '', "
                      "gps_address varchar(255) DEFAULT '', "
                      "tag varchar(255) DEFAULT '', "

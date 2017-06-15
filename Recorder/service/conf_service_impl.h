@@ -52,6 +52,9 @@ public:
 
     void deviceEnvironmentUpdate(QVariantMap info);
 
+
+    void AddPersonalRecordInfo();
+
 public slots:
     void createConference(QVariantMap info);
     void startConference(QString qstrConferenceUuid);

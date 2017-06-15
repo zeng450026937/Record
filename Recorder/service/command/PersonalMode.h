@@ -1,15 +1,13 @@
 ﻿#pragma once
 
-#include <QList>
-#include <QVariant>
+#include <QVariantList>
 #include <service/messager/CommandModeBase.h>
 
-class ConfServiceImpl;
 
 class Config;
+class ConfServiceImpl;
 class MessageBase;
-class DataBase_Impl;
-class PersonalDatabase;
+class RecorderShared;
 class PersonalMode : public CommandModeBase
 {
     friend class ServiceThread;
@@ -20,30 +18,18 @@ class PersonalMode : public CommandModeBase
 public:
     ~PersonalMode();
 
-    void SetDataBase(DataBase_Impl *pDatabase);
-    void SetConfServiceImpl(ConfServiceImpl *pConfServiceImpl);
 
     void GetPersonalList();
     void GetAllPersoanlList();
-    void DownloadFile(const QString &qstrConferenceUuid, const QString &qstrDeviceUuid, int iStartpos);
-
-signals:
-    void personal_list_got_trigger(bool);
-    void all_personal_list_got_trigger(bool);
 
 private:
-    void GetAllPersonalListReply(bool bResult, QJsonObject jsData);
     void GetPersonalListReply(bool bResult, QJsonObject jsData); 
-    void DownloadFileReply(bool bResult, QJsonObject jsData);
-    void SendAction(const char *pAction,const QJsonObject &jsData);
 
 private:
-    void checkPersonal(QVariantMap& vmRecordInfo);
 
-
+    RecorderShared      *m_pRecordShared;
     Config              *m_pConfig;
     ConfServiceImpl     *m_pConfService;
-    PersonalDatabase    *m_pPersonalDB;
-    QMap<QString, int>  m_mapConferenceRecordTotalSize;
+
 };
 

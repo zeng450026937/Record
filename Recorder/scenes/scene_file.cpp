@@ -84,26 +84,14 @@ Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent) :
     connect(_player,SIGNAL(stopPositionChanged(qint64)),this,SLOT(stopPositionChanged(qint64)));
 
     ServiceThread *pService = ServiceThread::GetInstance();
-
     m_pPersonalMode = pService->GetPersonalMode();
-    connect(m_pPersonalMode, SIGNAL(personal_list_got_trigger(bool)),
-        _sharedData, SLOT(on_personal_list_got_trigger(bool)), Qt::QueuedConnection);
-    connect(m_pPersonalMode, SIGNAL(all_personal_list_got_trigger(bool)),
-        _sharedData, SLOT(on_all_personal_list_got_trigger(bool)), Qt::QueuedConnection);
-
     m_pConferenceMode = pService->GetConferenceMode();
-    connect(m_pConferenceMode, SIGNAL(conference_list_got_trigger(bool)),
-        _sharedData, SLOT(on_conference_list_got_trigger(bool)), Qt::QueuedConnection);
-    connect(m_pConferenceMode, SIGNAL(template_list_got_trigger(bool)),
-        _sharedData, SLOT(on_template_list_got_trigger(bool)), Qt::QueuedConnection);
 
     m_pInfoMode = pService->GetInfoMode();
 
-    // m_pInfoMode->GetDeviceList();
     m_pPersonalMode->GetAllPersoanlList();
     m_pPersonalMode->GetPersonalList();
     m_pConferenceMode->GetConferenceList();
-    m_pConferenceMode->GetTemplateList();
 }
 
 Scene_File::~Scene_File()
@@ -139,7 +127,6 @@ void Scene_File::init_filter_menu()
     filter_menu->addAction(filter_action2);
     filter_menu->addAction(filter_action3);
     filter_menu->addAction(filter_action4);
-
 
     filter_menu->setStyleSheet("QMenu{ font: 9pt;border:0;margin:0;padding:4px;}"
                                "QMenu::item {"
@@ -353,7 +340,9 @@ void Scene_File::syntaxChange(QString text,QRegExp::PatternSyntax psyntax)
     //QRegExp::FixedString //字符串匹配
     //QRegExp::RegExp //正则表达式
     QRegExp syntax= QRegExp(text,Qt::CaseInsensitive, psyntax);
-    sortFilter_proxyModel->setFilterRegExp(syntax);  //设置过滤语法
+    sortFilter_proxyModel->setFilterRegExp(syntax);  //设置过滤语法 
+    
+    
 }
 
 QString Scene_File::dateToReg(QDate startDate,QDate endDate)
@@ -1151,13 +1140,16 @@ void Scene_File::on_sortBtn_clicked(bool checked)
 
 void Scene_File::on_typeComboBox_currentIndexChanged(int index)
 {
-    switch(index){
+    sortFilter_proxyModel->setSourceModel(_sharedData->GetModel(ModelUpdater::ConferenceRecordInfoModel));
+    return;
+    switch(index)
+    {
     case 1:
-        sortFilter_proxyModel->setSourceModel( _sharedData->GetModel(ModelUpdater::ConferenceModel) );
+        
         _type = 1;
         break;
     case 2:
-        sortFilter_proxyModel->setSourceModel( _sharedData->GetModel(ModelUpdater::PersonalModel) );
+        // sortFilter_proxyModel->setSourceModel( _sharedData->GetModel(ModelUpdater::PersonalModel) );
         _type = 2;
         break;
     default:

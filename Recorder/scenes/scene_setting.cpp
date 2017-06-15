@@ -30,7 +30,6 @@ Scene_Setting::~Scene_Setting()
     delete ui;
 }
 
-
 void Scene_Setting::initialize()
 {
     //prepare model

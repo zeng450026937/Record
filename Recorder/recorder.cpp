@@ -10,19 +10,22 @@
 #include "scenes/scene_file.h"
 #include "service/service_thread.h"
 
-Recorder::Recorder(RecorderShared *pRecorderShared, QWidget *parent) :
+Recorder::Recorder(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Recorder),
-    _sharedData(pRecorderShared),
     _scene_file(nullptr),
     _scene_record(nullptr),
     _scene_setting(nullptr)
 {
     ui->setupUi(this);
 
+    _sharedData = ServiceThread::GetInstance()->GetRecordShared();
+
     QDesktopWidget* desktopWidget = QApplication::desktop();
+
      //获取可用桌面大小
     QRect deskRect = desktopWidget->availableGeometry();
+
      //获取设备屏幕大小
     QRect screenRect = desktopWidget->screenGeometry();
 
@@ -60,7 +63,6 @@ Recorder::Recorder(RecorderShared *pRecorderShared, QWidget *parent) :
 
 Recorder::~Recorder()
 {
-    delete _sharedData;
     delete ui;
 }
 

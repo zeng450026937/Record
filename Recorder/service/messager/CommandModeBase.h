@@ -20,12 +20,10 @@ protected:
 #define AddActionProc(ac,proc) _AddActionProc((ac),(HandleActionProc)(proc))
     void _AddActionProc(const char *pAction, HandleActionProc fnHandleProc);
 
-
 private slots:
     void on_action_trigger(QString qstrAction, bool bResult, QJsonObject jsData);
 
 protected:
-
     virtual void SendAction(const char *pAction, const QJsonObject &jsData) = 0;
 
     MessageBase *m_pMessage;

@@ -1,115 +1,114 @@
 
 #include "message_base.h"
 #include <assert.h>
+#include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QDebug>
 #include "CommandModeBase.h"
-#include "message_base_private.h"
 #include "common/config.h"
-#include "websocketclient.h"
+#include "message_base_private.h"
 #include "network_info.h"
+#include "websocketclient.h"
 
-MessageBase::MessageBase(QObject *parent) :
-    QObject(parent),
-    d(new MessageBasePrivate)
-{
-    qRegisterMetaType<QByteArray>();
-    connect(d->_client,SIGNAL(binary_message(uint,QByteArray)),this,SLOT(on_binary_message(uint,QByteArray)),Qt::QueuedConnection);
-    connect(d->_client,SIGNAL(text_message(QString)),this,SLOT(on_message_reply(QString)),Qt::QueuedConnection);
-    bool bRes = connect(d->_client,SIGNAL(connection_status(int)),this,SIGNAL(connection_status(int)));
-
+MessageBase::MessageBase(QObject *parent)
+    : QObject(parent), d(new MessageBasePrivate) {
+  qRegisterMetaType<QByteArray>();
+  connect(d->_client, SIGNAL(binary_message(uint, QByteArray)), this,
+          SLOT(on_binary_message(uint, QByteArray)), Qt::QueuedConnection);
+  connect(d->_client, SIGNAL(text_message(QString)), this,
+          SLOT(on_message_reply(QString)), Qt::QueuedConnection);
+  bool bRes = connect(d->_client, SIGNAL(connection_status(int)), this,
+                      SIGNAL(connection_status(int)));
 }
 
-MessageBase::~MessageBase()
-{
-    delete d;
+MessageBase::~MessageBase() { delete d; }
+
+bool MessageBase::sendMessage(const QString &qstrMode,
+                              const QString &qstrAction,
+                              const QJsonObject &jsData) {
+  QJsonObject jsRoot;
+  jsRoot.insert("version", MB_MESSAGE_VERSION);
+  jsRoot.insert("authorization", "");
+  jsRoot.insert("from", Config::GetInstance()->GetUser().user_id);
+  jsRoot.insert("to", "");
+
+  QJsonObject jsCommand;
+  jsCommand.insert("mode", qstrMode);
+  jsCommand.insert("action", qstrAction);
+
+  jsRoot.insert("command", jsCommand);
+  jsRoot.insert("data", jsData);
+
+  QJsonDocument jsonDocument(jsRoot);
+  jsonDocument.setObject(jsRoot);
+  d->_client->sendText(
+      jsonDocument.toJson(QJsonDocument::Compact).toStdString());
+
+  return true;
 }
 
-bool MessageBase::sendMessage(const QString &qstrMode, const QString &qstrAction, const QJsonObject &jsData)
-{
-    QJsonObject jsRoot;
-    jsRoot.insert("version", MB_MESSAGE_VERSION);
-    jsRoot.insert("authorization", "");
-    jsRoot.insert("from", Config::GetInstance()->GetUser().user_id);
-    jsRoot.insert("to", "");
+void MessageBase::on_message_reply(QString qstrMessage) {
+  QJsonParseError error;
+  QJsonDocument jsonDocument =
+      QJsonDocument::fromJson(qstrMessage.toUtf8(), &error);
+  if (error.error == QJsonParseError::NoError) {
+    QJsonObject jsRoot = jsonDocument.object();
+    if (jsRoot["version"].toInt() == MB_MESSAGE_VERSION) {
+      QJsonObject jsCommand = jsRoot["command"].toObject();
+      auto itrFound = d->mapMode.find(jsCommand["mode"].toString());
+      if (itrFound == d->mapMode.end()) {
+        // æ‰€æœ‰ä¸ç¬¦åˆè§„åˆ™çš„å“åº”éƒ½ä¼šåœ¨è¿™é‡Œç»“æŸï¼ŒåŒ…æ‹¬ ä¸å­˜åœ¨"command" jsonå¯¹è±¡æ—¶ã€‚
+        qDebug() << jsCommand["mode"].toString()
+                 << " command mode is not found." << error.errorString();
+        return;
+      }
 
-    QJsonObject jsCommand;
-    jsCommand.insert("mode", qstrMode);
-	jsCommand.insert("action", qstrAction);
+      qDebug() << jsCommand;
+      emit itrFound->second->action_trigger(jsCommand["action"].toString(),
+                                            jsRoot["result"].toBool(),
+                                            jsRoot["data"].toObject());
+    } else {
+      int i = 0;
+      // TODO: æç¤ºåè®®ä¸æœåŠ¡ç«¯é€šè®¯åè®®ç‰ˆæœ¬ä¸åŒ¹é…ã€‚
+    }
+  } else {
+    qDebug() << "json command parse failed" << error.errorString();
+  }
+}
+void MessageBase::on_binary_message(unsigned int size, QByteArray content) {
+  Q_UNUSED(size);
+  auto itrFound = d->mapMode.find(QStringLiteral("binary"));
+  if (itrFound == d->mapMode.end()) {
+    // æ‰€æœ‰ä¸ç¬¦åˆè§„åˆ™çš„å“åº”éƒ½ä¼šåœ¨è¿™é‡Œç»“æŸï¼ŒåŒ…æ‹¬ ä¸å­˜åœ¨"command" jsonå¯¹è±¡æ—¶ã€‚
+    qDebug() << "binary mode is not found.";
+    return;
+  }
 
-    jsRoot.insert("command", jsCommand);
-    jsRoot.insert("data", jsData);
-
-	QJsonDocument jsonDocument(jsRoot);
-	jsonDocument.setObject(jsRoot);	
-	d->_client->sendText(jsonDocument.toJson(QJsonDocument::Compact).toStdString());
-
-	return true;
+  emit itrFound->second->binary_received(content);
 }
 
-void MessageBase::on_message_reply(QString qstrMessage)
-{
-	QJsonParseError error;
-	QJsonDocument jsonDocument = QJsonDocument::fromJson(qstrMessage.toUtf8(), &error);
-	if (error.error == QJsonParseError::NoError) 
-    {
-        QJsonObject jsRoot = jsonDocument.object();
-        if (jsRoot["version"].toInt() == MB_MESSAGE_VERSION)
-        {
-            QJsonObject jsCommand = jsRoot["command"].toObject();
-            auto itrFound = d->mapMode.find(jsCommand["mode"].toString());
-            if (itrFound == d->mapMode.end())
-            {
-                // ËùÓĞ²»·ûºÏ¹æÔòµÄÏìÓ¦¶¼»áÔÚÕâÀï½áÊø£¬°üÀ¨ ²»´æÔÚ"command" json¶ÔÏóÊ±¡£
-                qDebug() << jsCommand["mode"].toString() << " command mode is not found." << error.errorString();
-                return;
-            }
-
-           emit itrFound->second->action_trigger(jsCommand["action"].toString(),
-                                                   jsRoot["result"].toBool(),
-                                                   jsRoot["data"].toObject());
-        }
-        else
-        {
-            int i = 0;
-            // TODO: ÌáÊ¾Ğ­ÒéÓë·şÎñ¶ËÍ¨Ñ¶Ğ­Òé°æ±¾²»Æ¥Åä¡£
-        }
-	}
-	else {
-		qDebug() << "json command parse failed" << error.errorString();
-	}
+void MessageBase::connectTo(const QString &qstrHeader, QString uri) {
+  d->_client->connect_to(qstrHeader.toStdString(), uri.toStdString());
 }
-void MessageBase::on_binary_message(unsigned int size,QByteArray content)
-{
-	emit notify_binary(size, content);
+void MessageBase::stopConnection() { d->_client->stop_connect(); }
+
+void MessageBase::sendCommand(CommandList command, QString receiver,
+                              const QVariantMap &data) {
+  QVariantMap json_command;
+
+  json_command.insert("SENDER", d->_info->MAC());
+  json_command.insert("RECEIVER", receiver);
+  json_command.insert("COMMAND", d->_command_map.key(command));
+  json_command.insert("DATA", data);
+
+  QJsonDocument jsonDocument = QJsonDocument::fromVariant(json_command);
+
+  d->_client->sendText(jsonDocument.toJson().toStdString());
 }
 
-void MessageBase::connectTo(const QString &qstrHeader, QString uri)
-{
-    d->_client->connect_to(qstrHeader.toStdString(),uri.toStdString());
-}
-void MessageBase::stopConnection()
-{
-    d->_client->stop_connect();
-}
-
-void MessageBase::sendCommand(CommandList command, QString receiver, const QVariantMap& data)
-{
-    QVariantMap json_command;
-
-    json_command.insert("SENDER",d->_info->MAC());
-    json_command.insert("RECEIVER",receiver);
-    json_command.insert("COMMAND",d->_command_map.key(command));
-    json_command.insert("DATA",data);
-
-    QJsonDocument jsonDocument  = QJsonDocument::fromVariant(json_command);
-
-    d->_client->sendText( jsonDocument.toJson().toStdString() );
-}
-
-void MessageBase::AddMode(const QString &qstrModeName, CommandModeBase &commandMode)
-{
-    assert(d->mapMode.find(qstrModeName) == d->mapMode.end());
-    d->mapMode.insert(std::map<QString, CommandModeBase *>::value_type(QString(qstrModeName), &commandMode));
+void MessageBase::AddMode(const QString &qstrModeName,
+                          CommandModeBase &commandMode) {
+  assert(d->mapMode.find(qstrModeName) == d->mapMode.end());
+  d->mapMode.insert(std::map<QString, CommandModeBase *>::value_type(
+      QString(qstrModeName), &commandMode));
 }

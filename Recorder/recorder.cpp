@@ -20,7 +20,6 @@ Recorder::Recorder(QWidget *parent) :
     ui->setupUi(this);
 
     _sharedData = ServiceThread::GetInstance()->GetRecordShared();
-
     QDesktopWidget* desktopWidget = QApplication::desktop();
 
      //获取可用桌面大小

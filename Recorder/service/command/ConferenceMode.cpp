@@ -1,4 +1,4 @@
-﻿#include "ConferenceMode.h"
+#include "ConferenceMode.h"
 
 #include <QFile>
 #include <QJsonArray>

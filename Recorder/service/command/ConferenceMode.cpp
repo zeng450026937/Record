@@ -91,8 +91,6 @@ void ConferenceMode::DownloadFileReply(bool bResult, QJsonObject jsData) {
                      jsData.value("startpos").toInt());
 
       _conf_total_size_map.insert(qstrConferenceUuid, total_size);
-
-      // TODO : 优化过程中，暂不知道解析出来的数据要干嘛，暂不处理。
     }
   }
 }

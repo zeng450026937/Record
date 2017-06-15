@@ -76,7 +76,15 @@ void MessageBase::on_message_reply(QString qstrMessage) {
   }
 }
 void MessageBase::on_binary_message(unsigned int size, QByteArray content) {
-  emit notify_binary(size, content);
+  Q_UNUSED(size);
+  auto itrFound = d->mapMode.find(QStringLiteral("binary"));
+  if (itrFound == d->mapMode.end()) {
+    // 所有不符合规则的响应都会在这里结束，包括 不存在"command" json对象时。
+    qDebug() << "binary mode is not found.";
+    return;
+  }
+
+  emit itrFound->second->binary_received(content);
 }
 
 void MessageBase::connectTo(const QString &qstrHeader, QString uri) {

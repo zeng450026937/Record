@@ -12,6 +12,8 @@ CommandModeBase::CommandModeBase(MessageBase *pMessage, const char *pModeName)
   connect(this, SIGNAL(action_trigger(QString, bool, QJsonObject)), this,
           SLOT(on_action_trigger(QString, bool, QJsonObject)),
           Qt::QueuedConnection);
+  connect(this, SIGNAL(binary_received(QByteArray)), this,
+          SLOT(on_binary_received(QByteArray)), Qt::QueuedConnection);
 }
 
 CommandModeBase::~CommandModeBase() {}
@@ -22,6 +24,10 @@ void CommandModeBase::on_action_trigger(QString qstrAction, bool bResult,
   if (itrFond != m_mapHandleAction.end()) {
     (this->*itrFond->second)(bResult, jsData);
   }
+}
+
+void CommandModeBase::on_binary_received(QByteArray binary) {
+  // on_binary_received() is not impled
 }
 
 void CommandModeBase::_AddActionProc(const char *pAction,

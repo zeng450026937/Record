@@ -41,7 +41,8 @@ HEADERS += \
     $$PWD/command/ConferenceMode.h \
     $$PWD/command/info_mode.h \
     $$PWD/command/PersonalMode.h \
-    $$PWD/messager/CommandModeBase.h
+    $$PWD/messager/CommandModeBase.h \
+    $$PWD/command/binary_mode.h
 
 
 SOURCES += \
@@ -71,5 +72,6 @@ SOURCES += \
     $$PWD/command/ConferenceMode.cpp \
     $$PWD/command/info_mode.cpp \
     $$PWD/command/PersonalMode.cpp \
-    $$PWD/messager/CommandModeBase.cpp
+    $$PWD/messager/CommandModeBase.cpp \
+    $$PWD/command/binary_mode.cpp
 

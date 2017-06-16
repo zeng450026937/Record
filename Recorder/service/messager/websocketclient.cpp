@@ -159,10 +159,13 @@ void WebSocketClient::on_fail(websocketpp::connection_hdl) {
 // Define a callback to handle incoming messages
 void WebSocketClient::on_message(websocketpp::connection_hdl hdl, client::message_ptr msg) {
 
-    if (msg->get_opcode() == websocketpp::frame::opcode::text) {
+    switch (msg->get_opcode())
+    {
+    case websocketpp::frame::opcode::text:
         emit text_message(QString::fromStdString(msg->get_payload()));
-    }
-    else if (msg->get_opcode() == websocketpp::frame::opcode::binary) {
-        emit binary_message(msg->get_payload().size(),QByteArray::fromStdString(msg->get_payload()));
+        break;
+    case websocketpp::frame::opcode::binary:
+        emit binary_message(QByteArray::fromStdString(msg->get_payload()));
+        break;
     }
 }

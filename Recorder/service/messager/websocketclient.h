@@ -68,7 +68,7 @@ signals:
     void connection_status(int iStatus);
 
     void text_message(QString text);
-    void binary_message(unsigned int size,QByteArray content);
+    void binary_message(QByteArray content);
 
 public slots:
     // This method will complete the connection

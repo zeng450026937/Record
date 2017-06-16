@@ -1,6 +1,7 @@
 #include "download_database_impl.h"
 #include "database_impl.h"
 #include "shareddata.h"
+#include "include\data_base.h"
 #include <QtSql>
 #include <QDebug>
 
@@ -12,7 +13,12 @@ DownloadDatabase* DownloadDatabase::GetInterface(DataBase* db)
     return s;
 }
 
-int DownloadDatabaseImpl::AddSegment(int type, QString identity,
+int DownloadDatabase::InsertDownloadInfo(int iRecordType, const QString &qstrFileUuid, const QString &qstrConferenceUuid, const QString &qstrDeviceUuid)
+{
+    return 0;
+}
+
+int DownloadDatabase::AddSegment(int type, QString identity,
                QString uuid, int meeting_time,
                int startpos, int status,
                int data_size, QByteArray& data)
@@ -42,7 +48,7 @@ int DownloadDatabaseImpl::AddSegment(int type, QString identity,
     return 0;
 }
 
-int DownloadDatabaseImpl::RemoveFile(int type, QString uuid, QString identity)
+int DownloadDatabase::RemoveFile(int type, QString uuid, QString identity)
 {
     QMutexLocker locker(_shared->_apiLock);
 
@@ -61,7 +67,7 @@ int DownloadDatabaseImpl::RemoveFile(int type, QString uuid, QString identity)
 
     return 0;
 }
-int DownloadDatabaseImpl::RemoveConf(int type, QString uuid)
+int DownloadDatabase::RemoveConf(int type, QString uuid)
 {
     QMutexLocker locker(_shared->_apiLock);
 
@@ -79,11 +85,10 @@ int DownloadDatabaseImpl::RemoveConf(int type, QString uuid)
 
     return 0;
 }
-int DownloadDatabaseImpl::GetFileSize(int type, QString uuid, QString identity)
+int DownloadDatabase::GetFileSize(int type, QString uuid, QString identity)
 {
     QMutexLocker locker(_shared->_apiLock);
 
-    int file_size(0);
 
     QSqlQuery query(_shared->SqlDatabase());
 
@@ -92,6 +97,7 @@ int DownloadDatabaseImpl::GetFileSize(int type, QString uuid, QString identity)
     query.addBindValue( uuid );
     query.addBindValue( identity );
 
+    int file_size = 0;
     if(query.exec()){
         while(query.next()){
             file_size = query.value(0).toInt();
@@ -104,7 +110,7 @@ int DownloadDatabaseImpl::GetFileSize(int type, QString uuid, QString identity)
     return file_size;
 }
 
-int DownloadDatabaseImpl::GetConfSize(int type, QString uuid)
+int DownloadDatabase::GetConfSize(int type, QString uuid)
 {
     QMutexLocker locker(_shared->_apiLock);
 
@@ -127,7 +133,7 @@ int DownloadDatabaseImpl::GetConfSize(int type, QString uuid)
 
     return conf_size;
 }
-QByteArray DownloadDatabaseImpl::GetFile(int type, QString uuid, QString identity)
+QByteArray DownloadDatabase::GetFile(int type, QString uuid, QString identity)
 {
     QMutexLocker locker(_shared->_apiLock);
 
@@ -152,7 +158,7 @@ QByteArray DownloadDatabaseImpl::GetFile(int type, QString uuid, QString identit
     return file_data.join();
 }
 
-QStringList DownloadDatabaseImpl::GetCompletedIdentity(int type, QString uuid)
+QStringList DownloadDatabase::GetCompletedIdentity(int type, QString uuid)
 {
     QMutexLocker locker(_shared->_apiLock);
 

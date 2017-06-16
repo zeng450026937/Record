@@ -32,30 +32,16 @@ bool SharedData::InitDb()
     QSqlQuery query(_db);
     bool ret(false);
 
-//     ret = query.exec("CREATE TABLE IF NOT EXISTS tb_conference ("
-//                      "id INTEGER PRIMARY KEY NOT NULL, "
-//                      "uuid varchar(255) UNIQUE NOT NULL, "
-//                      "title varchar(255) DEFAULT '', "
-//                      "content varchar(255) DEFAULT '', "
-//                      "members varchar(255) DEFAULT '', "
-//                      "devices varchar NOT NULL,"
-//                      "create_time varchar(255) NOT NULL DEFAULT '', "
-//                      "update_time varchar(255) NOT NULL DEFAULT '', "
-//                      "date varchar(255) DEFAULT '', "
-//                      "time varchar(255) DEFAULT '', "
-//                      "completed int DEFAULT '0' "
-//                       ")");
-
-    ret = query.exec("CREATE TABLE IF NOT EXISTS tb_download ("
-                     "type int DEFAULT '0', "
-                     "identity varchar(255) NOT NULL, "
-                     "uuid varchar(255) NOT NULL, "
-                     "meeting_time int DEFAULT '0', "
-                     "startpos int DEFAULT '0', "
-                     "status int DEFAULT '0', "
-                     "data_size int DEFAULT '0', "
-                     "data blob DEFAULT '' "
-                     ")");
+    ret = query.exec("CREATE TABLE IF NOT EXISTS tb_record_download ("
+                     "id INTEGER PRIMARY KEY NOT NULL, "
+                     "recordType int DEFAULT '0', "
+                     "file_uuid TEXT, "
+                     "conference_uuid TEXT, "
+                     "device_uuid TEXT, "
+                     "startpos INT DEFAULT '0', "
+                     "status INT DEFAULT '0', "
+                     "data_size INT DEFAULT '0', "
+                     "data blob)");
 
     ret = query.exec("CREATE TABLE IF NOT EXISTS tb_clip_file ("
                      "id INTEGER PRIMARY KEY NOT NULL, "

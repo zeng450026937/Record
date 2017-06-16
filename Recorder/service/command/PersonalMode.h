@@ -1,14 +1,14 @@
 ﻿#pragma once
 
 #include <QVariantList>
-#include <service/messager/CommandModeBase.h>
+#include <service/messager/CommandBase.h>
 
 
 class Config;
 class ConfServiceImpl;
 class MessageBase;
 class RecorderShared;
-class PersonalMode : public CommandModeBase
+class PersonalMode : public CommandBase
 {
     friend class ServiceThread;
 

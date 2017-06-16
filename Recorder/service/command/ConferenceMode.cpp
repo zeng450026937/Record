@@ -8,7 +8,7 @@
 #include "service/messager/message_base.h"
 #include "storage/include/clip_file_database.h"
 #include "storage/include/conferencedatabase.h"
-#include "storage/include/download_database.h"
+#include "storage/download_database_impl.h"
 #include "storage/include/templatedatabase.h"
 #include "service/conf_service_impl.h"
 #include "storage/database_impl.h"
@@ -18,14 +18,14 @@
 // #define CM_DOWNLOAD_FILE        "downloadFile"
 
 ConferenceMode::ConferenceMode(MessageBase *pMessage) : 
-    CommandModeBase(pMessage, "conference"),
+    CommandBase(pMessage),
     m_pConfig(Config::GetInstance()),
     m_pClipFileDB(NULL),
     m_pDownloadDB(NULL),
     m_pTemplateDB(nullptr)
 {
-    AddActionProc(PSL_GET_CONFERENCE_LIST, &ConferenceMode::GetConferenceListReply);
-    AddActionProc(CM_GET_TEMPLATE_LIST, &ConferenceMode::GetTemplateListReply);
+    AddActionProc(MB_CONFERENCE_MODE,PSL_GET_CONFERENCE_LIST, &ConferenceMode::GetConferenceListReply);
+    AddActionProc(MB_CONFERENCE_MODE,CM_GET_TEMPLATE_LIST, &ConferenceMode::GetTemplateListReply);
 }
 
 ConferenceMode::~ConferenceMode()
@@ -41,12 +41,12 @@ void ConferenceMode::SetDataBase(DataBase_Impl *pDatabase)
 
 void ConferenceMode::GetConferenceList()
 {
-    SendAction(PSL_GET_CONFERENCE_LIST, QJsonObject());
+    m_pMessage->sendMessage("conference", PSL_GET_CONFERENCE_LIST, QJsonObject());
 }
 
 void ConferenceMode::GetTemplateList()
 {
-    SendAction(CM_GET_TEMPLATE_LIST, QJsonObject());
+//    SendAction(CM_GET_TEMPLATE_LIST, QJsonObject());
 }
 
 void ConferenceMode::GetTemplateListReply(bool bResult, QJsonObject jsData)
@@ -72,9 +72,4 @@ void ConferenceMode::GetConferenceListReply(bool bResult, QJsonObject jsData)
             m_pRecrodShared->AddConferenceRecordInfo(varInfo.toMap());
         }
     }
-}
-
-void ConferenceMode::SendAction(const char *pAction, const QJsonObject &jsData)
-{
-    m_pMessage->sendMessage("conference", pAction, jsData);
 }

@@ -12,13 +12,13 @@
 #define PM_GET_ALL_PERSONAL_LIST    "getAllPersonalList"
 
 PersonalMode::PersonalMode(MessageBase *pMessage) : 
-    CommandModeBase(pMessage,"personal"),
+    CommandBase(pMessage),
     m_pConfig(Config::GetInstance()),
     m_pConfService(NULL),
     m_pRecordShared(nullptr)
 {
-    AddActionProc(PM_GET_PERSONAL_LIST, &PersonalMode::GetPersonalListReply);
-    AddActionProc(PM_GET_ALL_PERSONAL_LIST, &PersonalMode::GetPersonalListReply);
+    AddActionProc(MB_PERSONAL_MODE,PM_GET_PERSONAL_LIST, &PersonalMode::GetPersonalListReply);
+    AddActionProc(MB_PERSONAL_MODE,PM_GET_ALL_PERSONAL_LIST, &PersonalMode::GetPersonalListReply);
 }
 
 PersonalMode::~PersonalMode()

@@ -17,11 +17,11 @@ public:
 
     void showEvent(QShowEvent *event);
 
-public slots:
-    void show_dl(const QString& uuid);
-
-signals:
-    void redownload(const QString& uuid);
+// public slots:
+//     void show_dl(const QString& uuid);
+// 
+// signals:
+//     void redownload(const QString& uuid);
 
 private slots:
     void on_close();

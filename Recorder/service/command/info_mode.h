@@ -1,10 +1,10 @@
 ﻿#pragma once
 
 #include <QString>
-#include "../messager/CommandModeBase.h"
+#include "../messager/CommandBase.h"
 
 class MessageBase;
-class InfoMode : public CommandModeBase
+class InfoMode : public CommandBase
 {
 public:
 	InfoMode(MessageBase *pMessager);

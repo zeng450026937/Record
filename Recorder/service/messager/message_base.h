@@ -11,7 +11,8 @@
 class MessageBasePrivate;
 class MessageBase : public QObject
 {
-    friend class CommandModeBase;
+    friend class CommandBase;
+
 	Q_OBJECT
 public:
     explicit MessageBase(QObject *parent = 0);
@@ -66,15 +67,16 @@ public:
 
     enum ConnectionStatus
     {
-        CS_CONNECTION_OPENED,
-        CS_CONNECTION_CLOSED,
-        CS_CONNECTION_FAILED
+        CS_OPENED,
+        CS_CLOSED,
+        CS_FAILED
     };
 
-    void connectTo(const QString &qstrHeader, QString uri);
+    void connectTo(const QString &qstrHeader,const QString &qstrUri);
+
 signals:
     void connection_status(int iStatus);
-    void notify_binary(unsigned int size, QByteArray& content);
+    void notify_binary(QByteArray& content);
 
 public slots:
     void stopConnection(); 
@@ -82,10 +84,10 @@ public slots:
 
 private slots:
     void on_message_reply(QString qstrMessage);
-    void on_binary_message(unsigned int size,QByteArray content);
+    void on_binary_message(QByteArray content);
 
 private:
-    void AddMode(const QString &qstrModeName, CommandModeBase &commandMode);
+    void AddActionHandleObject(const QByteArray &qbaLocate, CommandBase &commandMode);
 
 private:
     MessageBasePrivate* d;

@@ -1,7 +1,9 @@
 #include "list_form.h"
-#include "ui_list_form.h"
 #include <QDateTime>
 #include <QDebug>
+#include <Recorder/recorder_shared.h>
+#include "ui_list_form.h"
+#include "scene_file_dl.h"
 
 ListForm::ListForm(QWidget *parent) :
     QWidget(parent),
@@ -49,8 +51,8 @@ void ListForm::update_display(const QVariantMap& info)
         ui->userGroupBox->hide();
     }
     else{
-        if(text != _info.value("userId").toString()){
-
+        if(text != _info.value("userId").toString())
+        {
             if(!ui->userGroupBox->isVisible())
                 ui->userGroupBox->show();
 
@@ -124,15 +126,33 @@ void ListForm::update_display(const QVariantMap& info)
 
 void ListForm::on_downloadButton_clicked()
 {
-    int completed = _info.value("completed").toInt();
+    if (!_info.value("completed").toBool())
+    {
+        Scene_File_DL promptDialog;
+        if (promptDialog.exec() == QDialog::Rejected)
+            return;
 
-    if(completed == 0){
-        QString uuid = _info.value("uuid").toString();
-        if(_info.contains("conference_uuid"))
-            uuid = _info.value("conference_uuid").toString();
-
-        emit button_clicked(uuid);
+        switch (_info["recordType"].toInt())
+        {
+        case RecorderShared::RT_PERSONAL:
+        case RecorderShared::RT_CONFERENCE:
+        case RecorderShared::RT_MOBILE:
+        default:
+            break;
+        }
     }
+
+    return;
+
+//     int completed = _info.value("completed").toInt();
+// 
+//     if(completed == 0){
+//         QString uuid = _info.value("uuid").toString();
+//         if(_info.contains("conference_uuid"))
+//             uuid = _info.value("conference_uuid").toString();
+// 
+//         emit button_clicked(uuid);
+//     }
 }
 
 void ListForm::on_downloadButton_pressed()

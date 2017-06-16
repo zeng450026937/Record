@@ -44,8 +44,8 @@ private:
     QString differentMonthDayReg(int startyear,QString startmonthStr,int startday,int endyear,QString endmonthStr,int endday);
 
 private slots:
-    void show_download_dlg(const QString& uuid);
-    void download_conference(const QString& uuid);
+//     void show_download_dlg(const QString& uuid);
+//     void download_conference(const QString& uuid);
 
     void clip_file_btn_clicked();
 
@@ -109,7 +109,7 @@ private:
     RecorderShared *_sharedData;
 
     Scene_File_Clip *_scene_file_clip;
-    Scene_File_DL   *_scene_file_dl;
+    // Scene_File_DL   *_scene_file_dl;
 
     QMenu       *filter_menu;
     QAction     *filter_action1;

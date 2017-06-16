@@ -12,11 +12,6 @@ public:
     explicit ListItemDelegate(QObject *parent = 0);
     ~ListItemDelegate();
 
-signals:
-    void download_item(const QString& uuid);
-private slots:
-    void receive_button_clicked(const QString& uuid);
-
 protected:
     virtual QWidget *createEditor(QWidget *parent,
                                   const QStyleOptionViewItem &option,

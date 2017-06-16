@@ -12,7 +12,6 @@ DataBase* GetDataBase(){
     return self;
 }
 
-
 DataBase* DataBase::CreateDB()
 {
     return GetDataBase();

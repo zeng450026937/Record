@@ -44,13 +44,13 @@ void UserServiceImpl::on_connection_status(int iStatus)
     switch(iStatus)
     {
     //common command
-    case MessageBase::CS_CONNECTION_OPENED:
+    case MessageBase::CS_OPENED:
         emit loginResult(QString());
         this->killTimer(_connect_monitor);
         _connect_monitor = 0;
         _warning = true;
         break;
-    case MessageBase::CS_CONNECTION_FAILED:
+    case MessageBase::CS_FAILED:
 		if (_warning) 
         {
             emit loginResult(QObject::tr("连接服务失败"));
@@ -60,7 +60,7 @@ void UserServiceImpl::on_connection_status(int iStatus)
         }
 		_message->stopConnection();
         break;
-    case MessageBase::CS_CONNECTION_CLOSED:
+    case MessageBase::CS_CLOSED:
 		if (_warning)
         {
 			emit loginResult(QObject::tr("服务器断开连接,程序进行自动重连"));

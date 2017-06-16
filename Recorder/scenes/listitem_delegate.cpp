@@ -24,11 +24,6 @@ QWidget *ListItemDelegate::createEditor(QWidget *parent,
     return QStyledItemDelegate::createEditor(parent, option, index);
 }
 
-void ListItemDelegate::receive_button_clicked(const QString& uuid)
-{
-    emit download_item(uuid);
-}
-
 void ListItemDelegate::paint(QPainter *painter,
                    const QStyleOptionViewItem &option,
                    const QModelIndex &index) const
@@ -41,7 +36,6 @@ void ListItemDelegate::paint(QPainter *painter,
         {
             ListForm* widget = new ListForm();
             view->setIndexWidget( index, widget );
-            QObject::connect(widget,SIGNAL(button_clicked(QString)),this,SLOT(receive_button_clicked(QString)));
         }
         else{
             ListForm *widget = qobject_cast<ListForm*>(view->indexWidget(index));

@@ -10,10 +10,10 @@
 #define IMAC_HEART_BEAT         "heartBeat"
 #define IMAC_GET_DEVICE_LIST    "getDeviceList"
 
-InfoMode::InfoMode(MessageBase *pMessager) : CommandModeBase(pMessager,"info")
+InfoMode::InfoMode(MessageBase *pMessager) : CommandBase(pMessager)
 {
-    AddActionProc(IMAC_HEART_BEAT, &InfoMode::HandleHeartBeat);
-    AddActionProc(IMAC_GET_DEVICE_LIST, &InfoMode::GetDeviceListReply);
+    AddActionProc(MB_INFO_MODE,IMAC_HEART_BEAT, &InfoMode::HandleHeartBeat);
+    AddActionProc(MB_INFO_MODE,IMAC_GET_DEVICE_LIST, &InfoMode::GetDeviceListReply);
 }
 
 InfoMode::~InfoMode()

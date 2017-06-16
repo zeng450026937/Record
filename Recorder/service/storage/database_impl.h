@@ -21,7 +21,7 @@ class DataBase_Impl : public SharedData,
                       public DeviceDatabase_Impl,
                       public TemplateDatabase_Impl,
                       public UserDatabase_Impl,
-                      public DownloadDatabaseImpl,
+                      public DownloadDatabase,
                       public ClipFileDatabaseImpl,
                       public PersonalDatabaseImpl
 {
@@ -32,7 +32,7 @@ public:
                     DeviceDatabase_Impl(this),
                     TemplateDatabase_Impl(this),
                     UserDatabase_Impl(this),
-                    DownloadDatabaseImpl(this),
+                    DownloadDatabase(this),
                     ClipFileDatabaseImpl(this),
                     PersonalDatabaseImpl(this),
                     _ref_count(0){}

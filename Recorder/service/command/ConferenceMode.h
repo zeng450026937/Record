@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QMap>
-#include <service/messager/CommandModeBase.h>
+#include <service/messager/CommandBase.h>
 
 class Config;
 class MessageBase;
@@ -12,7 +12,7 @@ class ClipFileDatabase;
 class TemplateDatabase;
 class ConfServiceImpl;
 class RecorderShared;
-class ConferenceMode : public CommandModeBase
+class ConferenceMode : public CommandBase
 {
     friend class ServiceThread;
 
@@ -42,11 +42,11 @@ private:
     };
 
 private:
-    void DownloadFileReply(bool bResult, QJsonObject jsData); 
+    // void DownloadFileReply(bool bResult, QJsonObject jsData); 
 
     void GetTemplateListReply(bool bResult, QJsonObject jsData);
     void GetConferenceListReply(bool bResult, QJsonObject jsData);
-    void SendAction(const char *pAction, const QJsonObject &jsData);
+  //  void SendAction(const char *pAction, const QJsonObject &jsData);
 
 
     RecorderShared      *m_pRecrodShared;

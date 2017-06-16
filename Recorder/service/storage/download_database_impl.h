@@ -1,34 +1,40 @@
-#ifndef DOWNLOADDATABASEIMPL_H
-#define DOWNLOADDATABASEIMPL_H
+#pragma once
 
-#include "include/download_database.h"
-
+#include <QString>
+class DataBase;
 class SharedData;
 
-class DownloadDatabaseImpl : public DownloadDatabase
+class DownloadDatabase
 {
 public:
+    static DownloadDatabase* GetInterface(DataBase* db);
+
+    int InsertDownloadInfo(int iRecordType,
+                            const QString &qstrFileUuid,
+                            const QString &qstrConferenceUuid,
+                            const QString &qstrDeviceUuid);
+
     int AddSegment(int type, QString identity,
                    QString uuid, int meeting_time,
                    int startpos, int status,
-                   int data_size, QByteArray& data) override;
+                   int data_size, QByteArray& data);
 
-    int RemoveFile(int type, QString uuid, QString identity) override;
-    int RemoveConf(int type, QString uuid) override;
+    int RemoveFile(int type, QString uuid, QString identity);
+    int RemoveConf(int type, QString uuid);
 
-    int GetFileSize(int type, QString uuid, QString identity) override;
-    int GetConfSize(int type, QString uuid) override;
-    QByteArray GetFile(int type, QString uuid, QString identity) override;
+    int GetFileSize(int type, QString uuid, QString identity);
+    int GetConfSize(int type, QString uuid);
+    QByteArray GetFile(int type, QString uuid, QString identity);
 
-    QStringList GetCompletedIdentity(int type, QString uuid) override;
+    QStringList GetCompletedIdentity(int type, QString uuid);
 
+    virtual int Release() = 0;
 protected:
-    DownloadDatabaseImpl(SharedData* shared):_shared(shared)
+    DownloadDatabase(SharedData* shared):_shared(shared)
     {}
-    ~DownloadDatabaseImpl() override {}
+    virtual ~DownloadDatabase()
+    {}
 
 private:
     SharedData* _shared;
 };
-
-#endif // DOWNLOADDATABASEIMPL_H

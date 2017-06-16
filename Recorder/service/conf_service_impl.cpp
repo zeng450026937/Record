@@ -8,7 +8,7 @@
 #include "storage/include/device_database.h"
 #include "storage/include/markdatabase.h"
 #include "storage/include/conferencedatabase.h"
-#include "storage/include/download_database.h"
+#include "storage/download_database_impl.h"
 #include "storage/include/clip_file_database.h"
 #include "storage/include/personal_database.h"
 #include "recorder_shared.h"
@@ -26,7 +26,7 @@ ConfServiceImpl::ConfServiceImpl(ServiceThreadPrivate* shared, QObject *parent) 
     _update_timer(0),
     auto_download(false)
 {
-    QObject::connect(_shared->Messager(),SIGNAL(notify_binary(uint,QByteArray&)),this,SLOT(parseBinary(uint,QByteArray&)),Qt::DirectConnection);
+   //  QObject::connect(_shared->Messager(),SIGNAL(notify_binary(uint,QByteArray&)),this,SLOT(parseBinary(uint,QByteArray&)),Qt::DirectConnection);
 
     this->setDownloadFolder("./OUT");
 

@@ -13,7 +13,6 @@
 #include "config.h"
 #include "scene_buttondelegate.h"
 #include "scene_file_clip.h"
-#include "scene_file_dl.h"
 #include "scene_record_warning.h"
 #include "listitem_delegate.h"
 #include "service/service_thread.h"
@@ -31,7 +30,7 @@ Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent) :
     sortFilter_proxyModel(new QSortFilterProxyModel(this)),
     _player(new QtAV::AVPlayer(this)),
     _scene_file_clip(new Scene_File_Clip(sharedData)),
-    _scene_file_dl(new Scene_File_DL),
+    // _scene_file_dl(new Scene_File_DL),
     _time_unit(1000),
     _duration(0),
     _offset(0),
@@ -71,7 +70,7 @@ Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent) :
     this->init_play_info();
 
     connect(_scene_file_clip,SIGNAL(output_file(QString,int)),this,SLOT(clip_finished(QString,int)));
-    connect(_scene_file_dl,SIGNAL(redownload(QString)),this,SLOT(download_conference(QString)));
+    // connect(_scene_file_dl,SIGNAL(redownload(QString)),this,SLOT(download_conference(QString)));
 
     connect(ui->time_slider,SIGNAL(select_value_changed(int)),this,SLOT(time_slider_selected_changed(int)));
     connect(ui->time_slider,SIGNAL(set_value_changed(int)),this,SLOT(time_slider_set_changed(int)));
@@ -100,9 +99,9 @@ Scene_File::~Scene_File()
         delete _scene_file_clip;
     }
 
-    if(_scene_file_dl){
-        delete _scene_file_dl;
-    }
+//     if(_scene_file_dl){
+//         delete _scene_file_dl;
+//     }
 
     delete ui;
 }
@@ -191,7 +190,7 @@ void Scene_File::init_model()
 
     ListItemDelegate* itemDelegate = new ListItemDelegate(this);
     ui->file_listView->setItemDelegateForColumn(0,itemDelegate);
-    connect(itemDelegate,SIGNAL(download_item(QString)),this,SLOT(show_download_dlg(QString)));
+    // connect(itemDelegate,SIGNAL(download_item(QString)),this,SLOT(show_download_dlg(QString)));
 
     ui->file_mark_tableView->verticalHeader()->hide();
     ui->file_mark_tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -625,21 +624,21 @@ void Scene_File::on_clearBtn_clicked()
     }
 }
 
-void Scene_File::show_download_dlg(const QString& uuid)
-{
-    if (_scene_file_dl == nullptr){
-        _scene_file_dl = new Scene_File_DL();
-    }
+//void Scene_File::show_download_dlg(const QString& uuid)
+//{
+//     if (_scene_file_dl == nullptr){
+//         _scene_file_dl = new Scene_File_DL();
+//     }
 
-    QPoint pos = this->parentWidget()->parentWidget()->parentWidget()->geometry().topLeft() + ui->file_listView->geometry().center();
-    _scene_file_dl->move(pos.x() - _scene_file_dl->width() / 2, pos.y() - _scene_file_dl->height() / 2);
-
-    _scene_file_dl->show_dl(uuid);
-}
-void Scene_File::download_conference(const QString& uuid)
-{
-    _sharedData->DownLoadConference( _type ,uuid );
-}
+//     QPoint pos = this->parentWidget()->parentWidget()->parentWidget()->geometry().topLeft() + ui->file_listView->geometry().center();
+//     _scene_file_dl->move(pos.x() - _scene_file_dl->width() / 2, pos.y() - _scene_file_dl->height() / 2);
+// 
+//     _scene_file_dl->show_dl(uuid);
+//}
+// void Scene_File::download_conference(const QString& uuid)
+// {
+//     _sharedData->DownLoadConference( _type ,uuid );
+// }
 
 void Scene_File::clip_file_btn_clicked()
 {

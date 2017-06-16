@@ -47,7 +47,6 @@ PersonalMode * ServiceThread::GetPersonalMode()
         _private->_pPersonalMode = new PersonalMode(GetMessager());
         _private->_pPersonalMode->m_pConfService = GetConfService();
         _private->_pPersonalMode->m_pRecordShared = GetRecordShared();
-        _private->_pPersonalMode->SetDataBase(static_cast<DataBase_Impl*>(_private->_db));        
         _private->_pPersonalMode->moveToThread(this);
     }
 

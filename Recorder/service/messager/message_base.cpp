@@ -1,10 +1,11 @@
-
+﻿
 #include "message_base.h"
 #include <assert.h>
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include "CommandModeBase.h"
+#include <QByteArray>
+#include "CommandBase.h"
 #include "common/config.h"
 #include "message_base_private.h"
 #include "network_info.h"
@@ -13,8 +14,8 @@
 MessageBase::MessageBase(QObject *parent)
     : QObject(parent), d(new MessageBasePrivate) {
   qRegisterMetaType<QByteArray>();
-  connect(d->_client, SIGNAL(binary_message(uint, QByteArray)), this,
-          SLOT(on_binary_message(uint, QByteArray)), Qt::QueuedConnection);
+  connect(d->_client, SIGNAL(binary_message(QByteArray)), this,
+          SLOT(on_binary_message(QByteArray)), Qt::QueuedConnection);
   connect(d->_client, SIGNAL(text_message(QString)), this,
           SLOT(on_message_reply(QString)), Qt::QueuedConnection);
   bool bRes = connect(d->_client, SIGNAL(connection_status(int)), this,
@@ -53,44 +54,54 @@ void MessageBase::on_message_reply(QString qstrMessage) {
       QJsonDocument::fromJson(qstrMessage.toUtf8(), &error);
   if (error.error == QJsonParseError::NoError) {
     QJsonObject jsRoot = jsonDocument.object();
-    if (jsRoot["version"].toInt() == MB_MESSAGE_VERSION) {
+    if (jsRoot["version"].toInt() == MB_MESSAGE_VERSION)
+    {
       QJsonObject jsCommand = jsRoot["command"].toObject();
-      auto itrFound = d->mapMode.find(jsCommand["mode"].toString());
-      if (itrFound == d->mapMode.end()) {
-        // 所有不符合规则的响应都会在这里结束，包括 不存在"command" json对象时。
+      QByteArray baActionLocator;
+      baActionLocator.append(jsCommand["mode"].toString());
+      baActionLocator.append(jsCommand["action"].toString());
+      auto itrFound = d->mapMode.find(baActionLocator);
+      if (itrFound == d->mapMode.end()) 
+      {
+        // 鎵€鏈変笉绗﹀悎瑙勫垯鐨勫搷搴旈兘浼氬湪杩欓噷缁撴潫锛屽寘鎷?涓嶅瓨鍦?command" json瀵硅薄鏃躲€?
         qDebug() << jsCommand["mode"].toString()
                  << " command mode is not found." << error.errorString();
         return;
       }
 
       qDebug() << jsCommand;
-      emit itrFound->second->action_trigger(jsCommand["action"].toString(),
+      emit itrFound->second->action_trigger(baActionLocator,
                                             jsRoot["result"].toBool(),
                                             jsRoot["data"].toObject());
     } else {
-      int i = 0;
-      // TODO: 提示协议与服务端通讯协议版本不匹配。
+
+      // TODO: 鎻愮ず鍗忚涓庢湇鍔＄閫氳鍗忚鐗堟湰涓嶅尮閰嶃€?
     }
   } else {
     qDebug() << "json command parse failed" << error.errorString();
   }
 }
-void MessageBase::on_binary_message(unsigned int size, QByteArray content) {
-  Q_UNUSED(size);
-  auto itrFound = d->mapMode.find(QStringLiteral("binary"));
-  if (itrFound == d->mapMode.end()) {
-    // 所有不符合规则的响应都会在这里结束，包括 不存在"command" json对象时。
-    qDebug() << "binary mode is not found.";
-    return;
-  }
 
-  emit itrFound->second->binary_received(content);
+void MessageBase::on_binary_message(QByteArray content) 
+{
+//   auto itrFound = d->mapMode.find(QStringLiteral("binary"));
+//   if (itrFound == d->mapMode.end()) {
+//     // 鎵€鏈変笉绗﹀悎瑙勫垯鐨勫搷搴旈兘浼氬湪杩欓噷缁撴潫锛屽寘鎷?涓嶅瓨鍦?command" json瀵硅薄鏃躲€?
+//     qDebug() << "binary mode is not found.";
+//     return;
+//   }
+
 }
 
-void MessageBase::connectTo(const QString &qstrHeader, QString uri) {
-  d->_client->connect_to(qstrHeader.toStdString(), uri.toStdString());
+void MessageBase::connectTo(const QString &qstrHeader, const QString &qstrUri)
+{
+  d->_client->connect_to(qstrHeader.toStdString(), qstrUri.toStdString());
 }
-void MessageBase::stopConnection() { d->_client->stop_connect(); }
+
+void MessageBase::stopConnection() 
+{
+    d->_client->stop_connect(); 
+}
 
 void MessageBase::sendCommand(CommandList command, QString receiver,
                               const QVariantMap &data) {
@@ -106,9 +117,10 @@ void MessageBase::sendCommand(CommandList command, QString receiver,
   d->_client->sendText(jsonDocument.toJson().toStdString());
 }
 
-void MessageBase::AddMode(const QString &qstrModeName,
-                          CommandModeBase &commandMode) {
-  assert(d->mapMode.find(qstrModeName) == d->mapMode.end());
-  d->mapMode.insert(std::map<QString, CommandModeBase *>::value_type(
-      QString(qstrModeName), &commandMode));
+void MessageBase::AddActionHandleObject(const QByteArray &qbaLocate,
+                          CommandBase &commandMode)
+{
+  assert(d->mapMode.find(qbaLocate) == d->mapMode.end());
+  d->mapMode.insert(std::map<QByteArray, CommandBase *>::value_type(
+      qbaLocate, &commandMode));
 }

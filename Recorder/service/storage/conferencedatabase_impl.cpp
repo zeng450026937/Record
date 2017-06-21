@@ -29,7 +29,7 @@ int ConferenceDatabase_Impl::AddConference(QVariantMap& conference)
                   "devices, create_time, update_time, date, time, completed) "
                 "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    // TODO id ºÍ status Á½¸ö×Ö¶ÎÃ»ÓÐ¼ÇÂ¼
+    // TODO id å’Œ status ä¸¤ä¸ªå­—æ®µæ²¡æœ‰è®°å½•
     query.addBindValue( conference.value("uuid").toString() );
     query.addBindValue( conference.value("title").toString() );
     query.addBindValue( conference.value("content").toString() );

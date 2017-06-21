@@ -27,7 +27,10 @@ HEADERS += \
     $$PWD/device_list_delegate_a.h \
     $$PWD/device_list_item_a.h \
     $$PWD/login_form.h \
-    $$PWD/notify_dialog.h
+    $$PWD/notify_dialog.h \
+    $$PWD/conf_detail.h \
+    $$PWD/conf_form.h \
+    $$PWD/file_list_form.h
 
 SOURCES += \
     $$PWD/scene_record_warning.cpp \
@@ -53,7 +56,10 @@ SOURCES += \
     $$PWD/device_list_delegate_a.cpp \
     $$PWD/device_list_item_a.cpp \
     $$PWD/login_form.cpp \
-    $$PWD/notify_dialog.cpp
+    $$PWD/notify_dialog.cpp \
+    $$PWD/conf_detail.cpp \
+    $$PWD/conf_form.cpp \
+    $$PWD/file_list_form.cpp
 
 FORMS    += \
     $$PWD/scene_record_warning.ui \
@@ -71,4 +77,7 @@ FORMS    += \
     $$PWD/template_list_item_a.ui \
     $$PWD/device_list_item_a.ui \
     $$PWD/login_form.ui \
-    $$PWD/notify_dialog.ui
+    $$PWD/notify_dialog.ui \
+    $$PWD/conf_detail.ui \
+    $$PWD/conf_form.ui \
+    $$PWD/file_list_form.ui

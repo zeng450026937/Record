@@ -1,133 +1,107 @@
 #include "service_thread.h"
-#include "conf_service_impl.h"
-#include "user_service_impl.h"
-#include "service_thread_private.h"
-#include "command/info_mode.h"
+#include <recorder_shared.h>
 #include "command/ConferenceMode.h"
 #include "command/PersonalMode.h"
+#include "command/info_mode.h"
+#include "conf_service_impl.h"
+#include "service_thread_private.h"
 #include "storage/database_impl.h"
-#include <recorder_shared.h>
+#include "user_service_impl.h"
 
-ServiceThread *ServiceThreadPrivate::s_pServiceSingleton = nullptr;
+ServiceThread* ServiceThreadPrivate::s_pServiceSingleton = nullptr;
 
-ServiceThread::ServiceThread(QObject *parent) :
-    QThread(parent),
-	_private(nullptr)
-{
+ServiceThread::ServiceThread(QObject* parent)
+    : QThread(parent), _private(nullptr) {}
+
+ServiceThread::~ServiceThread() {
+  if (this->isRunning()) {
+    this->quit();
+    this->wait();
+  }
+
+  if (_private) delete _private;
 }
 
-ServiceThread::~ServiceThread()
-{
-    if(this->isRunning()){
-        this->quit();
-        this->wait();
-    }
-
-    if (_private)
-        delete _private;
+void ServiceThread::Uninstance() {
+  delete ServiceThreadPrivate::s_pServiceSingleton;
+  ServiceThreadPrivate::s_pServiceSingleton = nullptr;
 }
 
-void ServiceThread::Uninstance()
-{
-    delete ServiceThreadPrivate::s_pServiceSingleton;
-    ServiceThreadPrivate::s_pServiceSingleton = nullptr;
+ConferenceMode* ServiceThread::GetConferenceMode() {
+  if (_private->_pConferenceMode == nullptr) {
+    _private->_pConferenceMode = new ConferenceMode(GetMessager());
+    _private->_pConferenceMode->m_pRecrodShared = GetRecordShared();
+    _private->_pConferenceMode->moveToThread(this);
+    _private->_pConferenceMode->SetDataBase(
+        static_cast<DataBase_Impl*>(_private->_db));
+  }
+
+  return _private->_pConferenceMode;
 }
 
-ConferenceMode * ServiceThread::GetConferenceMode()
-{
-    if (_private->_pConferenceMode == nullptr)
-    {
-        _private->_pConferenceMode = new ConferenceMode(GetMessager());
-        _private->_pConferenceMode->m_pRecrodShared = GetRecordShared();
-        _private->_pConferenceMode->moveToThread(this);
-    }
+PersonalMode* ServiceThread::GetPersonalMode() {
+  if (_private->_pPersonalMode == nullptr) {
+    _private->_pPersonalMode = new PersonalMode(GetMessager());
+    _private->_pPersonalMode->m_pConfService = GetConfService();
+    _private->_pPersonalMode->m_pRecordShared = GetRecordShared();
+    _private->_pPersonalMode->moveToThread(this);
+  }
 
-    return _private->_pConferenceMode;
+  return _private->_pPersonalMode;
 }
 
-PersonalMode * ServiceThread::GetPersonalMode()
-{
-    if (_private->_pPersonalMode == nullptr)
-    {
-        _private->_pPersonalMode = new PersonalMode(GetMessager());
-        _private->_pPersonalMode->m_pConfService = GetConfService();
-        _private->_pPersonalMode->m_pRecordShared = GetRecordShared();
-        _private->_pPersonalMode->moveToThread(this);
-    }
+ServiceThread* ServiceThread::ServiceThread::GetInstance() {
+  if (nullptr == ServiceThreadPrivate::s_pServiceSingleton) {
+    ServiceThreadPrivate::s_pServiceSingleton = new ServiceThread();
+  }
 
-    return _private->_pPersonalMode;
+  return ServiceThreadPrivate::s_pServiceSingleton;
 }
 
-ServiceThread * ServiceThread::ServiceThread::GetInstance()
-{
-	if (nullptr == ServiceThreadPrivate::s_pServiceSingleton)
-	{
-        ServiceThreadPrivate::s_pServiceSingleton = new ServiceThread();
-	}
+InfoMode* ServiceThread::GetInfoMode() {
+  if (nullptr == _private->_info_mode) {
+    _private->_info_mode = new InfoMode(GetMessager());
+    _private->_info_mode->m_pRecordShared = GetRecordShared();
+    _private->_info_mode->moveToThread(this);
+  }
 
-	return ServiceThreadPrivate::s_pServiceSingleton;
+  return _private->_info_mode;
 }
 
-InfoMode * ServiceThread::GetInfoMode()
-{
-    if (nullptr == _private->_info_mode)
-    {
-        _private->_info_mode = new InfoMode(GetMessager());
-        _private->_info_mode->moveToThread(this);
-    }
+AccountCenter* ServiceThread::GetAccountCenter() { return _private->_account; }
 
-	return _private->_info_mode;
+WhiteList* ServiceThread::GetLoginWhiteList() { return _private->_white_list; }
+
+MessageBase* ServiceThread::GetMessager() { return _private->_messager; }
+
+ConfServiceImpl* ServiceThread::GetConfService() {
+  return _private->_conf_service;
 }
 
-AccountCenter * ServiceThread::GetAccountCenter()
-{
-	return _private->_account;
+UserServiceImpl* ServiceThread::GetUserService() {
+  return _private->_user_service;
 }
 
-WhiteList	* ServiceThread::GetLoginWhiteList()
-{
-	return _private->_white_list;
+RecorderShared* ServiceThread::GetRecordShared() {
+  if (nullptr == _private->_record_shared) {
+    _private->_record_shared = new RecorderShared();
+  }
+
+  return _private->_record_shared;
 }
 
-MessageBase * ServiceThread::GetMessager()
-{
-	return _private->_messager;
+DownloadDatabase* ServiceThread::GetDownloadDB() {
+  return _private->_download_db;
 }
 
-ConfServiceImpl* ServiceThread::GetConfService()
-{
-    return _private->_conf_service;
-}
+void ServiceThread::run() {
+  _private =
+      new ServiceThreadPrivate();  // åœ¨è¿™é‡Œåˆå§‹åŒ–æ˜¯ä¸ºäº†è®©å¯¹è±¡çš„æ§½åœ¨è¿™ä¸ªçº¿ç¨‹ä¸­å¤„ç†ã€‚
 
-UserServiceImpl* ServiceThread::GetUserService()
-{
-    return _private->_user_service;
-}
+  _private->_conf_service = new ConfServiceImpl(_private);
+  _private->_user_service = new UserServiceImpl(this);
 
-RecorderShared * ServiceThread::GetRecordShared()
-{
-    if (nullptr == _private->_record_shared)
-    {
-        _private->_record_shared = new RecorderShared();
-    }
+  if (_private != nullptr) emit service_ready();
 
-    return _private->_record_shared;
-}
-
-DownloadDatabase * ServiceThread::GetDownloadDB()
-{
-    return _private->_download_db;
-}
-
-void ServiceThread::run()
-{
-	_private = new ServiceThreadPrivate(); // ÔÚÕâÀï³õÊ¼»¯ÊÇÎªÁËÈÃ¶ÔÏóµÄ²ÛÔÚÕâ¸öÏß³ÌÖÐ´¦Àí¡£
-
-	_private->_conf_service = new ConfServiceImpl(_private);
-	_private->_user_service = new UserServiceImpl(this);
-    
-    if(_private != nullptr)
-		emit service_ready();
-
-    this->exec();
+  this->exec();
 }

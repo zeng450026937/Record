@@ -1,19 +1,29 @@
-﻿#pragma once
+#pragma once
 
+#include <QString>
 #include "../messager/CommandBase.h"
 
 class MessageBase;
-class InfoMode : public CommandBase
-{
-public:
-	InfoMode(MessageBase *pMessager);
-	~InfoMode();
+class RecorderShared;
+class InfoMode : public CommandBase {
+  friend class ServiceThread;
 
-    void ConnectToServer();
+ public:
+  InfoMode(MessageBase *pMessager);
+  ~InfoMode();
 
-protected:
-    
-private:
-    void HandleHeartBeat(bool bResult,const QJsonObject &jsData);
+  void ConnectToServer();
+
+  void GetDeviceList();
+
+ protected:
+ private:
+  void GetDeviceListReply(bool bResult, const QJsonObject &jsData);
+
+  void HandleHeartBeat(bool bResult, const QJsonObject &jsData);
+
+  void SendAction(const char *pAction, const QJsonObject &jsData);
+
+ private:
+  RecorderShared *m_pRecordShared;
 };
-

@@ -28,8 +28,6 @@ HEADERS += \
     $$PWD/storage/include/markdatabase.h \
     $$PWD/storage/include/templatedatabase.h \
     $$PWD/storage/include/user_database.h \
-    $$PWD/storage/include/download_database.h \
-    $$PWD/storage/download_database_impl.h \
     $$PWD/storage/include/clip_file_database.h \
     $$PWD/storage/clip_file_database_impl.h \
     $$PWD/storage/include/personal_database.h \
@@ -39,10 +37,11 @@ HEADERS += \
     $$PWD/messager/wavheader.h \
     $$PWD/command/info_mode.h \
     $$PWD/command/ConferenceMode.h \
-    $$PWD/command/info_mode.h \
     $$PWD/command/PersonalMode.h \
-    $$PWD/messager/CommandModeBase.h \
-    $$PWD/command/binary_mode.h
+    $$PWD/messager/CommandBase.h \
+    $$PWD/command/RecordDownloadReceiver.h \
+    $$PWD/command/RecordDownloadService.h \
+    $$PWD/storage/download_database.h
 
 
 SOURCES += \
@@ -63,15 +62,15 @@ SOURCES += \
     $$PWD/storage/shareddata.cpp \
     $$PWD/storage/templatedatabase_impl.cpp \
     $$PWD/storage/user_database_impl.cpp \
-    $$PWD/storage/download_database_impl.cpp \
     $$PWD/storage/clip_file_database_impl.cpp \
     $$PWD/storage/personal_database_impl.cpp \
     $$PWD/account/account_center.cpp \
     $$PWD/messager/wavheader.cpp \
     $$PWD/command/info_mode.cpp \
     $$PWD/command/ConferenceMode.cpp \
-    $$PWD/command/info_mode.cpp \
     $$PWD/command/PersonalMode.cpp \
-    $$PWD/messager/CommandModeBase.cpp \
-    $$PWD/command/binary_mode.cpp
+    $$PWD/messager/CommandBase.cpp \
+    $$PWD/command/RecordDownloadReceiver.cpp \
+    $$PWD/command/RecordDownloadService.cpp \
+    $$PWD/storage/download_database.cpp
 

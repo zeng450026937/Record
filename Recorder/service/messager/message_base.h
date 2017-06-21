@@ -14,6 +14,7 @@ class MessageBase : public QObject
     friend class CommandBase;
 
 	Q_OBJECT
+
 public:
     explicit MessageBase(QObject *parent = 0);
     ~MessageBase();
@@ -76,7 +77,7 @@ public:
 
 signals:
     void connection_status(int iStatus);
-    void notify_binary(QByteArray& content);
+    void notify_binary(QByteArray content);
 
 public slots:
     void stopConnection(); 
@@ -84,7 +85,6 @@ public slots:
 
 private slots:
     void on_message_reply(QString qstrMessage);
-    void on_binary_message(QByteArray content);
 
 private:
     void AddActionHandleObject(const QByteArray &qbaLocate, CommandBase &commandMode);

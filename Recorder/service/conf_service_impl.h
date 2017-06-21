@@ -83,7 +83,7 @@ public slots:
 
     void getDeviceInfoList() ;
 
-    void downloadConference(int type, QString qstrConferenceUuid) ;
+    // void downloadConference(int type, QString qstrConferenceUuid) ;
 
     void setDownloadFolder(QString folder) ;
 
@@ -113,14 +113,14 @@ public:
 
 protected slots:
     void parseCommand(int command, bool result, QVariantMap& info);
-    void parseBinary(unsigned int size, QByteArray& content);
+    // void parseBinary(unsigned int size, QByteArray& content);
 
 protected:
     void Execute(int command, QVariantMap param);
     // void downloadFile(int type, QString uuid, QString identity);
     // void downloadNextFile(QString uuid, QString identity);
-    void queryBinary(int type, QString qstrConferenceUuid, QString identity);
-    void monitorDownload(int type, QString qstrConferenceUuid, QString identity, int data_size);
+    //void queryBinary(int type, QString qstrConferenceUuid, QString identity);
+    // void monitorDownload(int type, QString qstrConferenceUuid, QString identity, int data_size);
     void monitorDisconnect(int type, QString qstrConferenceUuid, QString identity, int percentage, int data_size, bool completed);
     bool checkConferenceAlive(int type, QString qstrConferenceUuid);
     int  checkConferenceFile(QString qstrConferenceUuid, QStringList& exists, QStringList& missing);

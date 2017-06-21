@@ -27,6 +27,12 @@ ServiceThread::~ServiceThread()
         delete _private;
 }
 
+void ServiceThread::Uninstance()
+{
+    delete ServiceThreadPrivate::s_pServiceSingleton;
+    ServiceThreadPrivate::s_pServiceSingleton = nullptr;
+}
+
 ConferenceMode * ServiceThread::GetConferenceMode()
 {
     if (_private->_pConferenceMode == nullptr)
@@ -107,6 +113,11 @@ RecorderShared * ServiceThread::GetRecordShared()
     }
 
     return _private->_record_shared;
+}
+
+DownloadDatabase * ServiceThread::GetDownloadDB()
+{
+    return _private->_download_db;
 }
 
 void ServiceThread::run()

@@ -12,6 +12,7 @@ class PersonalMode;
 class ConferenceMode;
 class InfoMode;
 class RecorderShared;
+class DownloadDatabase;
 
 class ServiceThreadPrivate;
 class ServiceThread : public QThread
@@ -25,7 +26,8 @@ private:
 public:
 	~ServiceThread();
 
-	static ServiceThread * GetInstance();
+    static ServiceThread * GetInstance();
+    static void Uninstance();
 
     ConferenceMode  *GetConferenceMode();
     PersonalMode    *GetPersonalMode();
@@ -38,6 +40,8 @@ public:
 	UserServiceImpl*    GetUserService();
 
     RecorderShared  *GetRecordShared();
+
+    DownloadDatabase *GetDownloadDB();
 
 	ServiceThreadPrivate* _private;
 signals:

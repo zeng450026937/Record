@@ -2,24 +2,30 @@
 #include <QDateTime>
 #include <QDebug>
 #include <Recorder/recorder_shared.h>
+#include <service/command/RecordDownloadService.h>
 #include "ui_list_form.h"
 #include "scene_file_dl.h"
 
-ListForm::ListForm(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::ListForm)
+ListForm::ListForm() :
+    RecordDownloadReceiver(),
+    ui(new Ui::ListForm),
+    _download_status(DS_UNEXSITS)
 {
     ui->setupUi(this);
 
     QIcon icon = QIcon(":/resource/u620.png");
     ui->downloadButton->setIcon(icon);
     ui->downloadButton->setIconSize(ui->downloadButton->size());
+    ui->speedLabel->setVisible(false);
+    ui->percentageLabel->setVisible(false);
 
     ui->dateLabel->clear();
     ui->timeLabel->clear();
     ui->titleLabel->clear();
     ui->keywordLabel->clear();
     ui->locationLabel->clear();
+
+    connect(this, SIGNAL(downloading_tick(int, int)), this, SLOT(onDownloadingTick(int,int)));
 }
 
 ListForm::~ListForm()
@@ -29,9 +35,7 @@ ListForm::~ListForm()
 
 void ListForm::update_display(const QVariantMap& info)
 {
-    QString text;
-
-    text = info.value("date").toString();
+    QString text = info.value("date").toString();
     if(text != _info.value("date").toString()){
         ui->dateLabel->setText(QDate::fromString(text, "yyyy-MM-dd")
             .toString("yyyy年MM月dd\346\227\245"));
@@ -69,50 +73,21 @@ void ListForm::update_display(const QVariantMap& info)
             ui->keywordLabel->setText(text);
     }
 
-    int completed = info.value("completed").toInt();
-
-    if(completed == 2){
-        ui->speedLabel->setVisible(true);
-        ui->percentageLabel->setVisible(true);
-    }
-    else{
-        ui->speedLabel->setVisible(false);
-        ui->percentageLabel->setVisible(false);
-    }
-
-    if(ui->speedLabel->isVisible()){
-
-        QString subfix = "KB/S";
-
-        int speed = info.value("speed").toInt();
-
-        if(speed >= 1024){
-            subfix = "M/S";
-            speed /= 1024;
-        }
-        ui->speedLabel->setText(QString::number(speed)+subfix);
-    }
-    if(ui->percentageLabel->isVisible()){
-
-        QString subfix = "%";
-
-        int percentage = info.value("percentage").toInt();
-
-        ui->percentageLabel->setText(QString::number(percentage)+subfix);
-    }
-
-    if(completed != _info.value("completed").toInt()){
-
+    if (_info.isEmpty())
+    {
         QIcon icon;
-
-        switch(completed){
-        case 0:
+        _download_status = GetDownloadStatus(info["fileUuid"].toString(),
+            info["conferenceUuid"].toString(),
+            info["deviceUuid"].toString());
+        switch (_download_status)
+        {
+        case DS_UNCOMPLETED:
             icon = QIcon(":/resource/u620.png");
             break;
-        case 1:
+        case DS_COMPELETED:
             icon = QIcon(":/resource/u579.png");
             break;
-        case 2:
+        case DS_UNEXSITS:
             icon = QIcon(":/resource/u1610.png");
             break;
         }
@@ -126,33 +101,33 @@ void ListForm::update_display(const QVariantMap& info)
 
 void ListForm::on_downloadButton_clicked()
 {
-    if (!_info.value("completed").toBool())
+    if (_download_status != DS_COMPELETED)
     {
         Scene_File_DL promptDialog;
         if (promptDialog.exec() == QDialog::Rejected)
             return;
-
+        
         switch (_info["recordType"].toInt())
         {
         case RecorderShared::RT_PERSONAL:
+            RecordDownloadService::GetInstance()->DownloadRecord(
+                this, RecorderShared::RT_PERSONAL,QString(),_info["conferenceUuid"].toString(),
+                _info["deviceUuid"].toString(), _info["createTime"].toString(),_info["fileExtension"].toString());
+            break;
         case RecorderShared::RT_CONFERENCE:
+            RecordDownloadService::GetInstance()->DownloadRecord(
+                this, RecorderShared::RT_CONFERENCE, QString(), _info["uuid"].toString(),
+                _info["deviceUuid"].toString(), _info["createTime"].toString(), _info["fileExtension"].toString());
+            break;
         case RecorderShared::RT_MOBILE:
+            RecordDownloadService::GetInstance()->DownloadRecord(
+                this, RecorderShared::RT_CONFERENCE, _info["fileUuid"].toString(), _info["conferenceUuid"].toString(),
+                _info["deviceUuid"].toString(), _info["createTime"].toString(), _info["fileExtension"].toString());
+            break;
         default:
             break;
         }
     }
-
-    return;
-
-//     int completed = _info.value("completed").toInt();
-// 
-//     if(completed == 0){
-//         QString uuid = _info.value("uuid").toString();
-//         if(_info.contains("conference_uuid"))
-//             uuid = _info.value("conference_uuid").toString();
-// 
-//         emit button_clicked(uuid);
-//     }
 }
 
 void ListForm::on_downloadButton_pressed()
@@ -171,4 +146,67 @@ void ListForm::on_downloadButton_released()
     size.setHeight( size.height()+5 );
 
     ui->downloadButton->setIconSize( size);
+}
+
+void ListForm::onDownloadingTick(int iPercent, int iDownloadPerSecond)
+{
+    if (iPercent == 100)
+    {
+        ui->speedLabel->setVisible(false);
+        ui->percentageLabel->setVisible(false);
+        ui->downloadButton->setIcon(QIcon(":/resource/u579.png"));
+        ui->downloadButton->setIconSize(ui->downloadButton->size());
+        return;
+    }
+
+#define DS_PB (1024LL*1024LL*1024LL*1024LL*1024LL)
+#define DS_TB (1024LL*1024LL*1024LL*1024LL)
+#define DS_GB (1024*1024*1024)
+#define DS_MB (1024*1024)
+#define DS_KB (1024)
+
+    ui->percentageLabel->setText(QString::number(iPercent) + "%");
+    char szData[16] = "NaUN/s";
+    if (iDownloadPerSecond >= DS_GB)
+    {
+        sprintf_s(szData, 16, "%.2lfGB/s", (double)iDownloadPerSecond / DS_GB);
+    }
+    else if (iDownloadPerSecond >= DS_MB)
+    {
+        sprintf_s(szData, 16, "%.2lfMB/s", (double)iDownloadPerSecond / DS_MB);
+    }
+    else if (iDownloadPerSecond >= DS_KB)
+    {
+        sprintf_s(szData, 16, "%.2lfKB/s", (double)iDownloadPerSecond / DS_KB);
+    }
+    else if (iDownloadPerSecond >= 0)
+    {
+        sprintf_s(szData, 16, "%dB/s", iDownloadPerSecond);
+    }
+    ui->speedLabel->setText(QString(szData));
+
+#undef DS_PB
+#undef DS_TB
+#undef DS_GB
+#undef DS_MB
+#undef DS_KB
+}
+
+#include "scenes/scene_record_warning.h"
+#include <QScreen>
+void ListForm::onDownloadPrompt(QString qstrInfo)
+{
+    if (qstrInfo.isEmpty())
+    {
+        ui->speedLabel->setVisible(true);
+        ui->percentageLabel->setVisible(true);
+        return;
+    }
+
+    ui->speedLabel->setVisible(false);
+    ui->percentageLabel->setVisible(false);
+    ui->downloadButton->setIcon(QIcon(":/resource/u620.png"));
+    ui->downloadButton->setIconSize(ui->downloadButton->size());
+    QPoint pos = QGuiApplication::primaryScreen()->geometry().center();
+    Scene_Record_Warning::ShowMessage(pos, qstrInfo);
 }

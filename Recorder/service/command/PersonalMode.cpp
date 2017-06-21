@@ -41,6 +41,8 @@ void PersonalMode::GetPersonalListReply(bool bResult, QJsonObject jsData)
 {
     if (bResult)
     {
+        QJsonDocument jsDoc(jsData);
+        QString qstr = jsDoc.toJson();
         QVariantList lsRecordInfo = jsData["list"].toVariant().toList();
         foreach(const auto &varInfo , lsRecordInfo)
         {

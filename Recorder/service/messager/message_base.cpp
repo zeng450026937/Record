@@ -15,7 +15,7 @@ MessageBase::MessageBase(QObject *parent)
     : QObject(parent), d(new MessageBasePrivate) {
   qRegisterMetaType<QByteArray>();
   connect(d->_client, SIGNAL(binary_message(QByteArray)), this,
-          SLOT(on_binary_message(QByteArray)), Qt::QueuedConnection);
+      SIGNAL(notify_binary(QByteArray)), Qt::QueuedConnection);
   connect(d->_client, SIGNAL(text_message(QString)), this,
           SLOT(on_message_reply(QString)), Qt::QueuedConnection);
   bool bRes = connect(d->_client, SIGNAL(connection_status(int)), this,
@@ -80,17 +80,6 @@ void MessageBase::on_message_reply(QString qstrMessage) {
   } else {
     qDebug() << "json command parse failed" << error.errorString();
   }
-}
-
-void MessageBase::on_binary_message(QByteArray content) 
-{
-//   auto itrFound = d->mapMode.find(QStringLiteral("binary"));
-//   if (itrFound == d->mapMode.end()) {
-//     // 鎵€鏈変笉绗﹀悎瑙勫垯鐨勫搷搴旈兘浼氬湪杩欓噷缁撴潫锛屽寘鎷?涓嶅瓨鍦?command" json瀵硅薄鏃躲€?
-//     qDebug() << "binary mode is not found.";
-//     return;
-//   }
-
 }
 
 void MessageBase::connectTo(const QString &qstrHeader, const QString &qstrUri)

@@ -8,8 +8,8 @@ public:
     static bool      DeleteDB(DataBase* db);
 
 protected:
+    virtual ~DataBase() {}
     DataBase(){}
-    ~DataBase(){}
 };
 
 #endif // DATA_BASE_H

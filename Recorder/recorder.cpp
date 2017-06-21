@@ -50,18 +50,11 @@ Recorder::Recorder(QWidget *parent) :
     ui->stackedWidget->installEventFilter(this);
 
     this->setWindowFlags(Qt::FramelessWindowHint);//去掉标题栏
-    
-/*
-    QGraphicsDropShadowEffect *shadow_effect = new QGraphicsDropShadowEffect(this);
-    shadow_effect->setOffset(0);
-    shadow_effect->setColor(Qt::darkGray);
-    shadow_effect->setBlurRadius(25);
-    ui->groupBox->setGraphicsEffect(shadow_effect);
-*/
 }
 
 Recorder::~Recorder()
 {
+    ServiceThread::Uninstance();
     delete ui;
 }
 

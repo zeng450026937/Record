@@ -9,7 +9,7 @@
 #include "device_database_impl.h"
 #include "templatedatabase_impl.h"
 #include "user_database_impl.h"
-#include "download_database_impl.h"
+#include "download_database.h"
 #include "clip_file_database_impl.h"
 #include "personal_database_impl.h"
 

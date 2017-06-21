@@ -676,12 +676,17 @@ void Scene_File::on_file_listView_clicked(const QModelIndex &index) {
 
   _conf = sortFilter_proxyModel->mapToSource(index).data(Qt::UserRole).toMap();
 
-  if (_conf.contains("uuid")) {
-    _type = 1;
-    _uuid = _conf.value("uuid").toString();
-  } else if (_conf.contains("conference_uuid")) {
-    _type = 0;
-    _uuid = _conf.value("conference_uuid").toString();
+  switch (_type) {
+    case RecorderShared::RT_CONFERENCE:
+      _uuid = _conf.value("uuid").toString();
+      break;
+    case RecorderShared::RT_PERSONAL:
+      _uuid = _conf.value("conferenceUuid").toString();
+      break;
+    case RecorderShared::RT_MOBILE:
+      break;
+    default:
+      break;
   }
 
   _file_list = _sharedData->GetFileList(_uuid);

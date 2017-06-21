@@ -48,6 +48,7 @@ void ListForm::update_display(const QVariantMap& info) {
   text = info.value("userId").toString();
   if (text.isEmpty()) {
     ui->userGroupBox->hide();
+    ui->downloadButton->hide();
   } else {
     if (text != _info.value("userId").toString()) {
       if (!ui->userGroupBox->isVisible()) ui->userGroupBox->show();

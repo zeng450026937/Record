@@ -1605,19 +1605,6 @@ border:0;</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="0" colspan="6">
-       <widget class="QListView" name="file_listView">
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="editTriggers">
-         <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
-        </property>
-        <property name="movement">
-         <enum>QListView::Static</enum>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="0" colspan="2">
        <widget class="QComboBox" name="typeComboBox">
         <property name="sizePolicy">
@@ -1682,6 +1669,42 @@ QComboBox::drop-down {
         <property name="sizeAdjustPolicy">
          <enum>QComboBox::AdjustToMinimumContentsLength</enum>
         </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="6">
+       <widget class="QStackedWidget" name="fileStackedWidget">
+        <widget class="QWidget" name="page_2">
+         <layout class="QGridLayout" name="gridLayout_10">
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QListView" name="file_listView">
+            <property name="styleSheet">
+             <string notr="true"/>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+            </property>
+            <property name="movement">
+             <enum>QListView::Static</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </widget>
       </item>
      </layout>

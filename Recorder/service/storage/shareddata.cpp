@@ -42,7 +42,6 @@ bool SharedData::InitDb() {
       "CREATE TABLE IF NOT EXISTS tb_clip_file ("
       "id INTEGER PRIMARY KEY NOT NULL, "
       "uuid varchar(255) NOT NULL, "
-      "identity varchar(255) NOT NULL, "
       "start_time int DEFAULT '0', "
       "path varchar(255) UNIQUE NOT NULL "
       ")");

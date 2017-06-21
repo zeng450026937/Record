@@ -1,167 +1,156 @@
-ï»¿#include "RecordDownloadReceiver.h"
+#include "RecordDownloadReceiver.h"
 
-#include <QString>
 #include <QFile>
-#include "storage/download_database.h"
-#include "service/service_thread.h"
+#include <QString>
 #include "common/config.h"
+#include "service/service_thread.h"
+#include "storage/download_database.h"
+#include "storage/include/clip_file_database.h"
 
-struct ReceiverData
-{
-    int iRecordId;
-    QFile recordFile;
-    QString qstrFilePath;
-    int iFileSize;
-    int iWritten;
+struct ReceiverData {
+  int iRecordId;
+  QFile recordFile;
+  QString qstrFilePath;
+  int iFileSize;
+  int iWritten;
 
-    int iDownloadPerSecond;
+  int iDownloadPerSecond;
 
-    ReceiverData() : iRecordId(0),
-                     iFileSize(0.0),
-                     iWritten(0),
-                     iDownloadPerSecond(0)
-    {}
+  ReceiverData()
+      : iRecordId(0), iFileSize(0.0), iWritten(0), iDownloadPerSecond(0) {}
 };
 
-class RecordDownloadReceiverPrivate
-{
-    friend class RecordDownloadReceiver;
+class RecordDownloadReceiverPrivate {
+  friend class RecordDownloadReceiver;
 
-    ReceiverData *pData;
+  ReceiverData *pData;
 
-    RecordDownloadReceiverPrivate() : pData(nullptr)
-    {}
+  RecordDownloadReceiverPrivate() : pData(nullptr) {}
 };
 
-RecordDownloadReceiver::RecordDownloadReceiver() : m(new RecordDownloadReceiverPrivate())
-{
-    connect(this, SIGNAL(download_prompt(QString)), this, SLOT(onDownloadPrompt(QString)));
+RecordDownloadReceiver::RecordDownloadReceiver()
+    : m(new RecordDownloadReceiverPrivate()) {
+  connect(this, SIGNAL(download_prompt(QString)), this,
+          SLOT(onDownloadPrompt(QString)));
 }
 
-RecordDownloadReceiver::~RecordDownloadReceiver()
-{
-    delete m;
+RecordDownloadReceiver::~RecordDownloadReceiver() { delete m; }
+
+bool RecordDownloadReceiver::StartReceiveTrigger(int iResult, int iFileSize) {
+  if (iResult == RecordDownloadReceiver::EC_DOWNLOADING) {
+    if (!m->pData->recordFile.open(QIODevice::Append)) {
+      return false;
+    }
+
+    m->pData->iFileSize = iFileSize;
+    emit downloading_tick(
+        ((double)m->pData->iWritten / m->pData->iFileSize) * 100, 0);
+    emit download_prompt(QString());  // ÌáÊ¾UIÇÐµ½ÕýÔÚÏÂÔØ×´Ì¬
+  } else {
+    switch (iResult) {
+      case RecordDownloadReceiver::EC_ARGS_INVALID:
+        emit download_prompt(QString::fromUtf16(
+            (const ushort *)L"ÏÂÔØÊ§°Ü£¬ÏÂÔØÇëÇó²ÎÊýÎÞÐ§¡£"));
+        break;
+
+      case RecordDownloadReceiver::EC_FILE_UNEXSISTS:
+        emit download_prompt(
+            QString::fromUtf16((const ushort *)L"ÏÂÔØÊ§°Ü£¬ÏÂÔØÎÄ¼þ²»´æÔÚ¡£"));
+        break;
+
+      default:
+        emit download_prompt(
+            QString::fromUtf16((const ushort *)L"ÏÂÔØÊ§°Ü£¬Î´ÖªµÄÒì³£´íÎó."));
+        break;
+    }
+  }
+
+  return true;
 }
 
-bool RecordDownloadReceiver::StartReceiveTrigger(int iResult, int iFileSize)
-{
-    if (iResult == RecordDownloadReceiver::EC_DOWNLOADING)
-    {
-        if (!m->pData->recordFile.open(QIODevice::Append))
-        {
-            return false;
-        }
+bool RecordDownloadReceiver::WriteData(const char *pData, int iDataSize,
+                                       bool bCompleted) {
+  m->pData->recordFile.write(pData, iDataSize);
+  m->pData->iWritten += iDataSize;
+  m->pData->iDownloadPerSecond += iDataSize;
+  if (bCompleted) {
+    DownloadDatabase *pDownloadDB =
+        ServiceThread::GetInstance()->GetDownloadDB();
 
-        m->pData->iFileSize = iFileSize;
-        emit downloading_tick(((double)m->pData->iWritten / m->pData->iFileSize) * 100, 0);
-        emit download_prompt(QString());  // æç¤ºUIåˆ‡åˆ°æ­£åœ¨ä¸‹è½½çŠ¶æ€
-    }
-    else
-    {
-        switch (iResult)
-        {
-        case RecordDownloadReceiver::EC_ARGS_INVALID:
-            emit download_prompt(QString::fromUtf16((const ushort*)L"ä¸‹è½½å¤±è´¥ï¼Œä¸‹è½½è¯·æ±‚å‚æ•°æ— æ•ˆã€‚"));
-            break;
+    m->pData->recordFile.close();
+    pDownloadDB->SetDownloadCompeletedById(m->pData->iRecordId);
+    delete m->pData;
+    emit downloading_tick(100, 0);
+  }
 
-        case RecordDownloadReceiver::EC_FILE_UNEXSISTS:
-            emit download_prompt(QString::fromUtf16((const ushort*)L"ä¸‹è½½å¤±è´¥ï¼Œä¸‹è½½æ–‡ä»¶ä¸å­˜åœ¨ã€‚"));
-            break;
-
-        default:
-            emit download_prompt(QString::fromUtf16((const ushort*)L"ä¸‹è½½å¤±è´¥ï¼ŒæœªçŸ¥çš„å¼‚å¸¸é”™è¯¯."));
-            break;
-        }
-    }
-
-    return true;
+  return true;
 }
 
-bool RecordDownloadReceiver::WriteData(const char *pData, int iDataSize, bool bCompleted)
-{
-    m->pData->recordFile.write(pData, iDataSize);
-    m->pData->iWritten += iDataSize;
-    m->pData->iDownloadPerSecond += iDataSize;
-    if (bCompleted)
-    {
-        DownloadDatabase *pDownloadDB = ServiceThread::GetInstance()->GetDownloadDB();
-
-        m->pData->recordFile.close();
-        pDownloadDB->SetDownloadCompeletedById(m->pData->iRecordId);
-        delete m->pData;
-        emit downloading_tick(100,0);
-    }
-
-    return true;
+void RecordDownloadReceiver::TickDownloadStatus() {
+  emit downloading_tick(
+      ((double)m->pData->iWritten / m->pData->iFileSize) * 100,
+      m->pData->iDownloadPerSecond);
+  m->pData->iDownloadPerSecond = 0;
 }
 
-void RecordDownloadReceiver::TickDownloadStatus()
-{
-    emit downloading_tick(((double)m->pData->iWritten / m->pData->iFileSize) * 100, m->pData->iDownloadPerSecond);
-    m->pData->iDownloadPerSecond = 0;
+int RecordDownloadReceiver::GetDownloadStatus(const QString &qstrFileUuid,
+                                              const QString &qstrConferenceUuid,
+                                              const QString &qstrDeviceUuid) {
+  DownloadDatabase *pDownloadDB = ServiceThread::GetInstance()->GetDownloadDB();
+
+  QString qstrFilePath;
+  bool bCompeleted = false;
+  if (pDownloadDB->GetCompeleteStatus(qstrFileUuid, qstrConferenceUuid,
+                                      qstrDeviceUuid, &qstrFilePath,
+                                      &bCompeleted)) {
+    if (QFile(qstrFilePath).exists()) {
+      return bCompeleted ? DS_COMPELETED : DS_UNCOMPLETED;
+    }
+  }
+  return DS_UNEXSITS;
 }
 
-int RecordDownloadReceiver::GetDownloadStatus(const QString &qstrFileUuid, const QString &qstrConferenceUuid, const QString &qstrDeviceUuid)
-{
-    DownloadDatabase *pDownloadDB = ServiceThread::GetInstance()->GetDownloadDB();
+bool RecordDownloadReceiver::CreateReciveData(
+    int iType, const QString &qstrFileExtension, const QString &qstrFileUuid,
+    const QString &qstrConferenceUuid, const QString &qstrDeviceUuid,
+    QString qstrCreateTime, int *iStartPos) {
+  m->pData = new ReceiverData();
+  DownloadDatabase *pDownloadDB = ServiceThread::GetInstance()->GetDownloadDB();
 
-    QString qstrFilePath;
-    bool bCompeleted = false;
-    if (pDownloadDB->GetCompeleteStatus(qstrFileUuid, qstrConferenceUuid, qstrDeviceUuid, &qstrFilePath, &bCompeleted))
-    {
-        if (QFile(qstrFilePath).exists())
-        {
-            return bCompeleted ? DS_COMPELETED : DS_UNCOMPLETED;
-        }
-    }
-    return DS_UNEXSITS;
-}
-
-bool RecordDownloadReceiver::CreateReciveData(int iType,
-    const QString &qstrFileExtension,
-    const QString &qstrFileUuid, 
-    const QString &qstrConferenceUuid, 
-    const QString &qstrDeviceUuid, 
-    QString qstrCreateTime,
-    int *iStartPos)
-{
-    m->pData = new ReceiverData();
-    DownloadDatabase *pDownloadDB = ServiceThread::GetInstance()->GetDownloadDB();
-
-    if (pDownloadDB->GetDownloadInfo(qstrFileUuid, qstrConferenceUuid, qstrDeviceUuid,
-        &m->pData->iRecordId,&m->pData->qstrFilePath))
-    {
-        m->pData->recordFile.setFileName(m->pData->qstrFilePath);
-        if (m->pData->recordFile.exists())
-        {
-            m->pData->iWritten = m->pData->recordFile.size();
-        }
-        else
-        {
-            m->pData->iWritten = 0;
-        }
-
-        *iStartPos = m->pData->iWritten;
-    }
-    else
-    {
-        Config *pConfig = Config::GetInstance();
-        QRegExp regExp("[-: ]");
-        qstrCreateTime.replace(regExp, "");
-        m->pData->qstrFilePath = QString("%1\\%2_%3.%4").arg(pConfig->_output_dir,
-            pConfig->GetUser().user_name, qstrCreateTime, qstrFileExtension);
-
-        m->pData->iRecordId = pDownloadDB->InsertDownloadInfo(iType, qstrFileUuid, 
-            qstrConferenceUuid, qstrDeviceUuid, m->pData->qstrFilePath);
-        if (m->pData->iRecordId == 0)
-        {
-            delete m->pData;
-            return false;
-        }
-
-        m->pData->recordFile.setFileName(m->pData->qstrFilePath);
-        *iStartPos = 0;
+  if (pDownloadDB->GetDownloadInfo(qstrFileUuid, qstrConferenceUuid,
+                                   qstrDeviceUuid, &m->pData->iRecordId,
+                                   &m->pData->qstrFilePath)) {
+    m->pData->recordFile.setFileName(m->pData->qstrFilePath);
+    if (m->pData->recordFile.exists()) {
+      m->pData->iWritten = m->pData->recordFile.size();
+    } else {
+      m->pData->iWritten = 0;
     }
 
-    return true;
+    *iStartPos = m->pData->iWritten;
+  } else {
+    Config *pConfig = Config::GetInstance();
+    QRegExp regExp("[-: ]");
+    qstrCreateTime.replace(regExp, "");
+    m->pData->qstrFilePath =
+        QString("%1\\%2_%3.%4")
+            .arg(pConfig->_output_dir, pConfig->GetUser().user_name,
+                 qstrCreateTime, qstrFileExtension);
+
+    m->pData->iRecordId =
+        pDownloadDB->InsertDownloadInfo(iType, qstrFileUuid, qstrConferenceUuid,
+                                        qstrDeviceUuid, m->pData->qstrFilePath);
+    if (m->pData->iRecordId == 0) {
+      delete m->pData;
+      return false;
+    }
+
+    m->pData->recordFile.setFileName(m->pData->qstrFilePath);
+    *iStartPos = 0;
+
+    ClipFileDatabase *pClipDB = ServiceThread::GetInstance()->GetClipDB();
+    pClipDB->AddFile(qstrConferenceUuid, -1, m->pData->qstrFilePath);
+  }
+
+  return true;
 }

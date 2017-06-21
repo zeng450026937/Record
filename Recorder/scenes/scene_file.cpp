@@ -8,6 +8,7 @@
 
 #include <service/command/ConferenceMode.h>
 #include <service/command/PersonalMode.h>
+#include "conf_detail.h"
 #include "config.h"
 #include "listitem_delegate.h"
 #include "recorder_shared.h"
@@ -187,7 +188,19 @@ void Scene_File::init_model() {
 
   ListItemDelegate *itemDelegate = new ListItemDelegate(this);
   ui->file_listView->setItemDelegateForColumn(0, itemDelegate);
-  // connect(itemDelegate,SIGNAL(download_item(QString)),this,SLOT(show_download_dlg(QString)));
+
+  ConfDetail *conf_detail = new ConfDetail(this);
+  ui->fileStackedWidget->addWidget(conf_detail);
+
+  connect(itemDelegate, &ListItemDelegate::itemClicked,
+          [=](const QString &uuid) {
+            ui->fileStackedWidget->setCurrentIndex(
+                ui->fileStackedWidget->currentIndex() + 1);
+          });
+  connect(conf_detail, &ConfDetail::goBack, [=]() {
+    ui->fileStackedWidget->setCurrentIndex(
+        ui->fileStackedWidget->currentIndex() - 1);
+  });
 
   ui->file_mark_tableView->verticalHeader()->hide();
   ui->file_mark_tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -675,12 +688,17 @@ void Scene_File::on_file_listView_clicked(const QModelIndex &index) {
 
   _conf = sortFilter_proxyModel->mapToSource(index).data(Qt::UserRole).toMap();
 
-  if (_conf.contains("uuid")) {
-    _type = 1;
-    _uuid = _conf.value("uuid").toString();
-  } else if (_conf.contains("conference_uuid")) {
-    _type = 0;
-    _uuid = _conf.value("conference_uuid").toString();
+  switch (_type) {
+    case RecorderShared::RT_CONFERENCE:
+      _uuid = _conf.value("uuid").toString();
+      break;
+    case RecorderShared::RT_PERSONAL:
+      _uuid = _conf.value("conferenceUuid").toString();
+      break;
+    case RecorderShared::RT_MOBILE:
+      break;
+    default:
+      break;
   }
 
   _file_list = _sharedData->GetFileList(_uuid);

@@ -13,45 +13,45 @@ class ConferenceMode;
 class LoginControl;
 class RecorderShared;
 class DownloadDatabase;
+class ClipFileDatabase;
 
 class ServiceThreadPrivate;
-class ServiceThread : public QThread
-{
-	Q_OBJECT
-private:
-	explicit ServiceThread(QObject *parent = 0);
-	ServiceThread(ServiceThread &) {}
-	ServiceThread & operator=(ServiceThread*) {}
+class ServiceThread : public QThread {
+  Q_OBJECT
+ private:
+  explicit ServiceThread(QObject *parent = 0);
+  ServiceThread(ServiceThread &) {}
+  ServiceThread &operator=(ServiceThread *) {}
 
-public:
-	~ServiceThread();
+ public:
+  ~ServiceThread();
 
-    static ServiceThread * GetInstance();
-    static void Uninstance();
+  static ServiceThread *GetInstance();
+  static void Uninstance();
 
     ConferenceMode  *GetConferenceMode();
     PersonalMode    *GetPersonalMode();
 	LoginControl		*GetInfoMode();
 	AccountCenter *GetAccountCenter();
 
-	WhiteList	*	GetLoginWhiteList();
-	MessageBase *	GetMessager();
-	ConfServiceImpl*    GetConfService();
-	UserServiceImpl*    GetUserService();
+  WhiteList *GetLoginWhiteList();
+  MessageBase *GetMessager();
+  ConfServiceImpl *GetConfService();
+  UserServiceImpl *GetUserService();
 
-    RecorderShared  *GetRecordShared();
+  RecorderShared *GetRecordShared();
 
-    DownloadDatabase *GetDownloadDB();
+  DownloadDatabase *GetDownloadDB();
+  ClipFileDatabase *GetClipDB();
 
-	ServiceThreadPrivate* _private;
-signals:
-    void service_ready();
+  ServiceThreadPrivate *_private;
+ signals:
+  void service_ready();
 
+ protected:
+  void run() override;
 
-protected:
-    void run() override;
-
-protected:
+ protected:
 };
 
-#endif // SERVICETHREAD_H
+#endif  // SERVICETHREAD_H

@@ -5,23 +5,22 @@
 
 class SharedData;
 
-class ClipFileDatabaseImpl : public ClipFileDatabase
-{
-public:
-    int AddFile(QString uuid, QString identity, int start_time, QString path) override;
+class ClipFileDatabaseImpl : public ClipFileDatabase {
+ public:
+  int AddFile(QString uuid, int start_time, QString path) override;
 
-    int RemoveConferenceFile(QString uuid) override;
+  int RemoveConferenceFile(QString uuid) override;
 
-    QVariantList GetFileList(QString uuid) override;
-    QVariantList GetConferenceFile(QString uuid) override;
-    QVariantList GetClipFile(QString uuid) override;
+  QVariantList GetFileList(QString uuid) override;
+  QVariantList GetConferenceFile(QString uuid) override;
+  QVariantList GetClipFile(QString uuid) override;
 
-protected:
-    ClipFileDatabaseImpl(SharedData* shared):_shared(NULL){ _shared = shared; }
-    ~ClipFileDatabaseImpl() override {}
+ protected:
+  ClipFileDatabaseImpl(SharedData* shared) : _shared(NULL) { _shared = shared; }
+  ~ClipFileDatabaseImpl() override {}
 
-private:
-    SharedData* _shared;
+ private:
+  SharedData* _shared;
 };
 
-#endif // CLIPFILEDATABASEIMPL_H
+#endif  // CLIPFILEDATABASEIMPL_H

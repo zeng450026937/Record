@@ -92,6 +92,8 @@ DownloadDatabase* ServiceThread::GetDownloadDB() {
   return _private->_download_db;
 }
 
+ClipFileDatabase* ServiceThread::GetClipDB() { return _private->ClipDB(); }
+
 void ServiceThread::run() {
   _private =
       new ServiceThreadPrivate();  // 在这里初始化是为了让对象的槽在这个线程中处理。

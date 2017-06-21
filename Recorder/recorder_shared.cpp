@@ -620,6 +620,8 @@ void RecorderShared::initialize() {
 
   QObject::connect(_service, SIGNAL(service_ready()), this,
                    SLOT(receive_service_ready()), Qt::QueuedConnection);
+
+  if (_service->isRunning()) receive_service_ready();
 }
 
 void RecorderShared::request_data() {

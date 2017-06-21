@@ -17,7 +17,7 @@ class ClipFileDatabase;
 class DownloadDatabase;
 class PersonalDatabase;
 
-class InfoMode;
+class LoginControl;
 class PersonalMode;
 class ConferenceMode;
 class RecorderShared;
@@ -63,7 +63,7 @@ private:
     PersonalDatabase*   _personal_db;
 
     RecorderShared *_record_shared;
-    InfoMode	*_info_mode;
+    LoginControl	*_info_mode;
     PersonalMode *_pPersonalMode;
     ConferenceMode *_pConferenceMode;
 

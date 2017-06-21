@@ -2,7 +2,7 @@
 #include <recorder_shared.h>
 #include "command/ConferenceMode.h"
 #include "command/PersonalMode.h"
-#include "command/info_mode.h"
+#include "command/LoginControl.h"
 #include "conf_service_impl.h"
 #include "service_thread_private.h"
 #include "storage/database_impl.h"
@@ -32,8 +32,6 @@ ConferenceMode* ServiceThread::GetConferenceMode() {
     _private->_pConferenceMode = new ConferenceMode(GetMessager());
     _private->_pConferenceMode->m_pRecrodShared = GetRecordShared();
     _private->_pConferenceMode->moveToThread(this);
-    _private->_pConferenceMode->SetDataBase(
-        static_cast<DataBase_Impl*>(_private->_db));
   }
 
   return _private->_pConferenceMode;
@@ -58,9 +56,9 @@ ServiceThread* ServiceThread::ServiceThread::GetInstance() {
   return ServiceThreadPrivate::s_pServiceSingleton;
 }
 
-InfoMode* ServiceThread::GetInfoMode() {
+LoginControl* ServiceThread::GetInfoMode() {
   if (nullptr == _private->_info_mode) {
-    _private->_info_mode = new InfoMode(GetMessager());
+    _private->_info_mode = new LoginControl(GetMessager());
     _private->_info_mode->m_pRecordShared = GetRecordShared();
     _private->_info_mode->moveToThread(this);
   }

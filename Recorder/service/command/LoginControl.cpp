@@ -1,5 +1,5 @@
 
-#include "info_mode.h"
+#include "LoginControl.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 
@@ -10,17 +10,13 @@
 #include "service/user_service_impl.h"
 
 #define IMAC_HEART_BEAT "heartBeat"
-#define IMAC_GET_DEVICE_LIST "getDeviceList"
-
-InfoMode::InfoMode(MessageBase *pMessager) : CommandBase(pMessager) {
-  AddActionProc(MB_INFO_MODE, IMAC_HEART_BEAT, &InfoMode::HandleHeartBeat);
-  AddActionProc(MB_INFO_MODE, IMAC_GET_DEVICE_LIST,
-                &InfoMode::GetDeviceListReply);
+LoginControl::LoginControl(MessageBase *pMessager) : CommandBase(pMessager) {
+  AddActionProc(MB_INFO_MODE, IMAC_HEART_BEAT, &LoginControl::HandleHeartBeat);
 }
 
-InfoMode::~InfoMode() {}
+LoginControl::~LoginControl() {}
 
-void InfoMode::ConnectToServer() {
+void LoginControl::ConnectToServer() {
   Config *pConfig = Config::GetInstance();
   Config::USER &user = pConfig->GetUser();
 
@@ -48,22 +44,7 @@ void InfoMode::ConnectToServer() {
   m_pMessage->connectTo(jsDoc.toJson(), pConfig->TEST_SERVER);
 }
 
-void InfoMode::GetDeviceList() {
-  SendAction(IMAC_GET_DEVICE_LIST, QJsonObject());
-}
-
-void InfoMode::GetDeviceListReply(bool bResult, const QJsonObject &jsData) {
-  QJsonDocument jsDoc(jsData);
-  QString qstr = jsDoc.toJson();
-  if (bResult) {
-    QJsonDocument jsDoc(jsData);
-    QString qstr = jsDoc.toJson();
-    QVariantList lsRecordInfo = jsData["list"].toVariant().toList();
-    m_pRecordShared->receive_deviceInfoListGetted(true, lsRecordInfo);
-  }
-}
-
-void InfoMode::HandleHeartBeat(bool bResult, const QJsonObject &jsData) {
+void LoginControl::HandleHeartBeat(bool bResult, const QJsonObject &jsData) {
   Q_UNUSED(bResult);
 
   QString &qstrUserId = Config::GetInstance()->GetUser().user_id;
@@ -71,10 +52,6 @@ void InfoMode::HandleHeartBeat(bool bResult, const QJsonObject &jsData) {
   QJsonObject jsActionData;
   if (jsData["userId"].toString() == qstrUserId) {
     jsActionData.insert("userId", qstrUserId);
-    SendAction(IMAC_HEART_BEAT, jsActionData);
+    m_pMessage->sendMessage("info", IMAC_HEART_BEAT, jsData);
   }
-}
-
-void InfoMode::SendAction(const char *pAction, const QJsonObject &jsData) {
-  m_pMessage->sendMessage("info", pAction, jsData);
 }

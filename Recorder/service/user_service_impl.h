@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class InfoMode;
+class LoginControl;
 class AccountCenter;
 class MessageBase;
 class ServiceThread;
@@ -48,7 +48,7 @@ private:
 	ServiceThread		*_service;
 	MessageBase			 *_message;
 	AccountCenter		 *_account;
-	InfoMode			 *_info_mode;
+	LoginControl			 *_info_mode;
     QString               _uri;
     bool                  _warning;
     int                   _connect_monitor;

@@ -10,7 +10,7 @@ class ConfServiceImpl;
 class UserServiceImpl;
 class PersonalMode;
 class ConferenceMode;
-class InfoMode;
+class LoginControl;
 class RecorderShared;
 class DownloadDatabase;
 
@@ -31,7 +31,7 @@ public:
 
     ConferenceMode  *GetConferenceMode();
     PersonalMode    *GetPersonalMode();
-	InfoMode		*GetInfoMode();
+	LoginControl		*GetInfoMode();
 	AccountCenter *GetAccountCenter();
 
 	WhiteList	*	GetLoginWhiteList();

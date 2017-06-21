@@ -10,7 +10,7 @@
 #include "scenes/notify_dialog.h"
 #include "service/command/ConferenceMode.h"
 #include "service/command/PersonalMode.h"
-#include "service/command/info_mode.h"
+#include "service/command/RecordControl.h"
 #include "service/service_thread.h"
 
 #include <QMessageBox>
@@ -91,7 +91,9 @@ Scene_Record::Scene_Record(RecorderShared *sharedData, QWidget *parent)
   ServiceThread *pService = ServiceThread::GetInstance();
   m_pPersonalMode = pService->GetPersonalMode();
   m_pConferenceMode = pService->GetConferenceMode();
-  m_pInfoMode = pService->GetInfoMode();
+  m_pRecordControl = new RecordControl(_sharedData, pService->GetMessager());
+  m_pRecordControl->moveToThread(pService);
+  m_pRecordControl->GetDeviceList();
 }
 
 Scene_Record::~Scene_Record() {

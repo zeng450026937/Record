@@ -13,7 +13,7 @@ class Scene_Record_ModelList;
 class Scene_Record_Finish;
 class Scene_Record_Warning;
 class NotifyDialog;
-class InfoMode;
+class RecordControl;
 class ConferenceMode;
 class PersonalMode;
 
@@ -96,7 +96,7 @@ class Scene_Record : public QGroupBox {
 
   QTime _last_time;
 
-  InfoMode *m_pInfoMode;
+  RecordControl *m_pRecordControl;
   ConferenceMode *m_pConferenceMode;
   PersonalMode *m_pPersonalMode;
 };

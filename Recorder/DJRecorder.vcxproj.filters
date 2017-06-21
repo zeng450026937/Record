@@ -244,6 +244,24 @@
     <CustomBuild Include="service\command\RecordDownloadReceiver.h">
       <Filter>Source Files\service\command</Filter>
     </CustomBuild>
+    <CustomBuild Include="scenes\conf_detail.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\conf_detail.ui">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\conf_form.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\conf_form.ui">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\file_list_form.h">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
+    <CustomBuild Include="scenes\file_list_form.ui">
+      <Filter>Source Files\scenes</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resource\close.png">
@@ -707,9 +725,6 @@
     <ClCompile Include="service\storage\user_database_impl.cpp">
       <Filter>Source Files\service\storage</Filter>
     </ClCompile>
-    <ClCompile Include="service\command\info_mode.cpp">
-      <Filter>Source Files\service\command</Filter>
-    </ClCompile>
     <ClCompile Include="common\config.cpp">
       <Filter>Source Files\common</Filter>
     </ClCompile>
@@ -774,6 +789,36 @@
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
     <ClCompile Include="service\command\RecordControl.cpp">
+      <Filter>Source Files\service\command</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\conf_detail.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_conf_detail.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_conf_detail.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\conf_form.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_conf_form.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_conf_form.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="scenes\file_list_form.cpp">
+      <Filter>Source Files\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_file_list_form.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_file_list_form.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="service\command\LoginControl.cpp">
       <Filter>Source Files\service\command</Filter>
     </ClCompile>
   </ItemGroup>
@@ -901,14 +946,28 @@
     <ClInclude Include="service\storage\user_database_impl.h">
       <Filter>Source Files\service\storage</Filter>
     </ClInclude>
-    <ClInclude Include="service\command\info_mode.h">
-      <Filter>Source Files\service\command</Filter>
-    </ClInclude>
     <ClInclude Include="service\storage\download_database.h">
       <Filter>Source Files\service\storage</Filter>
     </ClInclude>
     <ClInclude Include="service\command\RecordControl.h">
       <Filter>Source Files\service\command</Filter>
     </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_conf_detail.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_conf_form.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_file_list_form.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="service\command\LoginControl.h">
+      <Filter>Source Files\service\command</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="scenes\scenes.pri">
+      <Filter>Source Files\scenes</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -6,7 +6,7 @@
 #include "white_list.h"
 #include "common/config.h"
 
-#include "../command/info_mode.h"
+#include "../command/LoginControl.h"
 #include "storage/include/user_database.h"
 
 #include <QTimerEvent>

@@ -8,7 +8,6 @@
 
 #include <service/command/ConferenceMode.h>
 #include <service/command/PersonalMode.h>
-#include <service/command/info_mode.h>
 #include "config.h"
 #include "listitem_delegate.h"
 #include "recorder_shared.h"
@@ -93,9 +92,9 @@ Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent)
   m_pPersonalMode = pService->GetPersonalMode();
   m_pConferenceMode = pService->GetConferenceMode();
 
-  m_pInfoMode = pService->GetInfoMode();
+  // m_pInfoMode = pService->GetInfoMode();
 
-  m_pInfoMode->GetDeviceList();
+  // m_pInfoMode->GetDeviceList();
   m_pPersonalMode->GetAllPersoanlList();
   m_pPersonalMode->GetPersonalList();
   m_pConferenceMode->GetConferenceList();

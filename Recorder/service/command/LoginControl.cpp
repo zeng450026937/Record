@@ -2,6 +2,7 @@
 #include "LoginControl.h"
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QVector>
 
 #include "common/config.h"
 #include "recorder_shared.h"
@@ -10,7 +11,9 @@
 #include "service/user_service_impl.h"
 
 #define IMAC_HEART_BEAT "heartBeat"
+
 LoginControl::LoginControl(MessageBase *pMessager) : CommandBase(pMessager) {
+  qRegisterMetaType<QVector<int>>();
   AddActionProc(MB_INFO_MODE, IMAC_HEART_BEAT, &LoginControl::HandleHeartBeat);
 }
 
@@ -51,7 +54,7 @@ void LoginControl::HandleHeartBeat(bool bResult, const QJsonObject &jsData) {
 
   QJsonObject jsActionData;
   if (jsData["userId"].toString() == qstrUserId) {
-    jsActionData.insert("userId", qstrUserId);
-    m_pMessage->sendMessage("info", IMAC_HEART_BEAT, jsData);
+      jsActionData.insert("userId", qstrUserId);
+      m_pMessage->sendMessage("info", IMAC_HEART_BEAT, jsData);
   }
 }

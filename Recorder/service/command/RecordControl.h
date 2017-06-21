@@ -26,6 +26,7 @@ private:
     void GetDeviceListReply(bool bResult, const QJsonObject &jsData);
     void GetTemplateListReply(bool bResult, const QJsonObject &jsData);
 
+    void UpdateDeviceInfo(bool bResult, const QJsonObject &jsData);
 
     void CreateConferenceReply(bool bResult, const QJsonObject &jsData);
     void StartConferenceReply(bool bResult, const QJsonObject &jsData);

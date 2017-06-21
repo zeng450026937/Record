@@ -1,10 +1,10 @@
-﻿
+
 #include "message_base.h"
 #include <assert.h>
+#include <QByteArray>
 #include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QByteArray>
 #include "CommandBase.h"
 #include "common/config.h"
 #include "message_base_private.h"
@@ -15,7 +15,7 @@ MessageBase::MessageBase(QObject *parent)
     : QObject(parent), d(new MessageBasePrivate) {
   qRegisterMetaType<QByteArray>();
   connect(d->_client, SIGNAL(binary_message(QByteArray)), this,
-      SIGNAL(notify_binary(QByteArray)), Qt::QueuedConnection);
+          SIGNAL(notify_binary(QByteArray)), Qt::QueuedConnection);
   connect(d->_client, SIGNAL(text_message(QString)), this,
           SLOT(on_message_reply(QString)), Qt::QueuedConnection);
   bool bRes = connect(d->_client, SIGNAL(connection_status(int)), this,
@@ -54,27 +54,25 @@ void MessageBase::on_message_reply(QString qstrMessage) {
       QJsonDocument::fromJson(qstrMessage.toUtf8(), &error);
   if (error.error == QJsonParseError::NoError) {
     QJsonObject jsRoot = jsonDocument.object();
-    if (jsRoot["version"].toInt() == MB_MESSAGE_VERSION)
-    {
+    if (jsRoot["version"].toInt() == MB_MESSAGE_VERSION) {
       QJsonObject jsCommand = jsRoot["command"].toObject();
       QByteArray baActionLocator;
       baActionLocator.append(jsCommand["mode"].toString());
       baActionLocator.append(jsCommand["action"].toString());
       auto itrFound = d->mapMode.find(baActionLocator);
-      if (itrFound == d->mapMode.end()) 
-      {
-        // 鎵€鏈変笉绗﹀悎瑙勫垯鐨勫搷搴旈兘浼氬湪杩欓噷缁撴潫锛屽寘鎷?涓嶅瓨鍦?command" json瀵硅薄鏃躲€?
+      if (itrFound == d->mapMode.end()) {
+        // 鎵€鏈変笉绗﹀悎瑙勫垯鐨勫搷搴旈兘浼氬湪杩欓噷缁撴潫锛屽寘鎷?涓嶅瓨鍦?command"
+        // json瀵硅薄鏃躲€?
         qDebug() << jsCommand["mode"].toString()
                  << " command mode is not found." << error.errorString();
         return;
       }
 
-      qDebug() << jsCommand;
+      if (jsCommand["action"].toString() != "heartBeat") qDebug() << jsCommand;
       emit itrFound->second->action_trigger(baActionLocator,
                                             jsRoot["result"].toBool(),
                                             jsRoot["data"].toObject());
     } else {
-
       // TODO: 鎻愮ず鍗忚涓庢湇鍔＄閫氳鍗忚鐗堟湰涓嶅尮閰嶃€?
     }
   } else {
@@ -82,15 +80,11 @@ void MessageBase::on_message_reply(QString qstrMessage) {
   }
 }
 
-void MessageBase::connectTo(const QString &qstrHeader, const QString &qstrUri)
-{
+void MessageBase::connectTo(const QString &qstrHeader, const QString &qstrUri) {
   d->_client->connect_to(qstrHeader.toStdString(), qstrUri.toStdString());
 }
 
-void MessageBase::stopConnection() 
-{
-    d->_client->stop_connect(); 
-}
+void MessageBase::stopConnection() { d->_client->stop_connect(); }
 
 void MessageBase::sendCommand(CommandList command, QString receiver,
                               const QVariantMap &data) {
@@ -107,9 +101,8 @@ void MessageBase::sendCommand(CommandList command, QString receiver,
 }
 
 void MessageBase::AddActionHandleObject(const QByteArray &qbaLocate,
-                          CommandBase &commandMode)
-{
+                                        CommandBase &commandMode) {
   assert(d->mapMode.find(qbaLocate) == d->mapMode.end());
-  d->mapMode.insert(std::map<QByteArray, CommandBase *>::value_type(
-      qbaLocate, &commandMode));
+  d->mapMode.insert(
+      std::map<QByteArray, CommandBase *>::value_type(qbaLocate, &commandMode));
 }

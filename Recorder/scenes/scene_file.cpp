@@ -91,11 +91,9 @@ Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent)
   ServiceThread *pService = ServiceThread::GetInstance();
   m_pPersonalMode = pService->GetPersonalMode();
   m_pConferenceMode = pService->GetConferenceMode();
-
   // m_pInfoMode = pService->GetInfoMode();
 
   // m_pInfoMode->GetDeviceList();
-  m_pPersonalMode->GetAllPersoanlList();
   m_pPersonalMode->GetPersonalList();
   m_pConferenceMode->GetConferenceList();
 }
@@ -212,6 +210,9 @@ void Scene_File::init_model() {
 
   connect(_clip_button, SIGNAL(clip_file()), this,
           SLOT(clip_file_btn_clicked()));
+
+  sortFilter_proxyModel->setSourceModel(
+      _sharedData->GetModel(ModelUpdater::ConferenceRecordInfoModel));
 }
 
 void Scene_File::init_play_info() {
@@ -552,7 +553,7 @@ QString Scene_File::differentMonthDayReg(int startyear, QString startmonthStr,
 }
 
 void Scene_File::menu_triggered(QAction *action) {
-  sortFilter_proxyModel->setFilterKeyColumn(2);
+  sortFilter_proxyModel->setFilterKeyColumn(3);
   ui->lineEdit->blockSignals(true);
   ui->lineEdit->clear();
   ui->lineEdit->blockSignals(false);
@@ -586,7 +587,7 @@ void Scene_File::menu_triggered(QAction *action) {
 void Scene_File::on_clearBtn_clicked() {
   ui->lineEdit->clear();
 
-  sortFilter_proxyModel->setFilterKeyColumn(5);
+  sortFilter_proxyModel->setFilterKeyColumn(7);
 
   this->syntaxChange(ui->lineEdit->text(), QRegExp::FixedString);
 
@@ -1107,30 +1108,32 @@ void Scene_File::on_sortBtn_clicked(bool checked) {
 }
 
 void Scene_File::on_typeComboBox_currentIndexChanged(int index) {
-  sortFilter_proxyModel->setSourceModel(
-      _sharedData->GetModel(ModelUpdater::ConferenceRecordInfoModel));
-  return;
+  sortFilter_proxyModel->setFilterKeyColumn(6);
   switch (index) {
+    case 0:
+      sortFilter_proxyModel->setFilterFixedString("");
+      break;
     case 1:
-
-      _type = 1;
+      _type = RecorderShared::RT_CONFERENCE;
       break;
     case 2:
-      // sortFilter_proxyModel->setSourceModel(
-      // _sharedData->GetModel(ModelUpdater::PersonalModel) );
-      _type = 2;
+      _type = RecorderShared::RT_PERSONAL;
+      break;
+    case 3:
+      _type = RecorderShared::RT_MOBILE;
       break;
     default:
       break;
   }
-  sortFilter_proxyModel->setFilterKeyColumn(2);
-  sortFilter_proxyModel->sort(2, Qt::DescendingOrder);
+  if (index != 0)
+    sortFilter_proxyModel->setFilterFixedString(QString::number(_type));
+  sortFilter_proxyModel->sort(3, Qt::DescendingOrder);
 
   ui->sortBtn->setChecked(false);
 }
 
 void Scene_File::on_searchButton_clicked() {
-  sortFilter_proxyModel->setFilterKeyColumn(5);
+  sortFilter_proxyModel->setFilterKeyColumn(7);
 
   this->syntaxChange(ui->lineEdit->text(), QRegExp::FixedString);
 

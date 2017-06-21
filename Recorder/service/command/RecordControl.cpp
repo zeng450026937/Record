@@ -10,15 +10,21 @@
 
 #define RC_GET_DEVICE_LIST      "getDeviceList"
 #define RC_GET_TEMPLATE_LIST    "getTemplateList"
+
 #define  RC_CREATE_CONFERENCE   "createConference"
 #define  RC_START_CONFERENCE    "startConference"
 #define  RC_PAUSE_CONFERENCE    "pauseConference"
 #define  RC_STOP_CONFERENCE     "stopConference"
 
+
+#define RC_UPDATE_DEVICE_INFO "updateDeviceInfo"
+
 RecordControl::RecordControl(RecorderShared *pRecorderShare, MessageBase *pMessager) : CommandBase(pMessager),m_pRecordShared(pRecorderShare)
 {
     AddActionProc(MB_INFO_MODE, RC_GET_DEVICE_LIST, &RecordControl::GetDeviceListReply);
     AddActionProc(MB_CONFERENCE_MODE, RC_GET_TEMPLATE_LIST, &RecordControl::GetTemplateListReply);
+
+    AddActionProc(MB_INFO_MODE, RC_UPDATE_DEVICE_INFO,&RecordControl::UpdateDeviceInfo);
 
     AddActionProc(MB_CONFERENCE_MODE, RC_CREATE_CONFERENCE, &RecordControl::CreateConferenceReply);
     AddActionProc(MB_CONFERENCE_MODE, RC_START_CONFERENCE, &RecordControl::StartConferenceReply);
@@ -42,6 +48,16 @@ void RecordControl::GetDeviceListReply(bool bResult, const QJsonObject &jsData)
     if (bResult) {
         QVariantList lsRecordInfo = jsData["list"].toVariant().toList();
         m_pRecordShared->receive_deviceInfoListGetted(true, lsRecordInfo);
+    }
+}
+
+
+void RecordControl::UpdateDeviceInfo(bool bResult, const QJsonObject &jsData) {
+
+    if (bResult)
+    {
+        QVariantMap lsRecordInfo = jsData.toVariantMap();
+        m_pRecordShared->receive_deviceInfoUpdate(lsRecordInfo);
     }
 }
 

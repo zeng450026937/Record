@@ -1,44 +1,48 @@
 #ifndef LIST_FORM_H
 #define LIST_FORM_H
 
-#include <QWidget>
-#include <QVariant>
 #include <service/command/RecordDownloadReceiver.h>
-
+#include <QVariant>
 
 namespace Ui {
 class ListForm;
 }
 
-class ListForm :public RecordDownloadReceiver
-{
-    Q_OBJECT
+class ListForm : public RecordDownloadReceiver {
+  Q_OBJECT
 
-public:
-    explicit ListForm();
-    ~ListForm();
+ public:
+  explicit ListForm();
+  ~ListForm();
 
-public slots:
-    void update_display(const QVariantMap& info);
+ protected:
+  virtual void mousePressEvent(QMouseEvent *event);
 
-private slots:
+ signals:
+  void itemClicked(const QString &uuid);
 
-    void on_downloadButton_clicked();
+ public slots:
+  void update_display(const QVariantMap &info);
 
-    void on_downloadButton_pressed();
+ private slots:
 
-    void on_downloadButton_released();
+  void on_downloadButton_clicked();
 
-    void onDownloadingTick(int iPercent,int iDownloadPerSecond);
+  void on_downloadButton_pressed();
 
-protected:
-    void onDownloadPrompt(QString qstrInfo) override;
-private:
-    Ui::ListForm *ui;
-    QVariantMap _info;
-    int         _download_status;
-protected:
+  void on_downloadButton_released();
 
+  void onDownloadingTick(int iPercent, int iDownloadPerSecond);
+
+ protected:
+  void onDownloadPrompt(QString qstrInfo) override;
+
+ private:
+  Ui::ListForm *ui;
+  QVariantMap _info;
+  int _download_status;
+
+ protected:
 };
 
-#endif // LIST_FORM_H
+#endif  // LIST_FORM_H

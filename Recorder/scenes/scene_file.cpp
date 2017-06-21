@@ -9,6 +9,7 @@
 #include <service/command/ConferenceMode.h>
 #include <service/command/PersonalMode.h>
 #include <service/command/info_mode.h>
+#include "conf_detail.h"
 #include "config.h"
 #include "listitem_delegate.h"
 #include "recorder_shared.h"
@@ -188,7 +189,19 @@ void Scene_File::init_model() {
 
   ListItemDelegate *itemDelegate = new ListItemDelegate(this);
   ui->file_listView->setItemDelegateForColumn(0, itemDelegate);
-  // connect(itemDelegate,SIGNAL(download_item(QString)),this,SLOT(show_download_dlg(QString)));
+
+  ConfDetail *conf_detail = new ConfDetail(this);
+  ui->fileStackedWidget->addWidget(conf_detail);
+
+  connect(itemDelegate, &ListItemDelegate::itemClicked,
+          [=](const QString &uuid) {
+            ui->fileStackedWidget->setCurrentIndex(
+                ui->fileStackedWidget->currentIndex() + 1);
+          });
+  connect(conf_detail, &ConfDetail::goBack, [=]() {
+    ui->fileStackedWidget->setCurrentIndex(
+        ui->fileStackedWidget->currentIndex() - 1);
+  });
 
   ui->file_mark_tableView->verticalHeader()->hide();
   ui->file_mark_tableView->setSelectionBehavior(QAbstractItemView::SelectRows);

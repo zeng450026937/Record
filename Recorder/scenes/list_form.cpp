@@ -3,6 +3,7 @@
 #include <service/command/RecordDownloadService.h>
 #include <QDateTime>
 #include <QDebug>
+#include <QMouseEvent>
 #include "scene_file_dl.h"
 #include "ui_list_form.h"
 
@@ -29,6 +30,16 @@ ListForm::ListForm()
 }
 
 ListForm::~ListForm() { delete ui; }
+
+void ListForm::mousePressEvent(QMouseEvent* event) {
+  if (_info["recordType"].toInt() != RecorderShared::RT_PERSONAL) {
+    Q_EMIT itemClicked(_info.value("conferenceUuid").toString());
+    qDebug() << "item clicked.";
+    event->accept();
+  } else {
+    event->ignore();
+  }
+}
 
 void ListForm::update_display(const QVariantMap& info) {
   QString text = info.value("date").toString();

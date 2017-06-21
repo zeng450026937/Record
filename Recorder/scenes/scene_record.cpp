@@ -8,6 +8,10 @@
 #include "scene_record_modellist.h"
 #include "scene_record_warning.h"
 #include "scenes/notify_dialog.h"
+#include "service/command/ConferenceMode.h"
+#include "service/command/PersonalMode.h"
+#include "service/command/info_mode.h"
+#include "service/service_thread.h"
 
 #include <QMessageBox>
 #include <QSortFilterProxyModel>
@@ -83,6 +87,11 @@ Scene_Record::Scene_Record(RecorderShared *sharedData, QWidget *parent)
           SLOT(receive_download_notify(int, QString, int, bool)));
   connect(_sharedData, SIGNAL(record_notify(QString, QString, QString)), this,
           SLOT(receive_record_notify(QString, QString, QString)));
+
+  ServiceThread *pService = ServiceThread::GetInstance();
+  m_pPersonalMode = pService->GetPersonalMode();
+  m_pConferenceMode = pService->GetConferenceMode();
+  m_pInfoMode = pService->GetInfoMode();
 }
 
 Scene_Record::~Scene_Record() {
@@ -271,7 +280,7 @@ void Scene_Record::on_rec_start_btn_clicked() {
       return;
     }
 
-    _conf_info.insert("devices", _conf_device.join(","));
+    _conf_info.insert("devices", _conf_device);
     if (_conf_info.value("title").toString().isEmpty())
       _conf_info.insert("title", "Default");
     _sharedData->CreateConf(_conf_info);
@@ -324,13 +333,11 @@ void Scene_Record::conference_info_changed(QString text) {
 
 void Scene_Record::receive_device_select_stateChanged(bool checked,
                                                       QVariantMap device) {
-  QString mac = device.value("deviceUuid").toString();
+  QString uuid = device.value("deviceUuid").toString();
   if (checked)
-    _conf_device << mac;
+    _conf_device.insert(uuid, device);
   else
-    _conf_device.removeAll(mac);
-
-  _conf_device.removeDuplicates();
+    _conf_device.remove(uuid);
 
   qDebug() << _conf_device;
 }
@@ -452,9 +459,9 @@ void Scene_Record::receive_conference_notify(int state, bool result,
   }
 }
 
-void Scene_Record::receive_record_notify(QString device_mac,
-                                         QString device_name, QString status) {
-  if (!_conf_device.contains(device_mac)) return;
+void Scene_Record::receive_record_notify(QString deviceUuid, QString deviceName,
+                                         QString status) {
+  if (!_conf_device.contains(deviceUuid)) return;
 
   QString message;
 
@@ -474,7 +481,7 @@ void Scene_Record::receive_record_notify(QString device_mac,
                   "\267\346\243\200\346\237\245\351\272\246\345\205\213\351\243"
                   "\216\346\210\226\345\260\206\350\256\276\345\244\207\351\235"
                   "\240\350\277\221\345\217\221\350\250\200\344\272\272")
-                  .arg(device_name);
+                  .arg(deviceName);
     _notify_dialog->NotifyMessage(message);
   } else if (status == "SpeechWithNoise" && !!!reminder_timer &&
              !_conf_uuid.isEmpty()) {
@@ -485,7 +492,7 @@ void Scene_Record::receive_record_notify(QString device_mac,
             "\345\210\253\345\210\260\346\235\202\351\237\263\357\274\214\350"
             "\257\267\350\260\203\346\225\264\344\270\213\350\256\276\345\244"
             "\207\350\277\234\347\246\273\345\231\252\345\243\260\346\272\220")
-            .arg(device_name);
+            .arg(deviceName);
     _notify_dialog->NotifyMessage(message);
   } else if (status == "SpeechNormal") {
     if (_notify_dialog->isVisible()) _notify_dialog->hide();

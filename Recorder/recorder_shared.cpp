@@ -132,10 +132,10 @@ QVariantList RecorderShared::GetFileList(QString uuid)
     return QVariantList();
 }
 
-void RecorderShared::DownLoadConference(int type, QString uuid)
-{
-    _service->GetConfService()->downloadConference(type, uuid);
-}
+// void RecorderShared::DownLoadConference(int type, QString uuid)
+// {
+//     _service->GetConfService()->downloadConference(type, uuid);
+// }
 void RecorderShared::CheckConferenceFile(QVariantMap &conf)
 {
     QString uuid = conf.value("uuid").toString();

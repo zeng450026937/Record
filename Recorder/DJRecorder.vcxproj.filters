@@ -238,6 +238,12 @@
     <CustomBuild Include="service\messager\CommandBase.h">
       <Filter>Source Files\service\messager</Filter>
     </CustomBuild>
+    <CustomBuild Include="service\command\RecordDownloadService.h">
+      <Filter>Source Files\service\command</Filter>
+    </CustomBuild>
+    <CustomBuild Include="service\command\RecordDownloadReceiver.h">
+      <Filter>Source Files\service\command</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resource\close.png">
@@ -590,12 +596,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_listitem_delegate.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="GeneratedFiles\Debug\moc_list_form.cpp">
-      <Filter>Generated Files\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="GeneratedFiles\Release\moc_list_form.cpp">
-      <Filter>Generated Files\Release</Filter>
-    </ClCompile>
     <ClCompile Include="GeneratedFiles\Debug\moc_device_list_item_a.cpp">
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
@@ -689,9 +689,6 @@
     <ClCompile Include="service\storage\device_database_impl.cpp">
       <Filter>Source Files\service\storage</Filter>
     </ClCompile>
-    <ClCompile Include="service\storage\download_database_impl.cpp">
-      <Filter>Source Files\service\storage</Filter>
-    </ClCompile>
     <ClCompile Include="service\storage\filedatabase_impl.cpp">
       <Filter>Source Files\service\storage</Filter>
     </ClCompile>
@@ -740,9 +737,6 @@
     <ClCompile Include="GeneratedFiles\Release\moc_recorder_shared.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
-    <ClCompile Include="service\command\RecordFileDownloadService.cpp">
-      <Filter>Source Files\service\command</Filter>
-    </ClCompile>
     <ClCompile Include="service\messager\CommandBase.cpp">
       <Filter>Source Files\service\messager</Filter>
     </ClCompile>
@@ -750,6 +744,33 @@
       <Filter>Generated Files\Debug</Filter>
     </ClCompile>
     <ClCompile Include="GeneratedFiles\Release\moc_CommandBase.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="service\command\RecordDownloadService.cpp">
+      <Filter>Source Files\service\command</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_list_form.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_list_form.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="service\storage\download_database.cpp">
+      <Filter>Source Files\service\storage</Filter>
+    </ClCompile>
+    <ClCompile Include="service\command\RecordDownloadReceiver.cpp">
+      <Filter>Source Files\service\command</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_RecordDownloadService.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_RecordDownloadService.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_RecordDownloadReceiver.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_RecordDownloadReceiver.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
   </ItemGroup>
@@ -859,9 +880,6 @@
     <ClInclude Include="service\storage\device_database_impl.h">
       <Filter>Source Files\service\storage</Filter>
     </ClInclude>
-    <ClInclude Include="service\storage\download_database_impl.h">
-      <Filter>Source Files\service\storage</Filter>
-    </ClInclude>
     <ClInclude Include="service\storage\filedatabase_impl.h">
       <Filter>Source Files\service\storage</Filter>
     </ClInclude>
@@ -883,8 +901,8 @@
     <ClInclude Include="service\command\info_mode.h">
       <Filter>Source Files\service\command</Filter>
     </ClInclude>
-    <ClInclude Include="service\command\RecordFileDownloadService.h">
-      <Filter>Source Files\service\command</Filter>
+    <ClInclude Include="service\storage\download_database.h">
+      <Filter>Source Files\service\storage</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

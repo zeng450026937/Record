@@ -66,6 +66,7 @@ Config::~Config()
 	settings.beginGroup("COMMON");
 
 	settings.setValue("ffmpeg_path", _ffmpeg_path);
+
 	settings.setValue("output_dir", _output_dir);
 
 	settings.setValue("clip_prev", _clip_prev);

@@ -10,7 +10,7 @@
 #include "storage/include/conferencedatabase.h"
 #include "storage/include/user_database.h"
 #include "storage/include/clip_file_database.h"
-#include "storage/download_database_impl.h"
+#include "storage/download_database.h"
 #include "storage/include/personal_database.h"
 
 

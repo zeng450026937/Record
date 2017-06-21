@@ -8,7 +8,7 @@
 #include "service/messager/message_base.h"
 #include "storage/include/clip_file_database.h"
 #include "storage/include/conferencedatabase.h"
-#include "storage/download_database_impl.h"
+#include "storage/download_database.h"
 #include "storage/include/templatedatabase.h"
 #include "service/conf_service_impl.h"
 #include "storage/database_impl.h"
@@ -41,12 +41,12 @@ void ConferenceMode::SetDataBase(DataBase_Impl *pDatabase)
 
 void ConferenceMode::GetConferenceList()
 {
-    m_pMessage->sendMessage("conference", PSL_GET_CONFERENCE_LIST, QJsonObject());
+    m_pMessage->sendMessage(MB_CONFERENCE_MODE, PSL_GET_CONFERENCE_LIST, QJsonObject());
 }
 
 void ConferenceMode::GetTemplateList()
 {
-//    SendAction(CM_GET_TEMPLATE_LIST, QJsonObject());
+    m_pMessage->sendMessage(MB_CONFERENCE_MODE, CM_GET_TEMPLATE_LIST, QJsonObject());
 }
 
 void ConferenceMode::GetTemplateListReply(bool bResult, QJsonObject jsData)

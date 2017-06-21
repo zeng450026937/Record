@@ -27,6 +27,7 @@ bool      DataBase::DeleteDB(DataBase* db)
 
     if(ref != 0) {
         //  Delete did not release the very last reference.
+        delete s;
     }
 
     return true;

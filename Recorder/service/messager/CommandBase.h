@@ -7,6 +7,7 @@
 #define MB_INFO_MODE "info"
 #define MB_PERSONAL_MODE "personal"
 #define MB_CONFERENCE_MODE "conference"
+#define MB_MOBILE_MODE "mobile"
 
 class MessageBase;
 class CommandBase : public QObject 
@@ -20,7 +21,6 @@ class CommandBase : public QObject
 
  signals:
   void action_trigger(QByteArray, bool, QJsonObject);
-  void binary_received(QByteArray binary);
 
  protected:
   typedef void (CommandBase::*HandleActionProc)(bool, const QJsonObject &);
@@ -30,7 +30,7 @@ class CommandBase : public QObject
 
  private slots:
   void on_action_trigger(QByteArray qstrTriggerId, bool bResult, QJsonObject jsData);
-  virtual void on_binary_received(QByteArray binary);
+  
 
  protected:
 

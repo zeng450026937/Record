@@ -8,7 +8,7 @@
 #include "storage/include/device_database.h"
 #include "storage/include/markdatabase.h"
 #include "storage/include/conferencedatabase.h"
-#include "storage/download_database_impl.h"
+#include "storage/download_database.h"
 #include "storage/include/clip_file_database.h"
 #include "storage/include/personal_database.h"
 #include "recorder_shared.h"
@@ -25,8 +25,7 @@ ConfServiceImpl::ConfServiceImpl(ServiceThreadPrivate* shared, QObject *parent) 
     _monitor_timer(0),
     _update_timer(0),
     auto_download(false)
-{
-   //  QObject::connect(_shared->Messager(),SIGNAL(notify_binary(uint,QByteArray&)),this,SLOT(parseBinary(uint,QByteArray&)),Qt::DirectConnection);
+{ 
 
     this->setDownloadFolder("./OUT");
 
@@ -162,13 +161,7 @@ void ConfServiceImpl::getConferenceList()
 
     this->Execute(MessageBase::GetConferenceList, param);
 }
-// void ConfServiceImpl::getPersonalList(QString user_id)
-// {
-//     QVariantMap param;
-//     param.insert("user_id", user_id);
-// 
-//     this->Execute(MessageBase::GetPersonalList, param);
-// }
+
 void ConfServiceImpl::getAllPersonalList()
 {
 	_shared->Messager()->sendMessage("getAllPersonalList", "personal");
@@ -300,39 +293,39 @@ void ConfServiceImpl::getDeviceInfoList()
     this->Execute(MessageBase::GetDeviceList, param);
 }
 
-void ConfServiceImpl::downloadConference(int type, QString qstrConferenceUuid)
-{
-    QStringList exists;
-    QStringList missing;
-    QStringList needed;
-
-    //needed total file
-    if(type == 1){
-        needed = _shared->ConferenceDB()->ConferenceInfo(qstrConferenceUuid).value("devices").toString().split(",");
-    }
-    else if(type == 0){
-        needed << _shared->PersonalDB()->ConferenceInfo(qstrConferenceUuid).value("user_id").toString();
-    }
-
-    needed.removeDuplicates();
-
-    //check exists from file database
-    this->checkConferenceFile(qstrConferenceUuid, exists, missing);
-    //check exists from download buffer
-    exists += _shared->DownloadDB()->GetCompletedIdentity(type, qstrConferenceUuid);
-
-    exists.removeDuplicates();
-
-    qDebug()<<"download conference for:"<<qstrConferenceUuid;
-    qDebug()<<"needed list:"<<needed;
-    qDebug()<<"exist file:"<<exists;
-
-    foreach (QString item, needed) {
-        if(!exists.contains(item)){
-            this->queryBinary(type, qstrConferenceUuid, item);
-        }
-    }
-}
+// void ConfServiceImpl::downloadConference(int type, QString qstrConferenceUuid)
+// {
+//     QStringList exists;
+//     QStringList missing;
+//     QStringList needed;
+// 
+//     //needed total file
+//     if(type == 1){
+//         needed = _shared->ConferenceDB()->ConferenceInfo(qstrConferenceUuid).value("devices").toString().split(",");
+//     }
+//     else if(type == 0){
+//         needed << _shared->PersonalDB()->ConferenceInfo(qstrConferenceUuid).value("user_id").toString();
+//     }
+// 
+//     needed.removeDuplicates();
+// 
+//     //check exists from file database
+//     this->checkConferenceFile(qstrConferenceUuid, exists, missing);
+//     //check exists from download buffer
+//     exists += _shared->DownloadDB()->GetCompletedIdentity(type, qstrConferenceUuid);
+// 
+//     exists.removeDuplicates();
+// 
+//     qDebug()<<"download conference for:"<<qstrConferenceUuid;
+//     qDebug()<<"needed list:"<<needed;
+//     qDebug()<<"exist file:"<<exists;
+// 
+//     foreach (QString item, needed) {
+//         if(!exists.contains(item)){
+//             this->queryBinary(type, qstrConferenceUuid, item);
+//         }
+//     }
+// }
 
 void ConfServiceImpl::setDownloadFolder(QString folder)
 {
@@ -589,89 +582,89 @@ void ConfServiceImpl::parseCommand(int command, bool result, QVariantMap& info)
 //             _download_info_map.insert(uuid, info_list);
 //         }
 //         break;
-    case MessageBase::NotifyNewDataRecv://conference record data
-        {
-            int int_type(-1);
-            QString type = info.value("type").toString();
-            QString qstrConferenceUuid = info.value("conference_uuid").toString();
-            QString identity;
-            if(type == "conference"){
-                int_type = 1;
-                identity = info.value("device_mac").toString();
-            }
-            else if(type == "person"){
-                int_type = 0;
-                identity = info.value("user_id").toString();
-            }
-
-            this->queryBinary(int_type, qstrConferenceUuid, identity);
-        }
-        break;
-
-    case MessageBase::NotifyPersonRecordAdd:
-        _shared->PersonalDB()->AddConference(info);
-        {
-        this->queryBinary(0, info.value("conference_uuid").toString(),
-                          info.value("user_id").toString());
-        }
-        emit personalConfCreated(true, info);
-        break;
-    case MessageBase::NotifyPersonRecordUpdate:
-        {
-        QString qstrConferenceUuid = info.value("conference_uuid").toString();
-        int completed = _shared->PersonalDB()->ConferenceInfo(qstrConferenceUuid).value("completed").toInt();
-        info.insert("completed",completed);
-        _shared->PersonalDB()->AddConference(info);
-        }
-        emit personalConfSetted(true, info);
-        break;
-    case MessageBase::NotifyPersonRecordDelete:
-        _shared->PersonalDB()->DelConference(info.value("conference_uuid").toString());
-        //remove download buffer
-        _shared->DownloadDB()->RemoveFile(0, info.value("conference_uuid").toString(),
-                                          info.value("user_id").toString());
+//     case MessageBase::NotifyNewDataRecv://conference record data
+//         {
+//             int int_type(-1);
+//             QString type = info.value("type").toString();
+//             QString qstrConferenceUuid = info.value("conference_uuid").toString();
+//             QString identity;
+//             if(type == "conference"){
+//                 int_type = 1;
+//                 identity = info.value("device_mac").toString();
+//             }
+//             else if(type == "person"){
+//                 int_type = 0;
+//                 identity = info.value("user_id").toString();
+//             }
+// 
+//             this->queryBinary(int_type, qstrConferenceUuid, identity);
+//         }
+//         break;
+// 
+//     case MessageBase::NotifyPersonRecordAdd:
+//         _shared->PersonalDB()->AddConference(info);
+//         {
+//         this->queryBinary(0, info.value("conference_uuid").toString(),
+//                           info.value("user_id").toString());
+//         }
+//         emit personalConfCreated(true, info);
+//         break;
+//     case MessageBase::NotifyPersonRecordUpdate:
+//         {
+//         QString qstrConferenceUuid = info.value("conference_uuid").toString();
+//         int completed = _shared->PersonalDB()->ConferenceInfo(qstrConferenceUuid).value("completed").toInt();
+//         info.insert("completed",completed);
+//         _shared->PersonalDB()->AddConference(info);
+//         }
+//         emit personalConfSetted(true, info);
+//         break;
+//     case MessageBase::NotifyPersonRecordDelete:
+//         _shared->PersonalDB()->DelConference(info.value("conference_uuid").toString());
+//         //remove download buffer
+//         _shared->DownloadDB()->RemoveFile(0, info.value("conference_uuid").toString(),
+//                                           info.value("user_id").toString());
         emit personalConfDeleted(true, info);
         break;
     }
 }
-void ConfServiceImpl::parseBinary(unsigned int size, QByteArray& content)
-{
-    Q_UNUSED(size);
-    QScopedPointer<BinaryReader> reader;
-    reader.reset(new BinaryReader);
-
-    reader->Read(content);
-
-    bool alive = this->checkConferenceAlive(reader->type, reader->file_uuid);
-    if(alive){
-
-        _shared->DownloadDB()->AddSegment(reader->type, reader->sender, reader->file_uuid,
-                                          reader->meeting_time, reader->file_startpos,
-                                          reader->file_status, reader->data_size,
-                                          reader->data);
-
-        QVariantMap param;
-        if(reader->type == 1){
-            param.insert("type","conference");
-            param.insert("device_mac",reader->sender);
-        }
-        else if(reader->type == 0){
-            param.insert("type","person");
-            param.insert("user_id",reader->sender);
-        }
-        param.insert("conference_uuid",reader->file_uuid);
-        param.insert("startpos",reader->file_startpos);
-
-        this->Execute(MessageBase::DownloadFileAck, param);
-
-        this->monitorDownload(reader->type, reader->file_uuid, reader->sender, reader->data_size);
-    }
-    else
-    {
-        //remove download buffer
-        _shared->DownloadDB()->RemoveConf(reader->type, reader->file_uuid);
-    }
-}
+// void ConfServiceImpl::parseBinary(unsigned int size, QByteArray& content)
+// {
+//     Q_UNUSED(size);
+//     QScopedPointer<BinaryReader> reader;
+//     reader.reset(new BinaryReader);
+// 
+//     reader->Read(content);
+// 
+//     bool alive = this->checkConferenceAlive(reader->type, reader->file_uuid);
+//     if(alive){
+// 
+//         _shared->DownloadDB()->AddSegment(reader->type, reader->sender, reader->file_uuid,
+//                                           reader->meeting_time, reader->file_startpos,
+//                                           reader->file_status, reader->data_size,
+//                                           reader->data);
+// 
+//         QVariantMap param;
+//         if(reader->type == 1){
+//             param.insert("type","conference");
+//             param.insert("device_mac",reader->sender);
+//         }
+//         else if(reader->type == 0){
+//             param.insert("type","person");
+//             param.insert("user_id",reader->sender);
+//         }
+//         param.insert("conference_uuid",reader->file_uuid);
+//         param.insert("startpos",reader->file_startpos);
+// 
+//         this->Execute(MessageBase::DownloadFileAck, param);
+// 
+//         this->monitorDownload(reader->type, reader->file_uuid, reader->sender, reader->data_size);
+//     }
+//     else
+//     {
+//         //remove download buffer
+//         _shared->DownloadDB()->RemoveConf(reader->type, reader->file_uuid);
+//     }
+// }
 
 void ConfServiceImpl::Execute(int command, QVariantMap param)
 {
@@ -692,6 +685,7 @@ void ConfServiceImpl::Execute(int command, QVariantMap param)
 //         this->queryBinary(info.type, info.uuid, info.identity);
 //     }
 // }
+
 // void ConfServiceImpl::downloadNextFile(QString uuid, QString identity)
 // {
 //     DownLoadInfo info;
@@ -711,169 +705,169 @@ void ConfServiceImpl::Execute(int command, QVariantMap param)
 //         }
 //     }
 // }
-
-void ConfServiceImpl::queryBinary(int type, QString qstrConferenceUuid, QString identity)
-{
-    //qDebug()<<"download file"<<uuid<<identity;
-
-    int binary_size(0);
-    binary_size = _shared->DownloadDB()->GetFileSize(type, qstrConferenceUuid, identity);
-
-    QVariantMap param;
-
-    if(type == 1){
-        param.insert("type","conference");
-        param.insert("device_mac",identity);
-    }
-    else if(type == 0){
-        param.insert("type","person");
-        param.insert("user_id",identity);
-    }
-    param.insert("conference_uuid",qstrConferenceUuid);
-    param.insert("startpos",binary_size);
-
-    this->Execute(MessageBase::DownloadFile, param);
-}
-
-void ConfServiceImpl::monitorDownload(int type, QString qstrConferenceUuid, QString identity, int data_size)
-{
-    QStringList completed_list = _shared->DownloadDB()->GetCompletedIdentity(type, qstrConferenceUuid);
-
-    //once a file download is compeleted, save it
-    if(completed_list.count() > 0){
-
-            QDir dir;
-            dir.setPath(this->outputFolder(type, qstrConferenceUuid));
-            dir.mkpath(dir.absolutePath());
-
-            QString fileName;
-            QScopedPointer<QFile> file(new QFile);
-            foreach (QString user, completed_list) {
-
-                fileName.clear();
-                fileName = _shared->DeviceDB()->DeviceInfo(user).value("name").toString();
-                if(fileName.isEmpty())
-                    fileName += _shared->ConferenceDB()->ConferenceInfo(qstrConferenceUuid).value("title").toString();
-                if(fileName.isEmpty())
-                    fileName += user;
-                fileName.replace(":","");
-                fileName.replace("-","");
-                fileName.replace(" ","_");
-
-                QByteArray record_data = _shared->DownloadDB()->GetFile(type, qstrConferenceUuid, user);
-
-                QBuffer buffer(&record_data);
-                buffer.open(QIODevice::ReadWrite);
-
-                buffer.reset();
-
-                QString format = QString::fromLatin1(buffer.read(4));
-                if(format=="RIFF"){
-                    fileName += ".wav";
-
-                    quint32 totalLen = record_data.size() - 8;
-
-                    buffer.putChar(totalLen);
-                    buffer.putChar(totalLen>>8);
-                    buffer.putChar(totalLen>>16);
-                    buffer.putChar(totalLen>>24);
-
-                    quint32 datalen = record_data.size() - 44;
-
-                    buffer.reset();
-                    buffer.seek(40);
-
-                    buffer.putChar(datalen);
-                    buffer.putChar(datalen>>8);
-                    buffer.putChar(datalen>>16);
-                    buffer.putChar(datalen>>24);
-                }
-                else{
-                    fileName += ".amr";
-                }
-
-                file->setFileName(dir.absolutePath() + "/" + fileName);
-                file->open(QIODevice::WriteOnly | QIODevice::Append);
-                if(file->isOpen()){
-                    //write into harddisk(storage)
-                    file->write(record_data);
-                    file->flush();
-                    file->close();
-
-                    //save into file database
-                    _shared->ClipDB()->AddFile(qstrConferenceUuid, user, -1, file->fileName());
-                    //remove download buffer
-                    _shared->DownloadDB()->RemoveFile(type, qstrConferenceUuid, user);
-
-                   // this->downloadNextFile(uuid, user);
-                }
-                else{
-                    qDebug()<<"create file failed."<<file->fileName();
-                }
-            }
-            file.reset();
-    }
-
-    QStringList exist_list;
-    QStringList needed_list;
-
-    QVariantMap conf;
-
-    if(type == 1){
-        conf = _shared->ConferenceDB()->ConferenceInfo(qstrConferenceUuid);
-        needed_list = conf.value("devices").toString().split(",");
-    }
-    else if(type == 0){
-        conf = _shared->PersonalDB()->ConferenceInfo(qstrConferenceUuid);
-        needed_list << conf.value("user_id").toString();
-    }
-
-    needed_list.removeDuplicates();
-
-    this->checkConferenceFile(qstrConferenceUuid, exist_list, QStringList());
-
-    bool completed(false);
-    int conf_size(0);
-    float_t percentage(0.0);
-
-    conf_size = _conf_size_map.value(qstrConferenceUuid,0);
-    conf_size += data_size;
-    _conf_size_map.insert(qstrConferenceUuid, conf_size);
-
-    percentage = conf_size * 100.0 / _conf_total_size_map.value(qstrConferenceUuid,1);
-    if(percentage > 100.0){
-        percentage = 100.0;
-        qDebug()<<"download size over! conference total size:"<<_conf_total_size_map.value(qstrConferenceUuid,1)<<"current size:"<<conf_size;
-    }
-
-    foreach (QString each, exist_list) {
-
-        if(needed_list.contains(each)){
-            needed_list.removeAll(each);
-        }
-    }
-
-    if(needed_list.count() == 0){
-        completed = true;
-        qDebug()<<"download size:"<<_conf_size_map.value(qstrConferenceUuid,1)<<"conference total size:"<<_conf_total_size_map.value(qstrConferenceUuid,1);
-
-        _conf_size_map.remove(qstrConferenceUuid);
-        _conf_total_size_map.remove(qstrConferenceUuid);
-        // _download_info_map.remove(qstrConferenceUuid);
-
-    }
-
-    conf.insert("completed",completed?completed:2);
-
-    if(type == 1){
-        _shared->ConferenceDB()->AddConference(conf);
-    }
-    else if(type == 0){
-        _shared->PersonalDB()->AddConference(conf);
-    }
-
-    this->monitorDisconnect(type, qstrConferenceUuid, identity, percentage, data_size, completed);
-}
+// 
+// void ConfServiceImpl::queryBinary(int type, QString qstrConferenceUuid, QString identity)
+// {
+//     //qDebug()<<"download file"<<uuid<<identity;
+// 
+//     int binary_size(0);
+//     binary_size = _shared->DownloadDB()->GetFileSize(type, qstrConferenceUuid, identity);
+// 
+//     QVariantMap param;
+// 
+//     if(type == 1){
+//         param.insert("type","conference");
+//         param.insert("device_mac",identity);
+//     }
+//     else if(type == 0){
+//         param.insert("type","person");
+//         param.insert("user_id",identity);
+//     }
+//     param.insert("conference_uuid",qstrConferenceUuid);
+//     param.insert("startpos",binary_size);
+// 
+//     this->Execute(MessageBase::DownloadFile, param);
+// }
+// 
+// void ConfServiceImpl::monitorDownload(int type, QString qstrConferenceUuid, QString identity, int data_size)
+// {
+//     QStringList completed_list = _shared->DownloadDB()->GetCompletedIdentity(type, qstrConferenceUuid);
+// 
+//     //once a file download is compeleted, save it
+//     if(completed_list.count() > 0){
+// 
+//             QDir dir;
+//             dir.setPath(this->outputFolder(type, qstrConferenceUuid));
+//             dir.mkpath(dir.absolutePath());
+// 
+//             QString fileName;
+//             QScopedPointer<QFile> file(new QFile);
+//             foreach (QString user, completed_list) {
+// 
+//                 fileName.clear();
+//                 fileName = _shared->DeviceDB()->DeviceInfo(user).value("name").toString();
+//                 if(fileName.isEmpty())
+//                     fileName += _shared->ConferenceDB()->ConferenceInfo(qstrConferenceUuid).value("title").toString();
+//                 if(fileName.isEmpty())
+//                     fileName += user;
+//                 fileName.replace(":","");
+//                 fileName.replace("-","");
+//                 fileName.replace(" ","_");
+// 
+//                 QByteArray record_data = _shared->DownloadDB()->GetFile(type, qstrConferenceUuid, user);
+// 
+//                 QBuffer buffer(&record_data);
+//                 buffer.open(QIODevice::ReadWrite);
+// 
+//                 buffer.reset();
+// 
+//                 QString format = QString::fromLatin1(buffer.read(4));
+//                 if(format=="RIFF"){
+//                     fileName += ".wav";
+// 
+//                     quint32 totalLen = record_data.size() - 8;
+// 
+//                     buffer.putChar(totalLen);
+//                     buffer.putChar(totalLen>>8);
+//                     buffer.putChar(totalLen>>16);
+//                     buffer.putChar(totalLen>>24);
+// 
+//                     quint32 datalen = record_data.size() - 44;
+// 
+//                     buffer.reset();
+//                     buffer.seek(40);
+// 
+//                     buffer.putChar(datalen);
+//                     buffer.putChar(datalen>>8);
+//                     buffer.putChar(datalen>>16);
+//                     buffer.putChar(datalen>>24);
+//                 }
+//                 else{
+//                     fileName += ".amr";
+//                 }
+// 
+//                 file->setFileName(dir.absolutePath() + "/" + fileName);
+//                 file->open(QIODevice::WriteOnly | QIODevice::Append);
+//                 if(file->isOpen()){
+//                     //write into harddisk(storage)
+//                     file->write(record_data);
+//                     file->flush();
+//                     file->close();
+// 
+//                     //save into file database
+//                     _shared->ClipDB()->AddFile(qstrConferenceUuid, user, -1, file->fileName());
+//                     //remove download buffer
+//                     _shared->DownloadDB()->RemoveFile(type, qstrConferenceUuid, user);
+// 
+//                    // this->downloadNextFile(uuid, user);
+//                 }
+//                 else{
+//                     qDebug()<<"create file failed."<<file->fileName();
+//                 }
+//             }
+//             file.reset();
+//     }
+// 
+//     QStringList exist_list;
+//     QStringList needed_list;
+// 
+//     QVariantMap conf;
+// 
+//     if(type == 1){
+//         conf = _shared->ConferenceDB()->ConferenceInfo(qstrConferenceUuid);
+//         needed_list = conf.value("devices").toString().split(",");
+//     }
+//     else if(type == 0){
+//         conf = _shared->PersonalDB()->ConferenceInfo(qstrConferenceUuid);
+//         needed_list << conf.value("user_id").toString();
+//     }
+// 
+//     needed_list.removeDuplicates();
+// 
+//     this->checkConferenceFile(qstrConferenceUuid, exist_list, QStringList());
+// 
+//     bool completed(false);
+//     int conf_size(0);
+//     float_t percentage(0.0);
+// 
+//     conf_size = _conf_size_map.value(qstrConferenceUuid,0);
+//     conf_size += data_size;
+//     _conf_size_map.insert(qstrConferenceUuid, conf_size);
+// 
+//     percentage = conf_size * 100.0 / _conf_total_size_map.value(qstrConferenceUuid,1);
+//     if(percentage > 100.0){
+//         percentage = 100.0;
+//         qDebug()<<"download size over! conference total size:"<<_conf_total_size_map.value(qstrConferenceUuid,1)<<"current size:"<<conf_size;
+//     }
+// 
+//     foreach (QString each, exist_list) {
+// 
+//         if(needed_list.contains(each)){
+//             needed_list.removeAll(each);
+//         }
+//     }
+// 
+//     if(needed_list.count() == 0){
+//         completed = true;
+//         qDebug()<<"download size:"<<_conf_size_map.value(qstrConferenceUuid,1)<<"conference total size:"<<_conf_total_size_map.value(qstrConferenceUuid,1);
+// 
+//         _conf_size_map.remove(qstrConferenceUuid);
+//         _conf_total_size_map.remove(qstrConferenceUuid);
+//         // _download_info_map.remove(qstrConferenceUuid);
+// 
+//     }
+// 
+//     conf.insert("completed",completed?completed:2);
+// 
+//     if(type == 1){
+//         _shared->ConferenceDB()->AddConference(conf);
+//     }
+//     else if(type == 0){
+//         _shared->PersonalDB()->AddConference(conf);
+//     }
+// 
+//     this->monitorDisconnect(type, qstrConferenceUuid, identity, percentage, data_size, completed);
+// }
 
 void  ConfServiceImpl::monitorDisconnect(int type, QString qstrConferenceUuid, QString identity, int percentage, int data_size, bool completed)
 {

@@ -17,12 +17,13 @@ public:
 
     enum RecordType
     {
-        RT_PERSONAL,
-        RT_CONFERENCE,
-        RT_MOBILE
+         // 根据服务端定义的值来设定的。 2是 performance，但目前好像跟录音文件无关。
+        RT_PERSONAL = 0,
+        RT_CONFERENCE = 1,
+        RT_MOBILE = 3
     };
 
-    enum{
+    enum {
         kConnectOpened = 0,
         kConnectFailed,
         kConnectClosed,
@@ -54,7 +55,7 @@ public:
     QString  GetFolder(int type, QString uuid);
     void     AddClipFile(QVariantMap& file);
     QVariantList GetFileList(QString uuid);
-    void     DownLoadConference(int type, QString uuid);
+    // void     DownLoadConference(int type, QString uuid);
     void     CheckConferenceFile(QVariantMap& conf);
     void     CheckPersonalFile(QVariantMap& conf);
 

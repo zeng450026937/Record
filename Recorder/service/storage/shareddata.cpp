@@ -33,15 +33,14 @@ bool SharedData::InitDb()
     bool ret(false);
 
     ret = query.exec("CREATE TABLE IF NOT EXISTS tb_record_download ("
-                     "id INTEGER PRIMARY KEY NOT NULL, "
-                     "recordType int DEFAULT '0', "
-                     "file_uuid TEXT, "
-                     "conference_uuid TEXT, "
-                     "device_uuid TEXT, "
-                     "startpos INT DEFAULT '0', "
-                     "status INT DEFAULT '0', "
-                     "data_size INT DEFAULT '0', "
-                     "data blob)");
+        "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "recordType INT, "
+        "file_uuid TEXT, "
+        "conference_uuid TEXT, "
+        "device_uuid TEXT, "
+        // "file_size INT, "
+        "completed INT DEFAULT 0,"
+        "path TEXT);");
 
     ret = query.exec("CREATE TABLE IF NOT EXISTS tb_clip_file ("
                      "id INTEGER PRIMARY KEY NOT NULL, "

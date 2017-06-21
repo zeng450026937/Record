@@ -16,7 +16,7 @@ protected:
     QSqlDatabase _db;
 
     SharedData();
-    ~SharedData();
+    virtual ~SharedData();
 };
 
 #endif // SHAREDDATA_H

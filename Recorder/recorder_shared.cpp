@@ -151,7 +151,6 @@ void RecorderShared::AddPersonalRecordInfo(QVariantMap& vmRecordInfo) {
   vmRecordInfo.insert("time",
                       qstrCreateTime.right(8));  // 8 == strlen("hh:mm:ss")
 
-  _conf_service->checkPersonal(vmRecordInfo);
   ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel,
                           vmRecordInfo);
   _conference_uuid_list << vmRecordInfo.value("conference_uuid").toString();
@@ -159,7 +158,11 @@ void RecorderShared::AddPersonalRecordInfo(QVariantMap& vmRecordInfo) {
 
 void RecorderShared::AddConferenceRecordInfo(QVariantMap& vmRecordInfo) {
   vmRecordInfo.insert("recordType", RT_CONFERENCE);
-  _conf_service->checkConference(vmRecordInfo);
+  QString qstrCreateTime = vmRecordInfo["createTime"].toString();
+  vmRecordInfo.insert("date",
+                      qstrCreateTime.left(10));  // 10 == strlen("yyyy-MM-dd")
+  vmRecordInfo.insert("time",
+                      qstrCreateTime.right(8));  // 8 == strlen("hh:mm:ss")
   ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel,
                           vmRecordInfo);
   _conference_uuid_list << vmRecordInfo.value("uuid").toString();

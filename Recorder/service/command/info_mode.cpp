@@ -2,6 +2,7 @@
 #include "info_mode.h"
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QVector>
 
 #include "common/config.h"
 #include "recorder_shared.h"
@@ -11,9 +12,13 @@
 
 #define IMAC_HEART_BEAT "heartBeat"
 #define IMAC_GET_DEVICE_LIST "getDeviceList"
+#define IMAC_UPDATE_DEVICE_INFO "updateDeviceInfo"
 
 InfoMode::InfoMode(MessageBase *pMessager) : CommandBase(pMessager) {
+  qRegisterMetaType<QVector<int>>();
   AddActionProc(MB_INFO_MODE, IMAC_HEART_BEAT, &InfoMode::HandleHeartBeat);
+  AddActionProc(MB_INFO_MODE, IMAC_UPDATE_DEVICE_INFO,
+                &InfoMode::GetDeviceInfoReply);
   AddActionProc(MB_INFO_MODE, IMAC_GET_DEVICE_LIST,
                 &InfoMode::GetDeviceListReply);
 }
@@ -53,13 +58,16 @@ void InfoMode::GetDeviceList() {
 }
 
 void InfoMode::GetDeviceListReply(bool bResult, const QJsonObject &jsData) {
-  QJsonDocument jsDoc(jsData);
-  QString qstr = jsDoc.toJson();
   if (bResult) {
-    QJsonDocument jsDoc(jsData);
-    QString qstr = jsDoc.toJson();
     QVariantList lsRecordInfo = jsData["list"].toVariant().toList();
     m_pRecordShared->receive_deviceInfoListGetted(true, lsRecordInfo);
+  }
+}
+
+void InfoMode::GetDeviceInfoReply(bool bResult, const QJsonObject &jsData) {
+  if (bResult) {
+    QVariantMap lsRecordInfo = jsData.toVariantMap();
+    m_pRecordShared->receive_deviceInfoUpdate(lsRecordInfo);
   }
 }
 

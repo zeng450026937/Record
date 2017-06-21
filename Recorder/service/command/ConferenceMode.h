@@ -1,7 +1,7 @@
 #pragma once
 
-#include <QMap>
 #include <service/messager/CommandBase.h>
+#include <QMap>
 
 class Config;
 class MessageBase;
@@ -12,52 +12,50 @@ class ClipFileDatabase;
 class TemplateDatabase;
 class ConfServiceImpl;
 class RecorderShared;
-class ConferenceMode : public CommandBase
-{
-    friend class ServiceThread;
+class ConferenceMode : public CommandBase {
+  friend class ServiceThread;
 
-    Q_OBJECT
+  Q_OBJECT
 
-    ConferenceMode(MessageBase *pMessage);
-public:
-    ~ConferenceMode();
+  ConferenceMode(MessageBase *pMessage);
 
-    void SetDataBase(DataBase_Impl *pDatabase);
+ public:
+  ~ConferenceMode();
 
-public:
-    void GetConferenceList();
-    void GetTemplateList();
+  void SetDataBase(DataBase_Impl *pDatabase);
 
-private:
-    struct DownLoadInfo {
-        int type;
-        QString uuid;
-        QString identity;
-        int sample_rate;
-        int channal;
+ public:
+  void GetConferenceList();
+  void GetTemplateList();
 
-        bool DownLoadInfo::operator==(const DownLoadInfo &rhs) {            
-            return (rhs.uuid == uuid && rhs.identity == identity);
-        }
-    };
+ private:
+  struct DownLoadInfo {
+    int type;
+    QString uuid;
+    QString identity;
+    int sample_rate;
+    int channal;
 
-private:
-    // void DownloadFileReply(bool bResult, QJsonObject jsData); 
+    bool DownLoadInfo::operator==(const DownLoadInfo &rhs) {
+      return (rhs.uuid == uuid && rhs.identity == identity);
+    }
+  };
 
-    void GetTemplateListReply(bool bResult, QJsonObject jsData);
-    void GetConferenceListReply(bool bResult, QJsonObject jsData);
+ private:
+  // void DownloadFileReply(bool bResult, QJsonObject jsData);
+
+  void GetTemplateListReply(bool bResult, QJsonObject jsData);
+  void GetConferenceListReply(bool bResult, QJsonObject jsData);
   //  void SendAction(const char *pAction, const QJsonObject &jsData);
 
+  RecorderShared *m_pRecrodShared;
 
-    RecorderShared      *m_pRecrodShared;
+  DownloadDatabase *m_pDownloadDB;
 
-    DownloadDatabase    *m_pDownloadDB;
+  ClipFileDatabase *m_pClipFileDB;
+  TemplateDatabase *m_pTemplateDB;
+  Config *m_pConfig;
+  ConfServiceImpl *m_pConfService;
 
-    ClipFileDatabase    *m_pClipFileDB;
-    TemplateDatabase    *m_pTemplateDB;
-    Config              *m_pConfig;
-    ConfServiceImpl     *m_pConfService;
-
-    QMap<QString, int>  _conf_total_size_map;
+  QMap<QString, int> _conf_total_size_map;
 };
-

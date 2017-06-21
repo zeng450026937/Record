@@ -19,6 +19,7 @@ class InfoMode : public CommandBase {
  protected:
  private:
   void GetDeviceListReply(bool bResult, const QJsonObject &jsData);
+  void GetDeviceInfoReply(bool bResult, const QJsonObject &jsData);
 
   void HandleHeartBeat(bool bResult, const QJsonObject &jsData);
 

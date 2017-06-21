@@ -701,6 +701,7 @@
     <ClCompile Include="scenes\template_list_item.cpp" />
     <ClCompile Include="scenes\template_list_item_a.cpp" />
     <ClCompile Include="service\account\account_center.cpp" />
+    <ClCompile Include="service\command\RecordControl.cpp" />
     <ClCompile Include="service\command\RecordDownloadReceiver.cpp" />
     <ClCompile Include="service\command\RecordDownloadService.cpp" />
     <ClCompile Include="service\command\ConferenceMode.cpp" />
@@ -1678,6 +1679,7 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
     </CustomBuild>
+    <ClInclude Include="service\command\RecordControl.h" />
     <ClInclude Include="service\messager\binary_reader.h" />
     <CustomBuild Include="service\messager\message_base.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>

@@ -40,7 +40,6 @@ ConferenceMode * ServiceThread::GetConferenceMode()
         _private->_pConferenceMode = new ConferenceMode(GetMessager());
         _private->_pConferenceMode->m_pRecrodShared = GetRecordShared();
         _private->_pConferenceMode->moveToThread(this);
-        _private->_pConferenceMode->SetDataBase(static_cast<DataBase_Impl*>(_private->_db));
     }
 
     return _private->_pConferenceMode;

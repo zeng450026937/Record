@@ -2,18 +2,14 @@
 #include "info_mode.h"
 #include <QJsonDocument>
 #include <QJsonObject>
-#include "service/service_thread.h"
-#include "service/user_service_impl.h"
 #include "common/config.h"
 #include "service/messager/message_base.h"
 
-#define IMAC_HEART_BEAT         "heartBeat"
-#define IMAC_GET_DEVICE_LIST    "getDeviceList"
+#define IMAC_HEART_BEAT "heartBeat"
 
 InfoMode::InfoMode(MessageBase *pMessager) : CommandBase(pMessager)
 {
     AddActionProc(MB_INFO_MODE,IMAC_HEART_BEAT, &InfoMode::HandleHeartBeat);
-    AddActionProc(MB_INFO_MODE,IMAC_GET_DEVICE_LIST, &InfoMode::GetDeviceListReply);
 }
 
 InfoMode::~InfoMode()
@@ -48,23 +44,6 @@ void InfoMode::ConnectToServer()
 	m_pMessage->connectTo(jsDoc.toJson(), pConfig->TEST_SERVER);
 }
 
-void InfoMode::GetDeviceList()
-{
-    SendAction(IMAC_GET_DEVICE_LIST,QJsonObject());
-}
-
-void InfoMode::GetDeviceListReply(bool bResult, const QJsonObject &jsData)
-{
-    QJsonDocument jsDoc(jsData);
-    QString qstr = jsDoc.toJson();
-    if (bResult)
-    {
-    }
-    else
-    {
-
-    }
-}
 
 void InfoMode::HandleHeartBeat(bool bResult, const QJsonObject &jsData)
 {
@@ -76,11 +55,6 @@ void InfoMode::HandleHeartBeat(bool bResult, const QJsonObject &jsData)
     if (jsData["userId"].toString() == qstrUserId)
     {
         jsActionData.insert("userId",qstrUserId);
-        SendAction(IMAC_HEART_BEAT, jsActionData);
+        m_pMessage->sendMessage(MB_INFO_MODE, IMAC_HEART_BEAT, jsData);
     }
-}
-
-void InfoMode::SendAction(const char *pAction, const QJsonObject &jsData)
-{
-    m_pMessage->sendMessage("info", pAction, jsData);
 }

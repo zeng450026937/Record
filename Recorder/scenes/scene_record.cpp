@@ -49,7 +49,6 @@ Scene_Record::Scene_Record(RecorderShared *sharedData, QWidget *parent) :
     }
 
     ui->more_btn->setMenu(more_menu);
-
     ui->ControlStackedWidget->setCurrentWidget(ui->Rec_Start_Page);
 
     this->init_model();
@@ -203,11 +202,9 @@ void Scene_Record::init_model()
     QObject::connect(device_delegate,SIGNAL(device_select_stateChanged(bool,QVariantMap)),
                      this,SLOT(receive_device_select_stateChanged(bool,QVariantMap)));
 
-
     QRegExp::PatternSyntax Psyntax=QRegExp::PatternSyntax(QRegExp::FixedString);
     QRegExp syntax=QRegExp(QString("%1").arg(Qt::Checked),Qt::CaseInsensitive,Psyntax);
     sortFilter_proxyModel->setFilterRegExp(syntax);  //设置过滤语法
-
 
     ui->MarkTable->verticalHeader()->hide();
     ui->MarkTable->setWordWrap(true);
@@ -225,9 +222,6 @@ void Scene_Record::init_model()
 
 void Scene_Record::on_add_mark(QString text)
 {
-    //if(text.isEmpty())
-        //return;
-
     if(!_conf_uuid.isEmpty()){
         QVariantMap mark_info = ui->mark_box->add_mark( text );
         mark_info.insert("uuid", _conf_uuid );

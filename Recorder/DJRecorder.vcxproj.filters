@@ -773,6 +773,9 @@
     <ClCompile Include="GeneratedFiles\Release\moc_RecordDownloadReceiver.cpp">
       <Filter>Generated Files\Release</Filter>
     </ClCompile>
+    <ClCompile Include="service\command\RecordControl.cpp">
+      <Filter>Source Files\service\command</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_recorder.h">
@@ -903,6 +906,9 @@
     </ClInclude>
     <ClInclude Include="service\storage\download_database.h">
       <Filter>Source Files\service\storage</Filter>
+    </ClInclude>
+    <ClInclude Include="service\command\RecordControl.h">
+      <Filter>Source Files\service\command</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

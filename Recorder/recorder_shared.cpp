@@ -188,6 +188,13 @@ void RecorderShared::AddConferenceRecordInfo(QVariantMap &vmRecordInfo)
     //_conf_service->getMarkInfo(vmRecordInfo.value("uuid").toString());    
 }
 
+void RecorderShared::AddTemplateInfo(QVariantMap &vmRecordInfo)
+{
+    QVariantList list = _service->GetConfService()->templateList();
+    _template_uuid_list << vmRecordInfo.value("uuid").toString();
+    ModelUpdater::AppendRow(ModelUpdater::TemplateModel, vmRecordInfo);
+}
+
 //mark interface
 QVariantList RecorderShared::GetMark(QString conf_uuid)
 {
@@ -196,12 +203,18 @@ QVariantList RecorderShared::GetMark(QString conf_uuid)
 
     return QVariantList();
 }
+
 void RecorderShared::AddMark(ModelType type, QString conf_uuid,QVariantMap& mark)
 {
     if(_service_ready){
         _service->GetConfService()->addMarkInfo(conf_uuid, mark);
         ModelUpdater::AppendRow(type, mark);
     }
+}
+
+void RecorderShared::AddDeviceInfo(QVariantMap &vmRecordInfo)
+{
+
 }
 
 //device interface
@@ -615,7 +628,8 @@ void RecorderShared::on_template_list_got_trigger(bool result)
 
     if(result){
         _template_uuid_list.clear();
-        foreach (QVariant Template, list) {
+        foreach (QVariant Template, list) 
+        {
             _template_uuid_list << Template.toMap().value("uuid").toString();
         }
         ModelUpdater::ListToModel(ModelUpdater::TemplateModel, list);

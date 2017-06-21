@@ -67,11 +67,13 @@ public:
     void     AddMark(ModelType type, QString conf_uuid,QVariantMap& mark);
 
     //device interface
+    void    AddDeviceInfo(QVariantMap &vmRecordInfo);
     void     RefreshDeviceList();
     void     SelectDevice(bool selected, QVariantMap& device);
     QVariantMap DeviceInfo(QString mac);
 
     //template interface
+    void    AddTemplateInfo(QVariantMap &vmRecordInfo);
     void     AddTemplate(QVariantMap& Template);
     void     RemoveTemplate(QString& uuid);
     void     SetTemplate(QVariantMap& Template);

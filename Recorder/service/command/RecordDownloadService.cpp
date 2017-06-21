@@ -99,11 +99,6 @@ bool RecordDownloadService::DownloadRecord(RecordDownloadReceiver *pDownloadRece
     return true;
 }
 
-void RecordDownloadService::SetDataBase(DataBase_Impl *pDatabase)
-{
-    m_pConferenceDB = ConferenceDatabase::GetInterface(pDatabase);
-    m_pClipFileDB = ClipFileDatabase::GetInterface(pDatabase);
-}
 
 void RecordDownloadService::SetConfServiceImpl(ConfServiceImpl *pConfServiceImpl)
 {

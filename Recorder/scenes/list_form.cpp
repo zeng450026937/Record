@@ -117,7 +117,7 @@ void ListForm::on_downloadButton_clicked() {
         break;
       case RecorderShared::RT_MOBILE:
         RecordDownloadService::GetInstance()->DownloadRecord(
-            this, RecorderShared::RT_CONFERENCE, _info["fileUuid"].toString(),
+            this, RecorderShared::RT_MOBILE, _info["fileUuid"].toString(),
             _info["conferenceUuid"].toString(), _info["deviceUuid"].toString(),
             _info["createTime"].toString(), _info["fileExtension"].toString());
         break;

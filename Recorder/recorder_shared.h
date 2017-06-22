@@ -59,6 +59,7 @@ class RecorderShared : public QObject, public ModelUpdater {
 
   void AddPersonalRecordInfo(QVariantMap& vmRecordInfo);
   void AddConferenceRecordInfo(QVariantMap& vmRecordInfo);
+  void AddMobileRecordInfo(QVariantMap& vmRecordInfo);
 
   // mark interface
   QVariantList GetMark(QString conf_uuid);

@@ -1,4 +1,4 @@
-﻿#include "RecordDownloadService.h"
+#include "RecordDownloadService.h"
 #include <Winsock2.h>
 #include <service/messager/message_base.h>
 #include <QDebug>
@@ -30,6 +30,8 @@ RecordDownloadService::RecordDownloadService(MessageBase *pMessager)
                 &RecordDownloadService::DownloadRecordReply);
   AddActionProc(MB_PERSONAL_MODE, RFDS_DOWNLOAD_FILE,
                 &RecordDownloadService::DownloadRecordReply);
+  AddActionProc(MB_MOBILE_MODE, RFDS_DOWNLOAD_FILE,
+                &RecordDownloadService::DownloadRecordReply);
 }
 
 RecordDownloadService *RecordDownloadService::GetInstance() {
@@ -49,12 +51,9 @@ bool RecordDownloadService::DownloadRecord(
     const QString &qstrFileExtension) {
   int iStartPos = 0;
   if (!pDownloadReceiver->CreateReciveData(
-          iType,
-          qstrFileExtension.isEmpty()
-              ? "amr"
-              : qstrFileExtension,  // 鏈嶅姟绔粰鐨勬枃浠舵墿灞曞悕涓虹┖鏃讹紝褰曢煶涓篴mr鏍煎紡
-          qstrFileUuid,
-          qstrConferenceUuid, qstrDeviceUuid, qstrCreateTime, &iStartPos)) {
+          iType, qstrFileExtension.isEmpty() ? "amr" : qstrFileExtension,
+          qstrFileUuid, qstrConferenceUuid, qstrDeviceUuid, qstrCreateTime,
+          &iStartPos)) {
     return false;
   }
 
@@ -91,7 +90,6 @@ bool RecordDownloadService::DownloadRecord(
 
   return true;
 }
-
 
 void RecordDownloadService::SetConfServiceImpl(
     ConfServiceImpl *pConfServiceImpl) {

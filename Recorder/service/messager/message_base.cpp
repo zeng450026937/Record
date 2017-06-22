@@ -59,23 +59,20 @@ void MessageBase::on_message_reply(QString qstrMessage) {
       QByteArray baActionLocator;
       baActionLocator.append(jsCommand["mode"].toString());
       baActionLocator.append(jsCommand["action"].toString());
-      
+
       auto itrFound = d->mapMode.find(baActionLocator);
       if (itrFound == d->mapMode.end()) {
-        // 鎵€鏈変笉绗﹀悎瑙勫垯鐨勫搷搴旈兘浼氬湪杩欓噷缁撴潫锛屽寘鎷?涓嶅瓨鍦?command"
-        // json瀵硅薄鏃躲€?
-        qDebug() << jsCommand["mode"].toString()
-                 << " command mode is not found." << error.errorString();
+        qDebug() << jsRoot << " command mode is not found."
+                 << error.errorString();
         return;
       }
-
 
       if (jsCommand["action"].toString() != "heartBeat") qDebug() << jsCommand;
       emit itrFound->second->action_trigger(baActionLocator,
                                             jsRoot["result"].toBool(),
                                             jsRoot["data"].toObject());
     } else {
-      // TODO: 鎻愮ず鍗忚涓庢湇鍔＄閫氳鍗忚鐗堟湰涓嶅尮閰嶃€?
+      // TODO
     }
   } else {
     qDebug() << "json command parse failed" << error.errorString();

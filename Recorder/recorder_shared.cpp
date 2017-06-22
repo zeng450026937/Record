@@ -174,6 +174,18 @@ void RecorderShared::AddConferenceRecordInfo(QVariantMap& vmRecordInfo) {
   //_conf_service->getMarkInfo(vmRecordInfo.value("uuid").toString());
 }
 
+void RecorderShared::AddMobileRecordInfo(QVariantMap& vmRecordInfo) {
+  vmRecordInfo.insert("recordType", RT_MOBILE);
+  QString qstrCreateTime = vmRecordInfo["createTime"].toString();
+  vmRecordInfo.insert("date",
+                      qstrCreateTime.left(10));  // 10 == strlen("yyyy-MM-dd")
+  vmRecordInfo.insert("time",
+                      qstrCreateTime.right(8));  // 8 == strlen("hh:mm:ss")
+  ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel,
+                          vmRecordInfo);
+  _conference_uuid_list << vmRecordInfo.value("uuid").toString();
+}
+
 // mark interface
 QVariantList RecorderShared::GetMark(QString conf_uuid) {
   return _service->GetConfService()->markInfo(conf_uuid);

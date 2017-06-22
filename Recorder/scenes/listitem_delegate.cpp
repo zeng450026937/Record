@@ -26,8 +26,8 @@ void ListItemDelegate::paint(QPainter *painter,
     if (view->indexWidget(index) == Q_NULLPTR) {
       ListForm *widget = new ListForm();
       view->setIndexWidget(index, widget);
-      QObject::connect(widget, SIGNAL(itemClicked(QString)), this,
-                       SIGNAL(itemClicked(QString)));
+      QObject::connect(widget, SIGNAL(itemClicked(QVariantMap)), this,
+                       SIGNAL(itemClicked(QVariantMap)));
     } else {
       ListForm *widget = qobject_cast<ListForm *>(view->indexWidget(index));
       if (widget) widget->update_display(index.data(Qt::UserRole).toMap());

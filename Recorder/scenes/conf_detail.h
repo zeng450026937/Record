@@ -1,28 +1,31 @@
 #ifndef CONF_DETAIL_H
 #define CONF_DETAIL_H
 
+#include <QVariantMap>
 #include <QWidget>
 
+class ConferenceMode;
 namespace Ui {
 class ConfDetail;
 }
 
-class ConfDetail : public QWidget
-{
-    Q_OBJECT
+class ConfDetail : public QWidget {
+  Q_OBJECT
 
-public:
-    explicit ConfDetail(QWidget *parent = 0);
-    ~ConfDetail();
+ public:
+  explicit ConfDetail(QWidget *parent = 0);
+  ~ConfDetail();
 
-public slots:
-    void setUuid(const QString &uuid);
+ public slots:
+  void setInfo(const QVariantMap &info);
 
-signals:
-    void goBack();
+ signals:
+  void goBack();
 
-private:
-    Ui::ConfDetail *ui;
+ private:
+  Ui::ConfDetail *ui;
+  QVariantMap _info;
+  ConferenceMode *conf_mode;
 };
 
-#endif // CONF_DETAIL_H
+#endif  // CONF_DETAIL_H

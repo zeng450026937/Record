@@ -19,7 +19,7 @@ class ListForm : public RecordDownloadReceiver {
   virtual void mousePressEvent(QMouseEvent *event);
 
  signals:
-  void itemClicked(const QString &uuid);
+  void itemClicked(const QVariantMap &info);
 
  public slots:
   void update_display(const QVariantMap &info);

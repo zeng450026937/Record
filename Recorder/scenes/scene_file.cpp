@@ -196,9 +196,10 @@ void Scene_File::init_model() {
   ui->fileStackedWidget->addWidget(conf_detail);
 
   connect(itemDelegate, &ListItemDelegate::itemClicked,
-          [=](const QString &uuid) {
+          [this, conf_detail](const QVariantMap &info) {
             ui->fileStackedWidget->setCurrentIndex(
                 ui->fileStackedWidget->currentIndex() + 1);
+            conf_detail->setInfo(info);
           });
   connect(conf_detail, &ConfDetail::goBack, [=]() {
     ui->fileStackedWidget->setCurrentIndex(
@@ -704,6 +705,19 @@ void Scene_File::on_file_listView_clicked(const QModelIndex &index) {
     default:
       break;
   }
+
+  _file_list = _sharedData->GetFileList(_uuid);
+
+  this->update_file_list(_file_list);
+
+  _mark_list = _sharedData->GetMark(_uuid);
+  // to avoid displaying the marks which are out of play range，update mark
+  // model in update_play_info()
+  this->update_mark_model(_mark_list);
+}
+
+void Scene_File::on_file_clicked(const QString &uuid) {
+  this->clear_file_info();
 
   _file_list = _sharedData->GetFileList(_uuid);
 

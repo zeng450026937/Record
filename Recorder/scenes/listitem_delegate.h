@@ -11,7 +11,7 @@ class ListItemDelegate : public QStyledItemDelegate {
   explicit ListItemDelegate(QObject *parent = 0);
   ~ListItemDelegate();
  signals:
-  void itemClicked(const QString &uuid);
+  void itemClicked(const QVariantMap &info);
 
  protected:
   virtual QWidget *createEditor(QWidget *parent,

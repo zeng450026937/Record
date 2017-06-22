@@ -1,9 +1,10 @@
 #include "service_thread.h"
 #include <recorder_shared.h>
 #include "command/ConferenceMode.h"
-#include "command/PersonalMode.h"
 #include "command/LoginControl.h"
 #include "command/MarkControl.h"
+#include "command/PersonalMode.h"
+#include "command/RecordControl.h"
 #include "conf_service_impl.h"
 #include "service_thread_private.h"
 #include "storage/database_impl.h"
@@ -95,20 +96,26 @@ DownloadDatabase* ServiceThread::GetDownloadDB() {
 
 ClipFileDatabase* ServiceThread::GetClipDB() { return _private->ClipDB(); }
 
-MarkDatabase * ServiceThread::GetMarkDB()
-{
-    return _private->_mark_db;
+MarkDatabase* ServiceThread::GetMarkDB() { return _private->_mark_db; }
+
+MarkControl* ServiceThread::GetMarkControl() {
+  if (_private->_mark_control == nullptr) {
+    _private->_mark_control =
+        new MarkControl(_private->_mark_db, _private->_messager);
+    _private->_mark_control->moveToThread(this);
+  }
+
+  return _private->_mark_control;
 }
 
-MarkControl * ServiceThread::GetMarkControl()
-{
-    if (_private->_mark_control == nullptr)
-    {
-        _private->_mark_control = new MarkControl(_private->_mark_db,_private->_messager);
-        _private->_mark_control->moveToThread(this);
-    }
+RecordControl* ServiceThread::GetRecordControl() {
+  if (_private->_record_control == nullptr) {
+    _private->_record_control =
+        new RecordControl(GetRecordShared(), _private->_messager);
+    _private->_record_control->moveToThread(this);
+  }
 
-    return _private->_mark_control;
+  return _private->_record_control;
 }
 
 void ServiceThread::run() {

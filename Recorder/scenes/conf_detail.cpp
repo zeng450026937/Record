@@ -16,20 +16,31 @@ ConfDetail::ConfDetail(QWidget *parent)
                    &ConfDetail::goBack);
 
   conf_mode = ServiceThread::GetInstance()->GetConferenceMode();
-  QObject::connect(conf_mode, &ConferenceMode::getConferenceFiles, this,
-                   [=](const QVariantList &list) {
+  QObject::connect(
+      conf_mode, &ConferenceMode::getConferenceFiles, this,
+      [=](const QVariantList &list) {
 
-                     ui->listWidget->clear();
-                     foreach (QVariant item, list) {
-                       QListWidgetItem *listItem = new QListWidgetItem(
-                           item.toMap().value("uuid").toString(),
-                           ui->listWidget);
-                       ListForm *listItemWidget = new ListForm();
-                       ui->listWidget->addItem(listItem);
-                       ui->listWidget->setItemWidget(listItem, listItemWidget);
-                       listItemWidget->update_display(item.toMap());
-                     }
-                   });
+        ui->listWidget->clear();
+        foreach (QVariant item, list) {
+          QVariantMap itemMap = item.toMap();
+          QString qstrCreateTime = itemMap["createTime"].toString();
+          itemMap.insert(
+              "date",
+              qstrCreateTime.left(10));  // 10 == strlen("yyyy-MM-dd")
+          itemMap.insert("time",
+                         qstrCreateTime.right(8));  // 8 == strlen("hh:mm:ss")
+          itemMap.insert("recordType", RecorderShared::RT_CONFERENCE);
+          QListWidgetItem *listItem = new QListWidgetItem(
+              item.toMap().value("uuid").toString(), ui->listWidget);
+          ListForm *listItemWidget = new ListForm();
+          listItem->setSizeHint(QSize(ui->listWidget->width() - 5,
+                                      listItemWidget->size().height()));
+          ui->listWidget->addItem(listItem);
+          ui->listWidget->setItemWidget(listItem, listItemWidget);
+          listItemWidget->update_display(itemMap);
+          qDebug() << item;
+        }
+      });
 }
 
 ConfDetail::~ConfDetail() { delete ui; }
@@ -41,6 +52,6 @@ void ConfDetail::setInfo(const QVariantMap &info) {
   ui->dateLabel->setText(_info.value("date").toString());
   ui->timeLabel->setText(_info.value("time").toString());
   if (conf_mode &&
-      _info.value("recordType").toInt() != RecorderShared::RT_PERSONAL)
+      _info.value("recordType").toInt() == RecorderShared::RT_CONFERENCE)
     conf_mode->GetConferenceFiles(_info.value("conferenceUuid").toString());
 }

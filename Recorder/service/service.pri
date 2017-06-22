@@ -42,7 +42,9 @@ HEADERS += \
     $$PWD/command/RecordDownloadService.h \
     $$PWD/storage/download_database.h \
     $$PWD/command/LoginControl.h \
-    $$PWD/command/RecordControl.h
+    $$PWD/command/RecordControl.h \
+    $$PWD/command/MarkControl.h \
+    $$PWD/command/SettingControl.h
 
 
 SOURCES += \
@@ -74,5 +76,7 @@ SOURCES += \
     $$PWD/command/RecordDownloadService.cpp \
     $$PWD/storage/download_database.cpp \
     $$PWD/command/LoginControl.cpp \
-    $$PWD/command/RecordControl.cpp
+    $$PWD/command/RecordControl.cpp \
+    $$PWD/command/MarkControl.cpp \
+    $$PWD/command/SettingControl.cpp
 

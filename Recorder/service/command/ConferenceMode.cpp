@@ -1,6 +1,7 @@
 #include "ConferenceMode.h"
 
 #include <recorder_shared.h>
+#include <QDebug>
 #include "common/config.h"
 #include "service/messager/message_base.h"
 

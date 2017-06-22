@@ -8,7 +8,6 @@
 
 #include <service/command/ConferenceMode.h>
 #include <service/command/PersonalMode.h>
-#include "service/command/MarkControl.h"
 #include "conf_detail.h"
 #include "config.h"
 #include "listitem_delegate.h"
@@ -16,6 +15,7 @@
 #include "scene_buttondelegate.h"
 #include "scene_file_clip.h"
 #include "scene_record_warning.h"
+#include "service/command/MarkControl.h"
 #include "service/service_thread.h"
 
 Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent)
@@ -34,9 +34,8 @@ Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent)
       _time_unit(1000),
       _duration(0),
       _offset(0),
-      _type(1) ,
-        m_pMarkControl(ServiceThread::GetInstance()->GetMarkControl())
-      {
+      _type(1),
+      m_pMarkControl(ServiceThread::GetInstance()->GetMarkControl()) {
   ui->setupUi(this);
 
   this->setWindowFlags(Qt::FramelessWindowHint);  //去掉标题栏
@@ -281,7 +280,7 @@ void Scene_File::update_file_list(QVariantList &list) {
     int start_time = var.toMap().value("start_time").toInt();
 
     QString folder;
-    folder = _sharedData->GetFolder(_type, _uuid);
+    folder = _sharedData->GetFolder(_type, _conf);
 
     QString name;
     if (start_time < 0)
@@ -324,7 +323,6 @@ void Scene_File::on_add_mark(QString text) {
   // return;
 
   QVariantMap mark_info = ui->MarkBox->add_mark(text);
-  // TODO RecordControl AddMark
   m_pMarkControl->AddMarkInfo(_uuid, text, mark_info["time"].toInt());
   _sharedData->AddMark(RecorderShared::MarkModel, mark_info);
 
@@ -1087,13 +1085,13 @@ void Scene_File::on_comboBox_currentIndexChanged(int index) {
     Scene_Record_Warning::ShowMessage(
         pos, QString("%1 文件丢失").arg(fileinfo.baseName()));
 
-//     if (_file.value("start_time").toInt() < 0) {
-//       if (_type == 1) {
-//         _sharedData->CheckConferenceFile(_conf);
-//       } else if (_type == 0) {
-//         _sharedData->CheckPersonalFile(_conf);
-//       }
-//     }
+    //     if (_file.value("start_time").toInt() < 0) {
+    //       if (_type == 1) {
+    //         _sharedData->CheckConferenceFile(_conf);
+    //       } else if (_type == 0) {
+    //         _sharedData->CheckPersonalFile(_conf);
+    //       }
+    //     }
 
     _player->stop();
   }

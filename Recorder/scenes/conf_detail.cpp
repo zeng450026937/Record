@@ -16,32 +16,27 @@ ConfDetail::ConfDetail(QWidget *parent)
                    &ConfDetail::goBack);
 
   conf_mode = ServiceThread::GetInstance()->GetConferenceMode();
-  QObject::connect(
-      conf_mode, &ConferenceMode::getConferenceFiles, this,
-      [=](const QVariantList &list) {
-        while (ui->listWidget->count()) {
-          ui->listWidget->itemWidget(ui->listWidget->item(0))->deleteLater();
-          ui->listWidget->takeItem(0);
-        }
-        foreach (QVariant item, list) {
-          QListWidgetItem *listItem = new QListWidgetItem(
-              item.toMap().value("uuid").toString(), ui->listWidget);
-          ListForm *listItemWidget = new ListForm();
-          ui->listWidget->addItem(listItem);
-          ui->listWidget->setItemWidget(listItem, listItemWidget);
-          listItemWidget->update_display(item.toMap());
-        }
-      });
+  QObject::connect(conf_mode, &ConferenceMode::getConferenceFiles, this,
+                   [=](const QVariantList &list) {
+
+                     ui->listWidget->clear();
+                     foreach (QVariant item, list) {
+                       QListWidgetItem *listItem = new QListWidgetItem(
+                           item.toMap().value("uuid").toString(),
+                           ui->listWidget);
+                       ListForm *listItemWidget = new ListForm();
+                       ui->listWidget->addItem(listItem);
+                       ui->listWidget->setItemWidget(listItem, listItemWidget);
+                       listItemWidget->update_display(item.toMap());
+                     }
+                   });
 }
 
 ConfDetail::~ConfDetail() { delete ui; }
 
 void ConfDetail::setInfo(const QVariantMap &info) {
   _info = info;
-  while (ui->listWidget->count()) {
-    ui->listWidget->itemWidget(ui->listWidget->item(0))->deleteLater();
-    ui->listWidget->takeItem(0);
-  }
+  ui->listWidget->clear();
   ui->titleLabel->setText(_info.value("title").toString());
   ui->dateLabel->setText(_info.value("date").toString());
   ui->timeLabel->setText(_info.value("time").toString());

@@ -28,14 +28,6 @@ QStandardItemModel* ModelUpdater::GetModel(ModelType type) {
 
       model = _record_mark_model;
       break;
-    //     case PersonalModel:
-    //
-    //         model = _personal_model;
-    //         break;
-    //     case AllConferenceModel:
-    //
-    //         model = _all_conference_model;
-    //         break;
     default:
       return NULL;
   }

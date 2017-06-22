@@ -735,7 +735,7 @@
     <ClCompile Include="service\command\ConferenceMode.cpp" />
     <ClCompile Include="service\command\LoginControl.cpp" />
     <ClCompile Include="service\command\PersonalMode.cpp" />
-    <ClCompile Include="service\command\SettingControl.cpp" />
+    <ClCompile Include="service\command\TemplateControl.cpp" />
     <ClCompile Include="service\conf_service_impl.cpp" />
     <ClCompile Include="service\messager\binary_reader.cpp" />
     <ClCompile Include="service\messager\CommandBase.cpp" />
@@ -1767,7 +1767,7 @@
     </CustomBuild>
     <ClInclude Include="service\command\MarkControl.h" />
     <ClInclude Include="service\command\RecordControl.h" />
-    <ClInclude Include="service\command\SettingControl.h" />
+    <ClInclude Include="service\command\TemplateControl.h" />
     <ClInclude Include="service\messager\binary_reader.h" />
     <CustomBuild Include="service\messager\message_base.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>

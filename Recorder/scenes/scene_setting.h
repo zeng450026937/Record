@@ -4,7 +4,7 @@
 #include <QGroupBox>
 #include <QtGui>
 
-class SettingControl;
+class TemplateControl;
 class RecorderShared;
 class Scene_Record_AddInfo;
 
@@ -47,7 +47,7 @@ private:
 private:
     Ui::Scene_Setting *ui;
     RecorderShared *_sharedData;
-    SettingControl  *m_pSettingControl;
+    TemplateControl  *m_pTemplateControl;
 
     Scene_Record_AddInfo    *_scene_record_addinfo;
 };

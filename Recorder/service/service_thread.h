@@ -16,6 +16,7 @@ class DownloadDatabase;
 class ClipFileDatabase;
 class MarkDatabase;
 class MarkControl;
+class TemplateControl;
 
 class ServiceThreadPrivate;
 class ServiceThread : public QThread {
@@ -48,6 +49,8 @@ class ServiceThread : public QThread {
 
   MarkDatabase      *GetMarkDB();
   MarkControl       *GetMarkControl();
+
+  TemplateControl   *GetTemplateControl();
 
   ServiceThreadPrivate *_private;
  signals:

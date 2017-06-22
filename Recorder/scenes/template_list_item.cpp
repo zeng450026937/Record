@@ -35,5 +35,5 @@ void TemplateListItem::on_editButton_clicked()
 
 void TemplateListItem::on_deleteButton_clicked()
 {
-    emit deleteButton( _info.value("uuid").toString() );
+    emit deleteButton( _info.value("templateUuid").toString() );
 }

@@ -69,7 +69,6 @@ void MessageBase::on_message_reply(QString qstrMessage) {
         return;
       }
 
-
       if (jsCommand["action"].toString() != "heartBeat") qDebug() << jsCommand;
       emit itrFound->second->action_trigger(baActionLocator,
                                             jsRoot["result"].toBool(),

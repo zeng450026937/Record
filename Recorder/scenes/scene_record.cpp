@@ -559,7 +559,8 @@ void Scene_Record::on_infoButton_pressed() {
     }
     else
     {
-        _sharedData->SetConfInfo(_conf_uuid, _conf_info);
+        ServiceThread::GetInstance()->GetConferenceMode()->SetConferenceInfo(_conf_uuid,
+            _conf_info["title"].toString(), _conf_info["content"].toString(), _conf_info["members"].toString());
     }
 }
 

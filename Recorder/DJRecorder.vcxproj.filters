@@ -821,10 +821,10 @@
     <ClCompile Include="service\command\LoginControl.cpp">
       <Filter>Source Files\service\command</Filter>
     </ClCompile>
-    <ClCompile Include="service\command\SettingControl.cpp">
+    <ClCompile Include="service\command\MarkControl.cpp">
       <Filter>Source Files\service\command</Filter>
     </ClCompile>
-    <ClCompile Include="service\command\MarkControl.cpp">
+    <ClCompile Include="service\command\TemplateControl.cpp">
       <Filter>Source Files\service\command</Filter>
     </ClCompile>
   </ItemGroup>
@@ -970,10 +970,10 @@
     <ClInclude Include="service\command\LoginControl.h">
       <Filter>Source Files\service\command</Filter>
     </ClInclude>
-    <ClInclude Include="service\command\SettingControl.h">
+    <ClInclude Include="service\command\MarkControl.h">
       <Filter>Source Files\service\command</Filter>
     </ClInclude>
-    <ClInclude Include="service\command\MarkControl.h">
+    <ClInclude Include="service\command\TemplateControl.h">
       <Filter>Source Files\service\command</Filter>
     </ClInclude>
   </ItemGroup>

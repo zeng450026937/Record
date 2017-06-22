@@ -3,7 +3,7 @@
 
 #include "config.h"
 #include <service/service_thread.h>
-#include <service/command/SettingControl.h>
+#include <service/command/TemplateControl.h>
 #include "recorder_shared.h"
 #include "scene_record_addinfo.h"
 #include "device_list_delegate_a.h"
@@ -16,7 +16,7 @@ Scene_Setting::Scene_Setting(RecorderShared *sharedData, QWidget *parent) :
     _sharedData(sharedData),
     ui(new Ui::Scene_Setting),
     _scene_record_addinfo(new Scene_Record_AddInfo),
-    m_pSettingControl(nullptr)
+    m_pTemplateControl(nullptr)
 {
     ui->setupUi(this);
 
@@ -24,9 +24,8 @@ Scene_Setting::Scene_Setting(RecorderShared *sharedData, QWidget *parent) :
 
     this->initialize();
 
-    ServiceThread *pService = ServiceThread::GetInstance();
-    m_pSettingControl = new SettingControl(sharedData, pService->GetMessager());
-    m_pSettingControl->moveToThread(pService);
+    m_pTemplateControl = ServiceThread::GetInstance()->GetTemplateControl();
+    m_pTemplateControl->GetTemplateList();
 }
 
 Scene_Setting::~Scene_Setting()
@@ -148,7 +147,10 @@ void Scene_Setting::receive_editTemplate(QVariantMap info)
     if ( _scene_record_addinfo->exec() == QDialog::Accepted ) {
         //refresh data;
         modified = _scene_record_addinfo->getTemplateInfo();
-        _sharedData->SetTemplate(modified);
+        // _sharedData->SetTemplate(modified);
+        m_pTemplateControl->SetTemplateinfo(modified["templateUuid"].toString(),
+            modified["title"].toString(),
+            modified["content"].toString(), modified["members"].toString());
     }
 
     ui->template_box->setEnabled(true);
@@ -156,12 +158,12 @@ void Scene_Setting::receive_editTemplate(QVariantMap info)
 }
 void Scene_Setting::receive_deleteTemplate(QString uuid)
 {
-    _sharedData->RemoveTemplate(uuid);
+    m_pTemplateControl->DeleteTemplateInfo(uuid);
 }
 
 void Scene_Setting::on_fresh_btn_clicked()
 {
-    //_sharedData->refresh_deviceInfoList();
+    // _sharedData->refresh_deviceInfoList();
 }
 
 void Scene_Setting::on_add_btn_clicked()
@@ -179,8 +181,8 @@ void Scene_Setting::on_add_btn_clicked()
 
     if ( _scene_record_addinfo->exec() == QDialog::Accepted ) {
         modified = _scene_record_addinfo->getTemplateInfo();
-        // _sharedData->AddTemplate(modified);
-        // m_pSettingControl->AddTemplateInfo(modified);
+        m_pTemplateControl->AddTemplateInfo(modified["title"].toString(), 
+            modified["content"].toString(), modified["members"].toString());
     }
 
     ui->template_box->setEnabled(true);

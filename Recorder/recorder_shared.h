@@ -48,7 +48,7 @@ class RecorderShared : public QObject, public ModelUpdater {
 //   void StartConf(QString uuid);
 //   void PauseConf(QString uuid);
 //   void StopConf(QString uuid);
-  void SetConfInfo(QString uuid, QVariantMap& conf);
+  // void SetConfInfo(QString uuid, QVariantMap& conf);
   void SetFolder(QString folder);
   QString GetFolder(int type, QString uuid);
   void AddClipFile(QVariantMap& file);
@@ -71,9 +71,9 @@ class RecorderShared : public QObject, public ModelUpdater {
 
   // template interface
   // void AddTemplate(QVariantMap& Template);
-  void RemoveTemplate(QString& uuid);
-  void SetTemplate(QVariantMap& Template);
-  QVariantList GetTemplateList();
+//   void RemoveTemplate(QString& uuid);
+//   void SetTemplate(QVariantMap& Template);
+   QVariantList GetTemplateList();
 
  signals: 
   void connection_notify(int state, QString text);
@@ -118,7 +118,7 @@ class RecorderShared : public QObject, public ModelUpdater {
 
  private:
   void initialize();
-  void request_data();
+
   static void customMessageHandler(QtMsgType type,
                                    const QMessageLogContext& context,
                                    const QString& str);

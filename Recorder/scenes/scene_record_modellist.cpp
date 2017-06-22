@@ -1,6 +1,7 @@
 #include "scene_record_modellist.h"
 #include "ui_scene_record_modellist.h"
-
+#include "service/service_thread.h"
+#include "service/command/TemplateControl.h"
 #include "recorder_shared.h"
 #include "scene_record_addinfo.h"
 #include "template_list_delegate_a.h"
@@ -62,6 +63,9 @@ void Scene_Record_ModelList::set_conference_info(QVariant info)
 
     //_sharedData->AddTemplate(conference_info);
 
+    ServiceThread::GetInstance()->GetTemplateControl()->AddTemplateInfo(
+        conference_info["title"].toString(), conference_info["content"].toString(), 
+        conference_info["members"].toString());
     emit modelList_selected(conference_info);
 }
 

@@ -4,6 +4,7 @@
 #include "command/PersonalMode.h"
 #include "command/LoginControl.h"
 #include "command/MarkControl.h"
+#include "command/TemplateControl.h"
 #include "conf_service_impl.h"
 #include "service_thread_private.h"
 #include "storage/database_impl.h"
@@ -109,6 +110,17 @@ MarkControl * ServiceThread::GetMarkControl()
     }
 
     return _private->_mark_control;
+}
+
+TemplateControl * ServiceThread::GetTemplateControl()
+{
+    if (_private->_template_control == nullptr)
+    {
+        _private->_template_control = new TemplateControl(_private->_record_shared, _private->_messager);
+        _private->_template_control->moveToThread(this);
+    }
+
+    return _private->_template_control;
 }
 
 void ServiceThread::run() {

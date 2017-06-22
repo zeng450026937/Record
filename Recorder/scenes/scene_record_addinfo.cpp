@@ -39,11 +39,12 @@ void Scene_Record_AddInfo::mouseMoveEvent(QMouseEvent *event)
 
 void Scene_Record_AddInfo::on_confirm_btn_clicked()
 {
-    _info.insert("title", ui->title_lineEdit->text());
+    _info.insert("title", ui->title_lineEdit->text().trimmed());
     _info.insert("content", "");
-    _info.insert("members", ui->member_plainTextEdit->toPlainText());
+    _info.insert("members", ui->member_plainTextEdit->toPlainText().trimmed());
 
     this->accept();
+    emit add_conference_info(_info);
 
     ui->title_lineEdit->setFocus();
 

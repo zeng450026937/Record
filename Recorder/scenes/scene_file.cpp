@@ -95,9 +95,7 @@ Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent)
   ServiceThread *pService = ServiceThread::GetInstance();
   m_pPersonalMode = pService->GetPersonalMode();
   m_pConferenceMode = pService->GetConferenceMode();
-  // m_pInfoMode = pService->GetInfoMode();
 
-  // m_pInfoMode->GetDeviceList();
   m_pPersonalMode->GetPersonalList();
   m_pConferenceMode->GetConferenceList();
 }

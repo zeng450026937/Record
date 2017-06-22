@@ -49,8 +49,6 @@ protected:
     QStandardItemModel* _mark_model;
     QStandardItemModel* _template_model;
     QStandardItemModel* _record_mark_model;
-//     QStandardItemModel* _personal_model;
-//     QStandardItemModel* _all_conference_model;
 
     Model_Editor*       _device;
     Model_Editor*       _conference;

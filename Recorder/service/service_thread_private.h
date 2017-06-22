@@ -22,6 +22,7 @@ class PersonalMode;
 class ConferenceMode;
 class RecorderShared;
 class MarkControl;
+class TemplateControl;
 class ServiceThreadPrivate
 {
 	friend class ServiceThread;
@@ -69,6 +70,7 @@ private:
 
     MarkDatabase        *_mark_db;
     MarkControl         *_mark_control;
+    TemplateControl     *_template_control;
 
 	static ServiceThread *s_pServiceSingleton;
 };

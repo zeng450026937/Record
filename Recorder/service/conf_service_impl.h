@@ -61,19 +61,19 @@ public slots:
 //     void pauseConference(QString qstrConferenceUuid);
 //     void stopConference(QString qstrConferenceUuid);
 
-    void setConferenceInfo(QString qstrConferenceUuid, QVariantMap info);
-    void delConferenceInfo(QString qstrConferenceUuid);
-    void getConferenceInfo(QString qstrConferenceUuid);
-    void getConferenceList();
+//     void setConferenceInfo(QString qstrConferenceUuid, QVariantMap info);
+//     void delConferenceInfo(QString qstrConferenceUuid);
+//     void getConferenceInfo(QString qstrConferenceUuid);
+//     void getConferenceList();
 
     // void getPersonalList(QString user_id) ;
-    void getAllPersonalList();
+//     void getAllPersonalList();
 
-    void addTemplateInfo(QVariantMap info);
-    void setTemplateInfo(QVariantMap info);
-    void delTemplateInfo(QString qstrConferenceUuid) ;
-    void getTemplateInfo(QString qstrConferenceUuid) ;
-    void getTemplateList() ;
+//     void addTemplateInfo(QVariantMap info);
+//     void setTemplateInfo(QVariantMap info);
+//     void delTemplateInfo(QString qstrConferenceUuid) ;
+//     void getTemplateInfo(QString qstrConferenceUuid) ;
+//     void getTemplateList() ;
 
     // void addMarkInfo(QString qstrConferenceUuid, QVariantMap mark) ;
     void setMarkInfo(QString qstrConferenceUuid, QVariantMap mark) ;
@@ -98,8 +98,8 @@ public:
     QVariantList conferenceList() const ;
     QVariantMap personalConfInfo(QString qstrConferenceUuid) const ;
     QVariantList personalConfList() const ;
-    QVariantMap templateInfo(QString qstrConferenceUuid) const ;
-    QVariantList templateList() const ;
+   // QVariantMap templateInfo(QString qstrConferenceUuid) const ;
+    // QVariantList templateList() const ;
     QVariantList markInfo(QString qstrConferenceUuid) const ;
     QVariantList deviceInfoList() const ;
     QVariantMap deviceInfo(QString mac) const ;

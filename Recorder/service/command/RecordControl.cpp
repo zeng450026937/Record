@@ -124,22 +124,3 @@ void RecordControl::StopConferenceReply(bool bResult, const QJsonObject &jsData)
     m_pRecordShared->receive_conferenceStoped(bResult, jsData.toVariantMap());
 }
 
-
-// void RecordControl::GetTemplateListReply(bool bResult, const QJsonObject &jsData)
-// {
-//     QJsonDocument jsDoc(jsData);
-//     QString qstr = jsDoc.toJson();
-//     if (bResult)
-//     {
-//         QVariantList lsRecordInfoes = jsData["list"].toVariant().toList();
-//         foreach(const auto &varInfo, lsRecordInfoes)
-//         {
-// //            m_pRecrodShared->AddTemplateInfo(varInfo.toMap());
-//         }
-//     }
-//     else
-//     {
-// 
-//     }
-// 
-// }

@@ -5,12 +5,12 @@
 
 class MessageBase;
 class RecorderShared;
-class SettingControl : public CommandBase {
+class TemplateControl : public CommandBase {
   friend class ServiceThread;
-  
+
+  TemplateControl(RecorderShared *pRecorderShared, MessageBase *pMessager);
  public:
-  SettingControl(RecorderShared *pRecorderShared,MessageBase *pMessager);
-  ~SettingControl();
+  ~TemplateControl();
 
   void AddTemplateInfo(const QString &qstrTitle, 
       const QString &qstrContent, 

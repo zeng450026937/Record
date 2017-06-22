@@ -18,11 +18,16 @@ class ConferenceMode : public CommandBase {
  public:
   ~ConferenceMode();
   void GetConferenceList();
+  void SetConferenceInfo(const QString &qstrConferenceUuid,
+      const QString &qstrTitle, 
+      const QString &qstrContent, 
+      const QString &qstrMembers);
   void GetConferenceFiles(const QString &uuid);
 
  private:
-  void GetConferenceListReply(bool bResult, QJsonObject jsData);
-  void GetConferenceFilesReply(bool bResult, QJsonObject jsData);
+     void GetConferenceListReply(bool bResult, QJsonObject jsData);
+     void GetConferenceFilesReply(bool bResult, QJsonObject jsData);
+     void SetConferenceInfoReply(bool bResult, QJsonObject jsData);
 
   RecorderShared *m_pRecrodShared;
 

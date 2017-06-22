@@ -193,9 +193,10 @@ void Scene_File::init_model() {
   ui->fileStackedWidget->addWidget(conf_detail);
 
   connect(itemDelegate, &ListItemDelegate::itemClicked,
-          [=](const QString &uuid) {
+          [this, conf_detail](const QVariantMap &info) {
             ui->fileStackedWidget->setCurrentIndex(
                 ui->fileStackedWidget->currentIndex() + 1);
+            conf_detail->setInfo(info);
           });
   connect(conf_detail, &ConfDetail::goBack, [=]() {
     ui->fileStackedWidget->setCurrentIndex(

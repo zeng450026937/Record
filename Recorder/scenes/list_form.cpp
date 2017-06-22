@@ -33,8 +33,7 @@ ListForm::~ListForm() { delete ui; }
 
 void ListForm::mousePressEvent(QMouseEvent* event) {
   if (_info["recordType"].toInt() != RecorderShared::RT_PERSONAL) {
-    Q_EMIT itemClicked(_info.value("conferenceUuid").toString());
-    qDebug() << "item clicked.";
+    Q_EMIT itemClicked(_info);
     event->accept();
   } else {
     event->ignore();

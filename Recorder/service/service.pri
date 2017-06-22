@@ -35,13 +35,14 @@ HEADERS += \
     $$PWD/account/account_center.h \
     $$PWD/white_list.h \
     $$PWD/messager/wavheader.h \
-    $$PWD/command/info_mode.h \
     $$PWD/command/ConferenceMode.h \
     $$PWD/command/PersonalMode.h \
     $$PWD/messager/CommandBase.h \
     $$PWD/command/RecordDownloadReceiver.h \
     $$PWD/command/RecordDownloadService.h \
-    $$PWD/storage/download_database.h
+    $$PWD/storage/download_database.h \
+    $$PWD/command/LoginControl.h \
+    $$PWD/command/RecordControl.h
 
 
 SOURCES += \
@@ -66,11 +67,12 @@ SOURCES += \
     $$PWD/storage/personal_database_impl.cpp \
     $$PWD/account/account_center.cpp \
     $$PWD/messager/wavheader.cpp \
-    $$PWD/command/info_mode.cpp \
     $$PWD/command/ConferenceMode.cpp \
     $$PWD/command/PersonalMode.cpp \
     $$PWD/messager/CommandBase.cpp \
     $$PWD/command/RecordDownloadReceiver.cpp \
     $$PWD/command/RecordDownloadService.cpp \
-    $$PWD/storage/download_database.cpp
+    $$PWD/storage/download_database.cpp \
+    $$PWD/command/LoginControl.cpp \
+    $$PWD/command/RecordControl.cpp
 

@@ -22,6 +22,7 @@ class PersonalMode;
 class ConferenceMode;
 class RecorderShared;
 class MarkControl;
+class RecordControl;
 class TemplateControl;
 class ServiceThreadPrivate
 {
@@ -30,49 +31,51 @@ public:
     ServiceThreadPrivate();
     ~ServiceThreadPrivate();
 
-    MessageBase*   Messager() { return _messager; }
-    AccountCenter* Account()  { return _account; }
-    WhiteList*     AppUser()     { return _white_list; }
 
-    ConfServiceImpl* GetConfService() { return _conf_service; }
-	UserServiceImpl* GetUserService() { return _user_service; }
+  MessageBase* Messager() { return _messager; }
+  AccountCenter* Account() { return _account; }
+  WhiteList* AppUser() { return _white_list; }
 
-    ConferenceDatabase* ConferenceDB() { return _conf_db; }
-    DeviceDatabase*     DeviceDB() { return _device_db; }
-    ClipFileDatabase*   ClipDB() { return _clip_db; }
-    DownloadDatabase*   DownloadDB() { return _download_db; }
-    TemplateDatabase*   TemplateDB() { return _template_db; }
-    MarkDatabase*       MarkDB() { return _mark_db; }
-    UserDatabase*       UserDB() { return _user_db; }
-    PersonalDatabase*   PersonalDB() { return _personal_db; }
+  ConfServiceImpl* GetConfService() { return _conf_service; }
+  UserServiceImpl* GetUserService() { return _user_service; }
 
-private:
-    ConfServiceImpl*        _conf_service;
-	UserServiceImpl*    _user_service;
-    MessageBase*        _messager;
-    AccountCenter*      _account;
-    WhiteList*           _white_list;
+  ConferenceDatabase* ConferenceDB() { return _conf_db; }
+  DeviceDatabase* DeviceDB() { return _device_db; }
+  ClipFileDatabase* ClipDB() { return _clip_db; }
+  DownloadDatabase* DownloadDB() { return _download_db; }
+  TemplateDatabase* TemplateDB() { return _template_db; }
+  MarkDatabase* MarkDB() { return _mark_db; }
+  UserDatabase* UserDB() { return _user_db; }
+  PersonalDatabase* PersonalDB() { return _personal_db; }
 
-    DataBase*           _db;
+ private:
+  ConfServiceImpl* _conf_service;
+  UserServiceImpl* _user_service;
+  MessageBase* _messager;
+  AccountCenter* _account;
+  WhiteList* _white_list;
 
-    ConferenceDatabase* _conf_db;
-    DeviceDatabase*     _device_db;
-    ClipFileDatabase*   _clip_db;
-    DownloadDatabase*   _download_db;
-    TemplateDatabase*   _template_db;
-    UserDatabase*       _user_db;
-    PersonalDatabase*   _personal_db;
+  DataBase* _db;
 
-    RecorderShared *_record_shared;
-    LoginControl	*_info_mode;
-    PersonalMode *_pPersonalMode;
-    ConferenceMode *_pConferenceMode;
+  ConferenceDatabase* _conf_db;
+  DeviceDatabase* _device_db;
+  ClipFileDatabase* _clip_db;
+  DownloadDatabase* _download_db;
+  TemplateDatabase* _template_db;
+  UserDatabase* _user_db;
+  PersonalDatabase* _personal_db;
 
-    MarkDatabase        *_mark_db;
-    MarkControl         *_mark_control;
+  RecorderShared* _record_shared;
+  LoginControl* _info_mode;
+  PersonalMode* _pPersonalMode;
+  ConferenceMode* _pConferenceMode;
     TemplateControl     *_template_control;
 
-	static ServiceThread *s_pServiceSingleton;
+  MarkDatabase* _mark_db;
+  MarkControl* _mark_control;
+  RecordControl* _record_control;
+
+  static ServiceThread* s_pServiceSingleton;
 };
 
-#endif // SERVICETHREADPRIVATE_H
+#endif  // SERVICETHREADPRIVATE_H

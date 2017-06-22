@@ -13,7 +13,7 @@ class ConferenceMode : public CommandBase {
 
   ConferenceMode(MessageBase *pMessage);
  signals:
-  void getConferenceFiles(const QVariantList &list);
+  void getConferenceFiles(int type, const QVariantList &list);
 
  public:
   ~ConferenceMode();
@@ -23,11 +23,15 @@ class ConferenceMode : public CommandBase {
       const QString &qstrContent, 
       const QString &qstrMembers);
   void GetConferenceFiles(const QString &uuid);
+  void GetMobileConferenceList();
+  void GetMobileConferenceFiles(const QString &uuid);
 
  private:
      void GetConferenceListReply(bool bResult, QJsonObject jsData);
      void GetConferenceFilesReply(bool bResult, QJsonObject jsData);
      void SetConferenceInfoReply(bool bResult, QJsonObject jsData);
+  void GetMobileConferenceListReply(bool bResult, QJsonObject jsData);
+  void GetMobileConferenceFilesReply(bool bResult, QJsonObject jsData);
 
   RecorderShared *m_pRecrodShared;
 

@@ -1,17 +1,17 @@
 #include "service_thread_private.h"
-#include "messager/message_base.h"
 #include "account/account_center.h"
+#include "messager/message_base.h"
 #include "white_list.h"
 
+#include "storage/download_database.h"
+#include "storage/include/clip_file_database.h"
+#include "storage/include/conferencedatabase.h"
 #include "storage/include/data_base.h"
-#include "storage/include/templatedatabase.h"
 #include "storage/include/device_database.h"
 #include "storage/include/markdatabase.h"
-#include "storage/include/conferencedatabase.h"
-#include "storage/include/user_database.h"
-#include "storage/include/clip_file_database.h"
-#include "storage/download_database.h"
 #include "storage/include/personal_database.h"
+#include "storage/include/templatedatabase.h"
+#include "storage/include/user_database.h"
 
 
 ServiceThreadPrivate::ServiceThreadPrivate():
@@ -24,6 +24,7 @@ ServiceThreadPrivate::ServiceThreadPrivate():
     _pConferenceMode(nullptr),
     _pPersonalMode(nullptr),
     _record_shared(nullptr),
+      _record_control(nullptr),
     _mark_control(nullptr),
     _template_control(nullptr)
 {
@@ -38,23 +39,22 @@ ServiceThreadPrivate::ServiceThreadPrivate():
     _personal_db = PersonalDatabase::GetInterface(_db);
 }
 
-ServiceThreadPrivate::~ServiceThreadPrivate()
-{
-    _messager->stopConnection();
-    delete _messager;
+ServiceThreadPrivate::~ServiceThreadPrivate() {
+  _messager->stopConnection();
+  delete _messager;
 
-    _account->UserLogout();
-    delete _account;
+  _account->UserLogout();
+  delete _account;
 
-    delete _white_list;
+  delete _white_list;
 
-    _conf_db->Release();
-    _device_db->Release();
-    _clip_db->Release();
-    _download_db->Release();
-    _template_db->Release();
-    _mark_db->Release();
-    _user_db->Release();
-    _personal_db->Release();
-    DataBase::DeleteDB(_db);
+  _conf_db->Release();
+  _device_db->Release();
+  _clip_db->Release();
+  _download_db->Release();
+  _template_db->Release();
+  _mark_db->Release();
+  _user_db->Release();
+  _personal_db->Release();
+  DataBase::DeleteDB(_db);
 }

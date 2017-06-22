@@ -44,21 +44,22 @@ class RecorderShared : public QObject, public ModelUpdater {
   Config* GetConfig() { return _config; }
 
   // conference interface
-//   void CreateConf(QVariantMap& conf);
-//   void StartConf(QString uuid);
-//   void PauseConf(QString uuid);
-//   void StopConf(QString uuid);
+  //   void CreateConf(QVariantMap& conf);
+  //   void StartConf(QString uuid);
+  //   void PauseConf(QString uuid);
+  //   void StopConf(QString uuid);
   // void SetConfInfo(QString uuid, QVariantMap& conf);
   void SetFolder(QString folder);
-  QString GetFolder(int type, QString uuid);
+  QString GetFolder(int type, QVariantMap& conf);
   void AddClipFile(QVariantMap& file);
   QVariantList GetFileList(QString uuid);
   // void     DownLoadConference(int type, QString uuid);
-//   void CheckConferenceFile(QVariantMap& conf);
-//   void CheckPersonalFile(QVariantMap& conf);
+  //   void CheckConferenceFile(QVariantMap& conf);
+  //   void CheckPersonalFile(QVariantMap& conf);
 
   void AddPersonalRecordInfo(QVariantMap& vmRecordInfo);
   void AddConferenceRecordInfo(QVariantMap& vmRecordInfo);
+  void AddMobileRecordInfo(QVariantMap& vmRecordInfo);
 
   // mark interface
   QVariantList GetMark(QString conf_uuid);
@@ -75,7 +76,7 @@ class RecorderShared : public QObject, public ModelUpdater {
 //   void SetTemplate(QVariantMap& Template);
    QVariantList GetTemplateList();
 
- signals: 
+ signals:
   void connection_notify(int state, QString text);
   void conference_notify(int state, bool result, QVariantMap conf);
   void record_notify(QString device_mac, QString device_name, QString status);
@@ -100,8 +101,8 @@ class RecorderShared : public QObject, public ModelUpdater {
   void receive_personalConfCreated(bool result, QVariantMap info);
   void receive_personalConfSetted(bool result, QVariantMap info);
   void receive_personalConfDeleted(bool result, QVariantMap info);
-//   void ReciveRecordInfoes(QVariantList& lsRecordInfoes);
-//   void on_all_personal_list_got_trigger(bool result);
+  //   void ReciveRecordInfoes(QVariantList& lsRecordInfoes);
+  //   void on_all_personal_list_got_trigger(bool result);
 
   void receive_deviceInfoUpdate(QVariantMap info);
   void receive_deviceInfoListGetted(bool result, QVariantList list);

@@ -108,19 +108,19 @@ void ConfServiceImpl::timerEvent(QTimerEvent* e) {
 // void ConfServiceImpl::startConference(QString qstrConferenceUuid) {
 //   QVariantMap param;
 //   param.insert("uuid", qstrConferenceUuid);
-// 
+//
 //   this->Execute(MessageBase::StartConference, param);
 // }
 // void ConfServiceImpl::pauseConference(QString qstrConferenceUuid) {
 //   QVariantMap param;
 //   param.insert("uuid", qstrConferenceUuid);
-// 
+//
 //   this->Execute(MessageBase::PauseConference, param);
 // }
 // void ConfServiceImpl::stopConference(QString qstrConferenceUuid) {
 //   QVariantMap param;
 //   param.insert("uuid", qstrConferenceUuid);
-// 
+//
 //   this->Execute(MessageBase::StopConference, param);
 // }
 
@@ -202,7 +202,7 @@ QVariantList ConfServiceImpl::personalConfList() const {
 //   QVariantMap param = mark;
 //   param.insert("conference_uuid", qstrConferenceUuid);
 //   param.insert("content", mark.value("mark").toString());
-// 
+//
 //   this->Execute(MessageBase::AddMarkInfo, param);
 // }
 void ConfServiceImpl::setMarkInfo(QString qstrConferenceUuid,
@@ -315,9 +315,9 @@ void ConfServiceImpl::setDownloadFolder(QString folder) {
 //   QString qstrConferenceUuid = conf.value("uuid").toString();
 //   QStringList needed_list = conf.value("devices").toString().split(",");
 //   needed_list.removeDuplicates();
-// 
+//
 //   bool completed = checkConferenceFile(qstrConferenceUuid, needed_list);
-// 
+//
 //   conf.insert("completed", completed);
 //   if (!completed && auto_download) {
 //     //  this->downloadConference(1, qstrConferenceUuid);
@@ -328,12 +328,12 @@ void ConfServiceImpl::setDownloadFolder(QString folder) {
 //   QStringList needed_list;
 //   needed_list << conf.value("user_id").toString();
 //   needed_list.removeDuplicates();
-// 
+//
 //   bool completed = checkConferenceFile(qstrConferenceUuid, needed_list);
-// 
+//
 //   conf.insert("completed", completed);
 //   _shared->PersonalDB()->AddConference(conf);
-// 
+//
 //   if (!completed && auto_download) {
 //     //    this->downloadConference(0, qstrConferenceUuid);
 //   }
@@ -352,12 +352,12 @@ QString ConfServiceImpl::outputFolder(int type,
 
   QString folderName;
 
-  folderName = conf.value("create_time").toString();
+  folderName = conf.value("createTime").toString();
   folderName.replace(":", "");
   folderName.replace("-", "");
   folderName.replace(" ", "_");
   folderName += "_";
-  if (type == 0) folderName += conf.value("user_name").toString();
+  if (type == 0) folderName += conf.value("userName").toString();
   folderName += conf.value("title").toString();
 
   return _folder + "/" + folderName;
@@ -367,21 +367,21 @@ void ConfServiceImpl::parseCommand(int command, bool result,
                                    QVariantMap& info) {
   switch (command) {
     // common command
-//     case MessageBase::CreateConference:
-//       if (result) {
-//         _shared->ConferenceDB()->AddConference(info);
-//       }
-//       emit conferenceCreated(result, info);
-//       break;
-//     case MessageBase::StartConference:
-//       emit conferenceStarted(result, info);
-//       break;
-//     case MessageBase::PauseConference:
-//       emit conferencePaused(result, info);
-//       break;
-//     case MessageBase::StopConference:
-//       emit conferenceStoped(result, info);
-//       break;
+    //     case MessageBase::CreateConference:
+    //       if (result) {
+    //         _shared->ConferenceDB()->AddConference(info);
+    //       }
+    //       emit conferenceCreated(result, info);
+    //       break;
+    //     case MessageBase::StartConference:
+    //       emit conferenceStarted(result, info);
+    //       break;
+    //     case MessageBase::PauseConference:
+    //       emit conferencePaused(result, info);
+    //       break;
+    //     case MessageBase::StopConference:
+    //       emit conferenceStoped(result, info);
+    //       break;
     case MessageBase::SetConferenceInfo:
       if (result) _shared->ConferenceDB()->AddConference(info);
       emit conferenceInfoSetted(result, info);
@@ -395,36 +395,36 @@ void ConfServiceImpl::parseCommand(int command, bool result,
       if (result) _shared->ConferenceDB()->AddConference(info);
       emit conferenceInfoGot(result, info);
       break;
-//     case MessageBase::GetConferenceList:
-//       if (result) {
-//         QVariantMap conf_map;
-//         foreach (QVariant conf, info.value("list").toList()) {
-//           conf_map = conf.toMap();
-//           this->checkConference(conf_map);
-//         }
-//       }
-//       emit conferenceListGot(result, info.value("list").toList());
-//       break;
-//     case MessageBase::GetPersonalList:
-//       if (result) {
-//         QVariantMap conf_map;
-//         foreach (QVariant conf, info.value("list").toList()) {
-//           conf_map = conf.toMap();
-//           this->checkPersonal(conf_map);
-//         }
-//       }
-//       emit personalListGot(result, info.value("list").toList());
-//       break;
-//     case MessageBase::GetAllPersonalList:
-//       if (result) {
-//         QVariantMap conf_map;
-//         foreach (QVariant conf, info.value("list").toList()) {
-//           conf_map = conf.toMap();
-//           this->checkPersonal(conf_map);
-//         }
-//       }
-//       emit allPersonalListGot(result, info.value("list").toList());
-//       break;
+    //     case MessageBase::GetConferenceList:
+    //       if (result) {
+    //         QVariantMap conf_map;
+    //         foreach (QVariant conf, info.value("list").toList()) {
+    //           conf_map = conf.toMap();
+    //           this->checkConference(conf_map);
+    //         }
+    //       }
+    //       emit conferenceListGot(result, info.value("list").toList());
+    //       break;
+    //     case MessageBase::GetPersonalList:
+    //       if (result) {
+    //         QVariantMap conf_map;
+    //         foreach (QVariant conf, info.value("list").toList()) {
+    //           conf_map = conf.toMap();
+    //           this->checkPersonal(conf_map);
+    //         }
+    //       }
+    //       emit personalListGot(result, info.value("list").toList());
+    //       break;
+    //     case MessageBase::GetAllPersonalList:
+    //       if (result) {
+    //         QVariantMap conf_map;
+    //         foreach (QVariant conf, info.value("list").toList()) {
+    //           conf_map = conf.toMap();
+    //           this->checkPersonal(conf_map);
+    //         }
+    //       }
+    //       emit allPersonalListGot(result, info.value("list").toList());
+    //       break;
 
     case MessageBase::SetTemplateInfo:
       if (result) _shared->TemplateDB()->AddTemplate(info);
@@ -452,34 +452,35 @@ void ConfServiceImpl::parseCommand(int command, bool result,
       emit templateListGot(result, info.value("list").toList());
       break;
 
-//     case MessageBase::SetMarkInfo:
-//       if (result) _shared->MarkDB()->AddMark(info);
-//       emit markInfoSetted(result, info);
-//       break;
-//     case MessageBase::AddMarkInfo:
-//       if (result) _shared->MarkDB()->AddMark(info);
-//       emit markInfoAdded(result, info);
-//       break;
-//     case MessageBase::DelMarkInfo:
-//       if (result) _shared->MarkDB()->DelMark(info.value("uuid").toString());
-//       emit markInfoDeleted(result, info);
-//       break;
-//     case MessageBase::GetMarkinfo:
-//       if (result) {
-//         foreach (QVariant mark, info.value("list").toList()) {
-//           _shared->MarkDB()->AddMark(mark.toMap());
-//         }
-//       }
-//       emit markInfoGot(result, info.value("mark").toList());
-//       break;
-//     case MessageBase::GetMarkList:
-//       if (result) {
-//         foreach (QVariant mark, info.value("list").toList()) {
-//           _shared->MarkDB()->AddMark(mark.toMap());
-//         }
-//       }
-//       emit markListGot(result, info.value("list").toList());
-//       break;
+    //     case MessageBase::SetMarkInfo:
+    //       if (result) _shared->MarkDB()->AddMark(info);
+    //       emit markInfoSetted(result, info);
+    //       break;
+    //     case MessageBase::AddMarkInfo:
+    //       if (result) _shared->MarkDB()->AddMark(info);
+    //       emit markInfoAdded(result, info);
+    //       break;
+    //     case MessageBase::DelMarkInfo:
+    //       if (result)
+    //       _shared->MarkDB()->DelMark(info.value("uuid").toString());
+    //       emit markInfoDeleted(result, info);
+    //       break;
+    //     case MessageBase::GetMarkinfo:
+    //       if (result) {
+    //         foreach (QVariant mark, info.value("list").toList()) {
+    //           _shared->MarkDB()->AddMark(mark.toMap());
+    //         }
+    //       }
+    //       emit markInfoGot(result, info.value("mark").toList());
+    //       break;
+    //     case MessageBase::GetMarkList:
+    //       if (result) {
+    //         foreach (QVariant mark, info.value("list").toList()) {
+    //           _shared->MarkDB()->AddMark(mark.toMap());
+    //         }
+    //       }
+    //       emit markListGot(result, info.value("list").toList());
+    //       break;
 
     case MessageBase::NotifyDeviceInfoChange:
       _shared->DeviceDB()->AddDevice(info);
@@ -488,14 +489,14 @@ void ConfServiceImpl::parseCommand(int command, bool result,
     case MessageBase::DeviceEnvironmentException:
       emit deviceEnvironmentUpdate(info);
       break;
-//     case MessageBase::GetDeviceList:
-//       if (result) {
-//         foreach (QVariant device, info.value("list").toList()) {
-//           _shared->DeviceDB()->AddDevice(device.toMap());
-//         }
-//       }
-//       emit deviceInfoListGetted(result, info.value("list").toList());
-//       break;
+    //     case MessageBase::GetDeviceList:
+    //       if (result) {
+    //         foreach (QVariant device, info.value("list").toList()) {
+    //           _shared->DeviceDB()->AddDevice(device.toMap());
+    //         }
+    //       }
+    //       emit deviceInfoListGetted(result, info.value("list").toList());
+    //       break;
     case MessageBase::AddDevice:
       break;
     case MessageBase::RemoveDevice:
@@ -912,41 +913,42 @@ bool ConfServiceImpl::checkConferenceAlive(int type,
 // bool ConfServiceImpl::checkConferenceFile(QString qstrConferenceUuid,
 //                                           QStringList needed) {
 //   bool completed(false);
-// 
+//
 //   if (needed.count() == 0) {
 //     completed = true;
 //     return completed;
 //   }
-// 
+//
 //   QStringList exist_list;
 //   QStringList missing_list;
-// 
+//
 //   this->checkConferenceFile(qstrConferenceUuid, exist_list, missing_list);
-// 
+//
 //   if (missing_list.count() > 0) {
 //     completed = false;
 //     return completed;
 //   }
-// 
+//
 //   foreach (const QString& each, exist_list) {
 //     if (needed.contains(each)) {
 //       needed.removeAll(each);
 //     }
 //   }
-// 
+//
 //   if (needed.count() == 0) {
 //     completed = true;
 //     return completed;
 //   }
-// 
+//
 //   return completed;
 // }
 
 // int ConfServiceImpl::checkConferenceFile(QString qstrConferenceUuid,
 //                                          QStringList& exists,
 //                                          QStringList& missing) {
-//   QVariantList list = _shared->ClipDB()->GetConferenceFile(qstrConferenceUuid);
-// 
+//   QVariantList list =
+//   _shared->ClipDB()->GetConferenceFile(qstrConferenceUuid);
+//
 //   if (list.count() > 0) {
 //     QString path;
 //     QFile file;
@@ -960,6 +962,6 @@ bool ConfServiceImpl::checkConferenceAlive(int type,
 //       }
 //     }
 //   }
-// 
+//
 //   return list.count();
 // }

@@ -60,7 +60,7 @@ void Scene_Record_ModelList::set_conference_info(QVariant info)
 {
     QVariantMap conference_info = info.toMap();
 
-    _sharedData->AddTemplate(conference_info);
+    //_sharedData->AddTemplate(conference_info);
 
     emit modelList_selected(conference_info);
 }

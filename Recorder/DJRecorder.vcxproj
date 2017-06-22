@@ -728,12 +728,14 @@
     <ClCompile Include="scenes\template_list_item.cpp" />
     <ClCompile Include="scenes\template_list_item_a.cpp" />
     <ClCompile Include="service\account\account_center.cpp" />
+    <ClCompile Include="service\command\MarkControl.cpp" />
     <ClCompile Include="service\command\RecordControl.cpp" />
     <ClCompile Include="service\command\RecordDownloadReceiver.cpp" />
     <ClCompile Include="service\command\RecordDownloadService.cpp" />
     <ClCompile Include="service\command\ConferenceMode.cpp" />
     <ClCompile Include="service\command\LoginControl.cpp" />
     <ClCompile Include="service\command\PersonalMode.cpp" />
+    <ClCompile Include="service\command\SettingControl.cpp" />
     <ClCompile Include="service\conf_service_impl.cpp" />
     <ClCompile Include="service\messager\binary_reader.cpp" />
     <ClCompile Include="service\messager\CommandBase.cpp" />
@@ -1763,7 +1765,9 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
     </CustomBuild>
+    <ClInclude Include="service\command\MarkControl.h" />
     <ClInclude Include="service\command\RecordControl.h" />
+    <ClInclude Include="service\command\SettingControl.h" />
     <ClInclude Include="service\messager\binary_reader.h" />
     <CustomBuild Include="service\messager\message_base.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
@@ -1967,9 +1971,6 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles\ui_%(Filename).h;%(Outputs)</Outputs>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(QTDIR)\bin\uic.exe" -o ".\GeneratedFiles\ui_%(Filename).h" "%(FullPath)"</Command>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="scenes\scenes.pri" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

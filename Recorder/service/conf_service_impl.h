@@ -41,11 +41,11 @@ public:
     void templateInfoGot(bool result, QVariantMap info);
     void templateListGot(bool result, QVariantList list);
 
-    void markInfoAdded(bool result, QVariantMap info);
-    void markInfoSetted(bool result, QVariantMap info);
-    void markInfoDeleted(bool result, QVariantMap info);
-    void markInfoGot(bool result, QVariantList info);
-    void markListGot(bool result, QVariantList info);
+//     void markInfoAdded(bool result, QVariantMap info);
+//     void markInfoSetted(bool result, QVariantMap info);
+//     void markInfoDeleted(bool result, QVariantMap info);
+//     void markInfoGot(bool result, QVariantList info);
+//     void markListGot(bool result, QVariantList info);
 
     void deviceInfoUpdate(QVariantMap info);
     void deviceInfoListGetted(bool result, QVariantList list);
@@ -56,10 +56,10 @@ public:
     void AddPersonalRecordInfo();
 
 public slots:
-    void createConference(QVariantMap info);
-    void startConference(QString qstrConferenceUuid);
-    void pauseConference(QString qstrConferenceUuid);
-    void stopConference(QString qstrConferenceUuid);
+//     void createConference(QVariantMap info);
+//     void startConference(QString qstrConferenceUuid);
+//     void pauseConference(QString qstrConferenceUuid);
+//     void stopConference(QString qstrConferenceUuid);
 
     void setConferenceInfo(QString qstrConferenceUuid, QVariantMap info);
     void delConferenceInfo(QString qstrConferenceUuid);
@@ -75,7 +75,7 @@ public slots:
     void getTemplateInfo(QString qstrConferenceUuid) ;
     void getTemplateList() ;
 
-    void addMarkInfo(QString qstrConferenceUuid, QVariantMap mark) ;
+    // void addMarkInfo(QString qstrConferenceUuid, QVariantMap mark) ;
     void setMarkInfo(QString qstrConferenceUuid, QVariantMap mark) ;
     void delMarkInfo(QString qstrConferenceUuid, QVariantMap mark) ;
     void getMarkInfo(QString qstrConferenceUuid) ;
@@ -88,8 +88,8 @@ public slots:
     void setDownloadFolder(QString folder) ;
 
 public:
-    void checkConference(QVariantMap& conf) ;
-    void checkPersonal(QVariantMap& conf) ;
+//     void checkConference(QVariantMap& conf) ;
+//     void checkPersonal(QVariantMap& conf) ;
 
     QString downloadFolder() const ;
     QString outputFolder(int type, QString qstrConferenceUuid) const ;
@@ -109,7 +109,7 @@ public:
 
 public:
 
-    bool checkConferenceFile(QString qstrConferenceUuid, QStringList needed);
+    // bool checkConferenceFile(QString qstrConferenceUuid, QStringList needed);
 
 protected slots:
     void parseCommand(int command, bool result, QVariantMap& info);
@@ -123,7 +123,7 @@ protected:
     // void monitorDownload(int type, QString qstrConferenceUuid, QString identity, int data_size);
     void monitorDisconnect(int type, QString qstrConferenceUuid, QString identity, int percentage, int data_size, bool completed);
     bool checkConferenceAlive(int type, QString qstrConferenceUuid);
-    int  checkConferenceFile(QString qstrConferenceUuid, QStringList& exists, QStringList& missing);
+    // int  checkConferenceFile(QString qstrConferenceUuid, QStringList& exists, QStringList& missing);
 
 protected:
     virtual void timerEvent(QTimerEvent *e);

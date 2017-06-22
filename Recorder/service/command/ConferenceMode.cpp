@@ -5,13 +5,13 @@
 #include "service/messager/message_base.h"
 
 #define PSL_GET_CONFERENCE_LIST "getConferenceList"
+#define PSL_GET_MARK_INFO "getMarkinfo"
 
 ConferenceMode::ConferenceMode(MessageBase *pMessage) : 
     CommandBase(pMessage),
     m_pConfig(Config::GetInstance())
 {
-    AddActionProc(MB_CONFERENCE_MODE,PSL_GET_CONFERENCE_LIST, &ConferenceMode::GetConferenceListReply);
-   
+    AddActionProc(MB_CONFERENCE_MODE,PSL_GET_CONFERENCE_LIST, &ConferenceMode::GetConferenceListReply);   
 }
 
 ConferenceMode::~ConferenceMode()

@@ -44,25 +44,25 @@ class RecorderShared : public QObject, public ModelUpdater {
   Config* GetConfig() { return _config; }
 
   // conference interface
-  void CreateConf(QVariantMap& conf);
-  void StartConf(QString uuid);
-  void PauseConf(QString uuid);
-  void StopConf(QString uuid);
+//   void CreateConf(QVariantMap& conf);
+//   void StartConf(QString uuid);
+//   void PauseConf(QString uuid);
+//   void StopConf(QString uuid);
   void SetConfInfo(QString uuid, QVariantMap& conf);
   void SetFolder(QString folder);
   QString GetFolder(int type, QString uuid);
   void AddClipFile(QVariantMap& file);
   QVariantList GetFileList(QString uuid);
   // void     DownLoadConference(int type, QString uuid);
-  void CheckConferenceFile(QVariantMap& conf);
-  void CheckPersonalFile(QVariantMap& conf);
+//   void CheckConferenceFile(QVariantMap& conf);
+//   void CheckPersonalFile(QVariantMap& conf);
 
   void AddPersonalRecordInfo(QVariantMap& vmRecordInfo);
   void AddConferenceRecordInfo(QVariantMap& vmRecordInfo);
 
   // mark interface
   QVariantList GetMark(QString conf_uuid);
-  void AddMark(ModelType type, QString conf_uuid, QVariantMap& mark);
+  void AddMark(ModelType type, QVariantMap& mark);
 
   // device interface
   void RefreshDeviceList();
@@ -70,12 +70,12 @@ class RecorderShared : public QObject, public ModelUpdater {
   QVariantMap DeviceInfo(QString mac);
 
   // template interface
-  void AddTemplate(QVariantMap& Template);
+  // void AddTemplate(QVariantMap& Template);
   void RemoveTemplate(QString& uuid);
   void SetTemplate(QVariantMap& Template);
   QVariantList GetTemplateList();
 
- signals:
+ signals: 
   void connection_notify(int state, QString text);
   void conference_notify(int state, bool result, QVariantMap conf);
   void record_notify(QString device_mac, QString device_name, QString status);
@@ -91,7 +91,7 @@ class RecorderShared : public QObject, public ModelUpdater {
   void receive_conferenceStoped(bool result, QVariantMap info);
 
   void receive_conferenceInfoSetted(bool result, QVariantMap info);
-  void on_conference_list_got_trigger(bool result);
+  // void on_conference_list_got_trigger(bool result);
 
   void receive_downloadConferenceCompleted(int type, QString uuid,
                                            int percentage, int speed,
@@ -100,8 +100,8 @@ class RecorderShared : public QObject, public ModelUpdater {
   void receive_personalConfCreated(bool result, QVariantMap info);
   void receive_personalConfSetted(bool result, QVariantMap info);
   void receive_personalConfDeleted(bool result, QVariantMap info);
-  void ReciveRecordInfoes(QVariantList& lsRecordInfoes);
-  void on_all_personal_list_got_trigger(bool result);
+//   void ReciveRecordInfoes(QVariantList& lsRecordInfoes);
+//   void on_all_personal_list_got_trigger(bool result);
 
   void receive_deviceInfoUpdate(QVariantMap info);
   void receive_deviceInfoListGetted(bool result, QVariantList list);
@@ -114,7 +114,7 @@ class RecorderShared : public QObject, public ModelUpdater {
   void receive_templateInfoSetted(bool result, QVariantMap info);
   void receive_templateInfoDeleted(bool result, QVariantMap info);
   void receive_templateInfoGot(bool result, QVariantMap info);
-  void on_template_list_got_trigger(bool result);
+  void receiver_templateInfoList(bool result, QVariantList list);
 
  private:
   void initialize();
@@ -126,7 +126,7 @@ class RecorderShared : public QObject, public ModelUpdater {
  private:
   Config* _config;
   ServiceThread* _service;
-  bool _service_ready;
+
   bool _server_available;
 
   QStringList _template_uuid_list;

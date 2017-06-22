@@ -2,6 +2,8 @@
 #include "RecordControl.h"
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QVector>
+#include <QJsonArray>
 #include <recorder_shared.h>
 #include "service/service_thread.h"
 #include "service/user_service_impl.h"
@@ -9,32 +11,30 @@
 #include "service/messager/message_base.h"
 
 #define RC_GET_DEVICE_LIST      "getDeviceList"
-#define RC_GET_TEMPLATE_LIST    "getTemplateList"
 
 #define  RC_CREATE_CONFERENCE   "createConference"
 #define  RC_START_CONFERENCE    "startConference"
 #define  RC_PAUSE_CONFERENCE    "pauseConference"
 #define  RC_STOP_CONFERENCE     "stopConference"
 
-
-#define RC_UPDATE_DEVICE_INFO "updateDeviceInfo"
+#define RC_UPDATE_DEVICE_INFO   "updateDeviceInfo"
 
 RecordControl::RecordControl(RecorderShared *pRecorderShare, MessageBase *pMessager) : CommandBase(pMessager),m_pRecordShared(pRecorderShare)
 {
+    qRegisterMetaType<QVector<int>>();
     AddActionProc(MB_INFO_MODE, RC_GET_DEVICE_LIST, &RecordControl::GetDeviceListReply);
-    AddActionProc(MB_CONFERENCE_MODE, RC_GET_TEMPLATE_LIST, &RecordControl::GetTemplateListReply);
 
     AddActionProc(MB_INFO_MODE, RC_UPDATE_DEVICE_INFO,&RecordControl::UpdateDeviceInfo);
 
     AddActionProc(MB_CONFERENCE_MODE, RC_CREATE_CONFERENCE, &RecordControl::CreateConferenceReply);
     AddActionProc(MB_CONFERENCE_MODE, RC_START_CONFERENCE, &RecordControl::StartConferenceReply);
-    AddActionProc(MB_CONFERENCE_MODE, RC_PAUSE_CONFERENCE, &RecordControl::PauseConferenceReply);
+    AddActionProc(MB_CONFERENCE_MODE, RC_PAUSE_CONFERENCE, &RecordControl::PauseConferenceReply);    
     AddActionProc(MB_CONFERENCE_MODE, RC_STOP_CONFERENCE, &RecordControl::StopConferenceReply);
+
 }
 
 RecordControl::~RecordControl()
 {}
-
 
 void RecordControl::GetDeviceList()
 {
@@ -51,7 +51,6 @@ void RecordControl::GetDeviceListReply(bool bResult, const QJsonObject &jsData)
     }
 }
 
-
 void RecordControl::UpdateDeviceInfo(bool bResult, const QJsonObject &jsData) {
 
     if (bResult)
@@ -61,15 +60,27 @@ void RecordControl::UpdateDeviceInfo(bool bResult, const QJsonObject &jsData) {
     }
 }
 
-void RecordControl::GetTemplateList()
+void RecordControl::CreateConference(const QString &qstrTitle,
+    const QString &qstrContent,
+    const QString &members,
+    const QVariantList &vlDevices)
 {
-    m_pMessage->sendMessage(MB_CONFERENCE_MODE, RC_GET_TEMPLATE_LIST, QJsonObject());
-}
-
-void RecordControl::CreateConference(const QVariantMap &vmCreateInfo)
-{
-    QJsonDocument jsDoc = QJsonDocument::fromVariant(QVariant(vmCreateInfo));
-    m_pMessage->sendMessage(MB_INFO_MODE, RC_CREATE_CONFERENCE, jsDoc.object());
+    QJsonObject jsData;
+    jsData.insert("title", qstrTitle);
+    jsData.insert("content", qstrContent);
+    jsData.insert("members", members);
+    QJsonArray jaDevices;
+    QJsonObject jsDevice;
+    QVariantMap vmDeviceInfo;
+    foreach (const QVariant &varDevice, vlDevices)
+    {
+        vmDeviceInfo = varDevice.toMap();
+        jsDevice.insert("userId", vmDeviceInfo["userId"].toString());
+        jsDevice.insert("deviceUuid", vmDeviceInfo["deviceUuid"].toString());
+        jaDevices.append(jsDevice);
+    }
+    jsData.insert("devices", jaDevices);
+    m_pMessage->sendMessage(MB_CONFERENCE_MODE, RC_CREATE_CONFERENCE, jsData);
 }
 
 void RecordControl::CreateConferenceReply(bool bResult, const QJsonObject &jsData)
@@ -80,8 +91,8 @@ void RecordControl::CreateConferenceReply(bool bResult, const QJsonObject &jsDat
 void RecordControl::StartConference(const QString &qstrConferenceUuid)
 {
     QJsonObject jsData;
-    jsData.insert("uuid", qstrConferenceUuid);
-    m_pMessage->sendMessage(MB_INFO_MODE, RC_START_CONFERENCE, QJsonObject());
+    jsData.insert("conferenceUuid", qstrConferenceUuid);
+    m_pMessage->sendMessage(MB_CONFERENCE_MODE, RC_START_CONFERENCE, jsData);
 }
 
 void RecordControl::StartConferenceReply(bool bResult, const QJsonObject &jsData)
@@ -92,8 +103,8 @@ void RecordControl::StartConferenceReply(bool bResult, const QJsonObject &jsData
 void RecordControl::PauseConference(const QString &qstrConferenceUuid)
 {
     QJsonObject jsData;
-    jsData.insert("uuid", qstrConferenceUuid);
-    m_pMessage->sendMessage(MB_INFO_MODE, RC_PAUSE_CONFERENCE, QJsonObject());
+    jsData.insert("conferenceUuid", qstrConferenceUuid);
+    m_pMessage->sendMessage(MB_CONFERENCE_MODE, RC_PAUSE_CONFERENCE, jsData);
 }
 
 void RecordControl::PauseConferenceReply(bool bResult, const QJsonObject &jsData)
@@ -104,8 +115,8 @@ void RecordControl::PauseConferenceReply(bool bResult, const QJsonObject &jsData
 void RecordControl::StopConference(const QString &qstrConferenceUuid)
 {
     QJsonObject jsData;
-    jsData.insert("uuid", qstrConferenceUuid);
-    m_pMessage->sendMessage(MB_INFO_MODE, RC_STOP_CONFERENCE, jsData);
+    jsData.insert("conferenceUuid", qstrConferenceUuid);
+    m_pMessage->sendMessage(MB_CONFERENCE_MODE, RC_STOP_CONFERENCE, jsData);
 }
 
 void RecordControl::StopConferenceReply(bool bResult, const QJsonObject &jsData)
@@ -113,21 +124,22 @@ void RecordControl::StopConferenceReply(bool bResult, const QJsonObject &jsData)
     m_pRecordShared->receive_conferenceStoped(bResult, jsData.toVariantMap());
 }
 
-void RecordControl::GetTemplateListReply(bool bResult, const QJsonObject &jsData)
-{
-    QJsonDocument jsDoc(jsData);
-    QString qstr = jsDoc.toJson();
-    if (bResult)
-    {
-        QVariantList lsRecordInfoes = jsData["list"].toVariant().toList();
-        foreach(const auto &varInfo, lsRecordInfoes)
-        {
-//            m_pRecrodShared->AddTemplateInfo(varInfo.toMap());
-        }
-    }
-    else
-    {
 
-    }
-
-}
+// void RecordControl::GetTemplateListReply(bool bResult, const QJsonObject &jsData)
+// {
+//     QJsonDocument jsDoc(jsData);
+//     QString qstr = jsDoc.toJson();
+//     if (bResult)
+//     {
+//         QVariantList lsRecordInfoes = jsData["list"].toVariant().toList();
+//         foreach(const auto &varInfo, lsRecordInfoes)
+//         {
+// //            m_pRecrodShared->AddTemplateInfo(varInfo.toMap());
+//         }
+//     }
+//     else
+//     {
+// 
+//     }
+// 
+// }

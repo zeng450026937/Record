@@ -18,6 +18,7 @@ class Scene_File;
 // class InfoMode;
 class ConferenceMode;
 class PersonalMode;
+class MarkControl;
 class Scene_File : public QGroupBox
 {
     Q_OBJECT
@@ -135,7 +136,7 @@ private:
     QTime           _current_time;
     QTime           _total_time;
 
-    // InfoMode        *m_pInfoMode;
+    MarkControl     *m_pMarkControl;
     ConferenceMode  *m_pConferenceMode;
     PersonalMode    *m_pPersonalMode;
 };

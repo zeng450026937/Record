@@ -102,5 +102,5 @@ void UserServiceImpl::timerEvent(QTimerEvent *e)
 
 void UserServiceImpl::DoWebsocketConnect()
 {
-    _service->GetInfoMode()->ConnectToServer();
+    _service->GetLoginControl()->ConnectToServer();
 }

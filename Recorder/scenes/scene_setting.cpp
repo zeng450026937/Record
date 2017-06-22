@@ -2,6 +2,8 @@
 #include "ui_scene_setting.h"
 
 #include "config.h"
+#include <service/service_thread.h>
+#include <service/command/SettingControl.h>
 #include "recorder_shared.h"
 #include "scene_record_addinfo.h"
 #include "device_list_delegate_a.h"
@@ -13,13 +15,18 @@ Scene_Setting::Scene_Setting(RecorderShared *sharedData, QWidget *parent) :
     QGroupBox(parent),
     _sharedData(sharedData),
     ui(new Ui::Scene_Setting),
-    _scene_record_addinfo(new Scene_Record_AddInfo)
+    _scene_record_addinfo(new Scene_Record_AddInfo),
+    m_pSettingControl(nullptr)
 {
     ui->setupUi(this);
 
     this->setWindowFlags(Qt::FramelessWindowHint);//去掉标题栏
 
     this->initialize();
+
+    ServiceThread *pService = ServiceThread::GetInstance();
+    m_pSettingControl = new SettingControl(sharedData, pService->GetMessager());
+    m_pSettingControl->moveToThread(pService);
 }
 
 Scene_Setting::~Scene_Setting()
@@ -93,7 +100,8 @@ void Scene_Setting::initialize()
 void Scene_Setting::receive_conference_notify(int state, bool result, QVariantMap conf)
 {
     Q_UNUSED(conf);
-    switch(state){
+    switch(state)
+    {
     case RecorderShared::kConfCreated:
     case RecorderShared::kConfStarted:
     case RecorderShared::kConfPaused:
@@ -171,7 +179,8 @@ void Scene_Setting::on_add_btn_clicked()
 
     if ( _scene_record_addinfo->exec() == QDialog::Accepted ) {
         modified = _scene_record_addinfo->getTemplateInfo();
-        _sharedData->AddTemplate(modified);
+        // _sharedData->AddTemplate(modified);
+        // m_pSettingControl->AddTemplateInfo(modified);
     }
 
     ui->template_box->setEnabled(true);

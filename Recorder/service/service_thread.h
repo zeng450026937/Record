@@ -14,6 +14,8 @@ class LoginControl;
 class RecorderShared;
 class DownloadDatabase;
 class ClipFileDatabase;
+class MarkDatabase;
+class MarkControl;
 
 class ServiceThreadPrivate;
 class ServiceThread : public QThread {
@@ -31,7 +33,7 @@ class ServiceThread : public QThread {
 
     ConferenceMode  *GetConferenceMode();
     PersonalMode    *GetPersonalMode();
-	LoginControl		*GetInfoMode();
+	LoginControl		*GetLoginControl();
 	AccountCenter *GetAccountCenter();
 
   WhiteList *GetLoginWhiteList();
@@ -43,6 +45,9 @@ class ServiceThread : public QThread {
 
   DownloadDatabase *GetDownloadDB();
   ClipFileDatabase *GetClipDB();
+
+  MarkDatabase      *GetMarkDB();
+  MarkControl       *GetMarkControl();
 
   ServiceThreadPrivate *_private;
  signals:

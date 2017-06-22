@@ -19,8 +19,8 @@ int MarkDatabase_Impl::AddMark(QVariantMap& mark)
     query.prepare("insert or replace into MARK (uuid, conference_uuid, time, mark) "
                 "values (?, ?, ?, ?)");
 
-    query.addBindValue( mark.value("uuid").toString() );
-    query.addBindValue( mark.value("conference_uuid").toString() );
+    query.addBindValue( mark.value("markUuid").toString() );
+    query.addBindValue( mark.value("conferenceUuid").toString() );
     query.addBindValue( mark.value("time").toInt() );
     query.addBindValue( mark.value("content").toString() );
 

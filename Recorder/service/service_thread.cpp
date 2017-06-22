@@ -3,6 +3,7 @@
 #include "command/ConferenceMode.h"
 #include "command/PersonalMode.h"
 #include "command/LoginControl.h"
+#include "command/MarkControl.h"
 #include "conf_service_impl.h"
 #include "service_thread_private.h"
 #include "storage/database_impl.h"
@@ -56,7 +57,7 @@ ServiceThread* ServiceThread::ServiceThread::GetInstance() {
   return ServiceThreadPrivate::s_pServiceSingleton;
 }
 
-LoginControl* ServiceThread::GetInfoMode() {
+LoginControl* ServiceThread::GetLoginControl() {
   if (nullptr == _private->_info_mode) {
     _private->_info_mode = new LoginControl(GetMessager());
     _private->_info_mode->m_pRecordShared = GetRecordShared();
@@ -93,6 +94,22 @@ DownloadDatabase* ServiceThread::GetDownloadDB() {
 }
 
 ClipFileDatabase* ServiceThread::GetClipDB() { return _private->ClipDB(); }
+
+MarkDatabase * ServiceThread::GetMarkDB()
+{
+    return _private->_mark_db;
+}
+
+MarkControl * ServiceThread::GetMarkControl()
+{
+    if (_private->_mark_control == nullptr)
+    {
+        _private->_mark_control = new MarkControl(_private->_mark_db,_private->_messager);
+        _private->_mark_control->moveToThread(this);
+    }
+
+    return _private->_mark_control;
+}
 
 void ServiceThread::run() {
   _private =

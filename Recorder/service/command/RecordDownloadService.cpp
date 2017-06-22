@@ -216,7 +216,7 @@ void RecordDownloadService::on_binary_received(QByteArray binary) {
       killTimer(m_iDownloadStatusTimerId);
     }
   } else {
-    //鍒涘缓涓€涓?list_form
+    // 创建 list_form
   }
 }
 

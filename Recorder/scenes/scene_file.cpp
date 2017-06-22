@@ -8,6 +8,7 @@
 
 #include <service/command/ConferenceMode.h>
 #include <service/command/PersonalMode.h>
+#include "service/command/MarkControl.h"
 #include "conf_detail.h"
 #include "config.h"
 #include "listitem_delegate.h"
@@ -33,7 +34,9 @@ Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent)
       _time_unit(1000),
       _duration(0),
       _offset(0),
-      _type(1) {
+      _type(1) ,
+        m_pMarkControl(ServiceThread::GetInstance()->GetMarkControl())
+      {
   ui->setupUi(this);
 
   this->setWindowFlags(Qt::FramelessWindowHint);  //去掉标题栏
@@ -320,8 +323,9 @@ void Scene_File::on_add_mark(QString text) {
   // return;
 
   QVariantMap mark_info = ui->MarkBox->add_mark(text);
-
-  _sharedData->AddMark(RecorderShared::MarkModel, _uuid, mark_info);
+  // TODO RecordControl AddMark
+  m_pMarkControl->AddMarkInfo(_uuid, text, mark_info["time"].toInt());
+  _sharedData->AddMark(RecorderShared::MarkModel, mark_info);
 
   ui->mark_lineEdit->clear();
 
@@ -1069,13 +1073,13 @@ void Scene_File::on_comboBox_currentIndexChanged(int index) {
     Scene_Record_Warning::ShowMessage(
         pos, QString("%1 文件丢失").arg(fileinfo.baseName()));
 
-    if (_file.value("start_time").toInt() < 0) {
-      if (_type == 1) {
-        _sharedData->CheckConferenceFile(_conf);
-      } else if (_type == 0) {
-        _sharedData->CheckPersonalFile(_conf);
-      }
-    }
+//     if (_file.value("start_time").toInt() < 0) {
+//       if (_type == 1) {
+//         _sharedData->CheckConferenceFile(_conf);
+//       } else if (_type == 0) {
+//         _sharedData->CheckPersonalFile(_conf);
+//       }
+//     }
 
     _player->stop();
   }

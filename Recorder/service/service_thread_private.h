@@ -21,6 +21,7 @@ class LoginControl;
 class PersonalMode;
 class ConferenceMode;
 class RecorderShared;
+class MarkControl;
 class ServiceThreadPrivate
 {
 	friend class ServiceThread;
@@ -58,7 +59,6 @@ private:
     ClipFileDatabase*   _clip_db;
     DownloadDatabase*   _download_db;
     TemplateDatabase*   _template_db;
-    MarkDatabase*       _mark_db;
     UserDatabase*       _user_db;
     PersonalDatabase*   _personal_db;
 
@@ -66,6 +66,9 @@ private:
     LoginControl	*_info_mode;
     PersonalMode *_pPersonalMode;
     ConferenceMode *_pConferenceMode;
+
+    MarkDatabase        *_mark_db;
+    MarkControl         *_mark_control;
 
 	static ServiceThread *s_pServiceSingleton;
 };

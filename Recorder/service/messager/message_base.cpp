@@ -59,6 +59,7 @@ void MessageBase::on_message_reply(QString qstrMessage) {
       QByteArray baActionLocator;
       baActionLocator.append(jsCommand["mode"].toString());
       baActionLocator.append(jsCommand["action"].toString());
+      
       auto itrFound = d->mapMode.find(baActionLocator);
       if (itrFound == d->mapMode.end()) {
         // 鎵€鏈変笉绗﹀悎瑙勫垯鐨勫搷搴旈兘浼氬湪杩欓噷缁撴潫锛屽寘鎷?涓嶅瓨鍦?command"
@@ -67,6 +68,7 @@ void MessageBase::on_message_reply(QString qstrMessage) {
                  << " command mode is not found." << error.errorString();
         return;
       }
+
 
       if (jsCommand["action"].toString() != "heartBeat") qDebug() << jsCommand;
       emit itrFound->second->action_trigger(baActionLocator,

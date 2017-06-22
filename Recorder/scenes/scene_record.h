@@ -16,6 +16,7 @@ class NotifyDialog;
 class RecordControl;
 class ConferenceMode;
 class PersonalMode;
+class MarkControl;
 
 namespace Ui {
 class Scene_Record;
@@ -56,7 +57,7 @@ class Scene_Record : public QGroupBox {
  private slots:
   void conference_info_changed(QString text);
   void more_menu_triggered(QAction *action);
-  void on_infoButton_clicked(bool checked);
+  void on_infoButton_pressed();
 
   void receive_device_select_stateChanged(bool checked, QVariantMap device);
   void receive_download_notify(int type, QString uuid, int percentage,
@@ -96,6 +97,7 @@ class Scene_Record : public QGroupBox {
 
   QTime _last_time;
 
+  MarkControl   *m_pMarkControl;
   RecordControl *m_pRecordControl;
   ConferenceMode *m_pConferenceMode;
   PersonalMode *m_pPersonalMode;

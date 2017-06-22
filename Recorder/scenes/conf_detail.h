@@ -4,6 +4,7 @@
 #include <QVariantMap>
 #include <QWidget>
 
+class ConferenceMode;
 namespace Ui {
 class ConfDetail;
 }
@@ -24,6 +25,7 @@ class ConfDetail : public QWidget {
  private:
   Ui::ConfDetail *ui;
   QVariantMap _info;
+  ConferenceMode *conf_mode;
 };
 
 #endif  // CONF_DETAIL_H

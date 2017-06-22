@@ -712,6 +712,19 @@ void Scene_File::on_file_listView_clicked(const QModelIndex &index) {
   this->update_mark_model(_mark_list);
 }
 
+void Scene_File::on_file_clicked(const QString &uuid) {
+  this->clear_file_info();
+
+  _file_list = _sharedData->GetFileList(_uuid);
+
+  this->update_file_list(_file_list);
+
+  _mark_list = _sharedData->GetMark(_uuid);
+  // to avoid displaying the marks which are out of play range，update mark
+  // model in update_play_info()
+  this->update_mark_model(_mark_list);
+}
+
 void Scene_File::on_cancel_btn_clicked() {
   ui->file_mark_tableView->setEnabled(true);
   ui->comboBox->setEnabled(true);

@@ -12,16 +12,19 @@ class ConferenceMode : public CommandBase {
   Q_OBJECT
 
   ConferenceMode(MessageBase *pMessage);
+ signals:
+  void getConferenceFiles(const QVariantList &list);
 
+ public:
+  ~ConferenceMode();
+  void GetConferenceList();
+  void GetConferenceFiles(const QString &uuid);
 
-public:
-    ~ConferenceMode();
-    void GetConferenceList();
-
-private:
-    void GetConferenceListReply(bool bResult, QJsonObject jsData);
+ private:
+  void GetConferenceListReply(bool bResult, QJsonObject jsData);
+  void GetConferenceFilesReply(bool bResult, QJsonObject jsData);
 
   RecorderShared *m_pRecrodShared;
 
-    Config              *m_pConfig;
+  Config *m_pConfig;
 };

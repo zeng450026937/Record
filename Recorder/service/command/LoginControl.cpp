@@ -10,7 +10,6 @@
 #define IMAC_HEART_BEAT "heartBeat"
 
 LoginControl::LoginControl(MessageBase *pMessager) : CommandBase(pMessager) {
-
   AddActionProc(MB_INFO_MODE, IMAC_HEART_BEAT, &LoginControl::HandleHeartBeat);
 }
 
@@ -51,7 +50,7 @@ void LoginControl::HandleHeartBeat(bool bResult, const QJsonObject &jsData) {
 
   QJsonObject jsActionData;
   if (jsData["userId"].toString() == qstrUserId) {
-      jsActionData.insert("userId", qstrUserId);
-      m_pMessage->sendMessage("info", IMAC_HEART_BEAT, jsData);
+    jsActionData.insert("userId", qstrUserId);
+    m_pMessage->sendMessage("info", IMAC_HEART_BEAT, jsActionData);
   }
 }

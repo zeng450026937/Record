@@ -24,7 +24,8 @@ ConfServiceImpl::ConfServiceImpl(ServiceThreadPrivate* shared, QObject* parent)
     : _shared(shared),
       _monitor_timer(0),
       _update_timer(0),
-      auto_download(false) {
+      auto_download(false),
+      QObject(parent) {
   this->setDownloadFolder("./OUT");
 
   auto_download = Config::GetInstance()->_auto_download;
@@ -128,19 +129,19 @@ void ConfServiceImpl::timerEvent(QTimerEvent* e) {
 //                                         QVariantMap info) {
 //   QVariantMap param = info;
 //   param.insert("uuid", qstrConferenceUuid);
-// 
+//
 //   this->Execute(MessageBase::SetConferenceInfo, param);
 // }
 // void ConfServiceImpl::delConferenceInfo(QString qstrConferenceUuid) {
 //   QVariantMap param;
 //   param.insert("uuid", qstrConferenceUuid);
-// 
+//
 //   this->Execute(MessageBase::DelConferenceInfo, param);
 // }
 // void ConfServiceImpl::getConferenceInfo(QString qstrConferenceUuid) {
 //   QVariantMap param;
 //   param.insert("uuid", qstrConferenceUuid);
-// 
+//
 //   this->Execute(MessageBase::GetConferenceInfo, param);
 // }
 QVariantMap ConfServiceImpl::conferenceInfo(QString qstrConferenceUuid) const {
@@ -148,7 +149,7 @@ QVariantMap ConfServiceImpl::conferenceInfo(QString qstrConferenceUuid) const {
 }
 // void ConfServiceImpl::getConferenceList() {
 //   QVariantMap param;
-// 
+//
 //   this->Execute(MessageBase::GetConferenceList, param);
 // }
 
@@ -165,24 +166,24 @@ QVariantMap ConfServiceImpl::personalConfInfo(
 QVariantList ConfServiceImpl::personalConfList() const {
   return _shared->PersonalDB()->ConfList();
 }
-// 
+//
 // void ConfServiceImpl::addTemplateInfo(QVariantMap info) {
 //   this->Execute(MessageBase::AddTemplateInfo, info);
 // }
-// 
+//
 // void ConfServiceImpl::setTemplateInfo(QVariantMap info) {
 //   this->Execute(MessageBase::SetTemplateInfo, info);
 // }
 // void ConfServiceImpl::getTemplateInfo(QString qstrConferenceUuid) {
 //   QVariantMap param;
 //   param.insert("uuid", qstrConferenceUuid);
-// 
+//
 //   this->Execute(MessageBase::GetTemplateInfo, param);
 // }
 // void ConfServiceImpl::delTemplateInfo(QString qstrConferenceUuid) {
 //   QVariantMap param;
 //   param.insert("uuid", qstrConferenceUuid);
-// 
+//
 //   this->Execute(MessageBase::DelTemplateInfo, param);
 // }
 // QVariantMap ConfServiceImpl::templateInfo(QString qstrConferenceUuid) const {
@@ -190,7 +191,7 @@ QVariantList ConfServiceImpl::personalConfList() const {
 // }
 // void ConfServiceImpl::getTemplateList() {
 //   QVariantMap param;
-// 
+//
 //   this->Execute(MessageBase::GetTemplateList, param);
 // }
 // QVariantList ConfServiceImpl::templateList() const {

@@ -518,7 +518,6 @@ void Scene_Record::accept_notify() {
 }
 
 void Scene_Record::on_infoButton_pressed() {
-
   if (ui->title->text() == "" && ui->context->text() == "" &&
       ui->member->text() == "") {
     return;
@@ -529,21 +528,19 @@ void Scene_Record::on_infoButton_pressed() {
   _conf_info.insert("members", ui->member->text());
 
   if (_conf_uuid.isEmpty()) {
-      ui->infoButton->setText("保存成功");
+    ui->infoButton->setText("保存成功");
 
-      if (!infoButton_timer) {
-          infoButton_timer = this->startTimer(INFO_INTERVAL);
-      }
-      else {
-          this->killTimer(infoButton_timer);
-          infoButton_timer = this->startTimer(INFO_INTERVAL);
-      }
-  }
-    else
-    {
-        ServiceThread::GetInstance()->GetConferenceMode()->SetConferenceInfo(_conf_uuid,
-            _conf_info["title"].toString(), _conf_info["content"].toString(), _conf_info["members"].toString());
+    if (!infoButton_timer) {
+      infoButton_timer = this->startTimer(INFO_INTERVAL);
+    } else {
+      this->killTimer(infoButton_timer);
+      infoButton_timer = this->startTimer(INFO_INTERVAL);
     }
+  } else {
+    ServiceThread::GetInstance()->GetConferenceMode()->SetConferenceInfo(
+        _conf_uuid, _conf_info["title"].toString(),
+        _conf_info["content"].toString(), _conf_info["members"].toString());
+  }
 }
 
 void Scene_Record::on_pause_btn_clicked(bool checked) {

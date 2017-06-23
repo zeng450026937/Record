@@ -1,5 +1,6 @@
 #include "RecordDownloadReceiver.h"
 
+#include <QDebug>
 #include <QFile>
 #include <QString>
 #include "common/config.h"

@@ -19,9 +19,8 @@ class Scene_File;
 class ConferenceMode;
 class PersonalMode;
 class MarkControl;
-class Scene_File : public QGroupBox
-{
-    Q_OBJECT
+class Scene_File : public QGroupBox {
+  Q_OBJECT
 
  public:
   explicit Scene_File(RecorderShared *sharedData, QWidget *parent = 0);
@@ -62,7 +61,7 @@ class Scene_File : public QGroupBox
   void on_play_btn_clicked(bool checked);
 
   void on_file_listView_clicked(const QModelIndex &index);
-  void on_file_clicked(const QString &uuid);
+  void on_file_clicked(const QVariantMap &info);
 
   void on_cancel_btn_clicked();
 
@@ -139,9 +138,9 @@ class Scene_File : public QGroupBox
   QTime _current_time;
   QTime _total_time;
 
-    MarkControl     *m_pMarkControl;
-    ConferenceMode  *m_pConferenceMode;
-    PersonalMode    *m_pPersonalMode;
+  MarkControl *m_pMarkControl;
+  ConferenceMode *m_pConferenceMode;
+  PersonalMode *m_pPersonalMode;
 };
 
 #endif  // SCENE_FILE_H

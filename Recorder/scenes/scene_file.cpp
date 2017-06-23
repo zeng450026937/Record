@@ -17,6 +17,7 @@
 #include "scene_record_warning.h"
 #include "service/command/MarkControl.h"
 #include "service/service_thread.h"
+#include "service/storage/download_database.h"
 
 Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent)
     : QGroupBox(parent),
@@ -193,16 +194,22 @@ void Scene_File::init_model() {
   ConfDetail *conf_detail = new ConfDetail(this);
   ui->fileStackedWidget->addWidget(conf_detail);
 
-  connect(itemDelegate, &ListItemDelegate::itemClicked,
-          [this, conf_detail](const QVariantMap &info) {
-            ui->fileStackedWidget->setCurrentIndex(
-                ui->fileStackedWidget->currentIndex() + 1);
-            conf_detail->setInfo(info);
-          });
+  connect(
+      itemDelegate, &ListItemDelegate::itemClicked,
+      [this, conf_detail](const QVariantMap &info) {
+        if (info.value("recordType").toInt() != RecorderShared::RT_PERSONAL) {
+          ui->fileStackedWidget->setCurrentIndex(
+              ui->fileStackedWidget->currentIndex() + 1);
+          conf_detail->setInfo(info);
+        }
+      });
+
   connect(conf_detail, &ConfDetail::goBack, [=]() {
     ui->fileStackedWidget->setCurrentIndex(
         ui->fileStackedWidget->currentIndex() - 1);
   });
+  connect(conf_detail, &ConfDetail::selectFile,
+          [=](const QVariantMap &info) { this->on_file_clicked(info); });
 
   ui->file_mark_tableView->verticalHeader()->hide();
   ui->file_mark_tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -303,7 +310,7 @@ void Scene_File::update_file_list(QVariantList &list) {
   }
   ui->comboBox->blockSignals(false);
 
-  if (filelist.count() > 0) ui->comboBox->currentIndexChanged(0);
+  if (_file_list.count() > 0) ui->comboBox->currentIndexChanged(0);
 }
 
 void Scene_File::update_mark_model(QVariantList &list) {
@@ -692,12 +699,9 @@ void Scene_File::on_file_listView_clicked(const QModelIndex &index) {
 
   switch (_type) {
     case RecorderShared::RT_CONFERENCE:
-      _uuid = _conf.value("uuid").toString();
-      break;
     case RecorderShared::RT_PERSONAL:
-      _uuid = _conf.value("conferenceUuid").toString();
-      break;
     case RecorderShared::RT_MOBILE:
+      _uuid = _conf.value("conferenceUuid").toString();
       break;
     default:
       break;
@@ -713,17 +717,47 @@ void Scene_File::on_file_listView_clicked(const QModelIndex &index) {
   this->update_mark_model(_mark_list);
 }
 
-void Scene_File::on_file_clicked(const QString &uuid) {
+void Scene_File::on_file_clicked(const QVariantMap &info) {
   this->clear_file_info();
 
   _file_list = _sharedData->GetFileList(_uuid);
-
-  this->update_file_list(_file_list);
 
   _mark_list = _sharedData->GetMark(_uuid);
   // to avoid displaying the marks which are out of play range，update mark
   // model in update_play_info()
   this->update_mark_model(_mark_list);
+
+  _offset = 0;
+
+  int pid;
+  QString path;
+  ServiceThread::GetInstance()->GetDownloadDB()->GetDownloadInfo(
+      info["fileUuid"].toString(), info["conferenceUuid"].toString(),
+      info["deviceUuid"].toString(), &pid, &path);
+
+  qDebug() << path;
+
+  if (QFile(path).exists() && QFile(path).size() > 0) {
+    this->update_play_info(path);
+
+    ui->file_mark_tableView->setEnabled(true);
+    ui->stackedWidget->setEnabled(true);
+  } else {
+    ui->file_mark_tableView->setEnabled(false);
+    ui->stackedWidget->setEnabled(false);
+
+    QFileInfo fileinfo(_file.value("fullpath").toString());
+    QPoint pos = this->parentWidget()
+                     ->parentWidget()
+                     ->parentWidget()
+                     ->geometry()
+                     .topLeft() +
+                 this->geometry().center();
+    Scene_Record_Warning::ShowMessage(
+        pos, QString("%1 文件丢失").arg(fileinfo.baseName()));
+
+    _player->stop();
+  }
 }
 
 void Scene_File::on_cancel_btn_clicked() {

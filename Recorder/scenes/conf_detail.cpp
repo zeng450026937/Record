@@ -38,6 +38,9 @@ ConfDetail::ConfDetail(QWidget *parent)
           ui->listWidget->addItem(listItem);
           ui->listWidget->setItemWidget(listItem, listItemWidget);
           listItemWidget->update_display(itemMap);
+
+          QObject::connect(listItemWidget, &ListForm::itemClicked, this,
+                           &ConfDetail::selectFile);
           qDebug() << item;
         }
       });

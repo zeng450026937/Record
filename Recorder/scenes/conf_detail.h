@@ -21,6 +21,7 @@ class ConfDetail : public QWidget {
 
  signals:
   void goBack();
+  void selectFile(const QVariantMap &info);
 
  private:
   Ui::ConfDetail *ui;

@@ -32,12 +32,8 @@ ListForm::ListForm()
 ListForm::~ListForm() { delete ui; }
 
 void ListForm::mousePressEvent(QMouseEvent* event) {
-  if (_info["recordType"].toInt() != RecorderShared::RT_PERSONAL) {
-    Q_EMIT itemClicked(_info);
-    event->accept();
-  } else {
-    event->ignore();
-  }
+  Q_EMIT itemClicked(_info);
+  event->ignore();
 }
 
 void ListForm::update_display(const QVariantMap& info) {

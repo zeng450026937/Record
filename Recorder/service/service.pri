@@ -44,7 +44,7 @@ HEADERS += \
     $$PWD/command/LoginControl.h \
     $$PWD/command/RecordControl.h \
     $$PWD/command/MarkControl.h \
-    $$PWD/command/SettingControl.h
+    $$PWD/command/TemplateControl.h
 
 
 SOURCES += \
@@ -78,5 +78,5 @@ SOURCES += \
     $$PWD/command/LoginControl.cpp \
     $$PWD/command/RecordControl.cpp \
     $$PWD/command/MarkControl.cpp \
-    $$PWD/command/SettingControl.cpp
+    $$PWD/command/TemplateControl.cpp
 

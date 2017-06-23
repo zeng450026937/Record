@@ -160,7 +160,7 @@ void RecordDownloadService::DownloadRecordReply(bool bResult,
 void RecordDownloadService::on_binary_received(QByteArray binary) {
   char *pData = binary.data();
   int iLocator = 0;
-  m_pTempRecordInfo->iRecordType = *(int *)pData + iLocator;  // type
+  m_pTempRecordInfo->iRecordType = htonl(*(int *)pData + iLocator);  // type
   iLocator += sizeof(int);
 
   memcpy(m_pTempRecordInfo->szUserId, pData + iLocator, 17);  // userId

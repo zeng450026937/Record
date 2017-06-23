@@ -19,17 +19,16 @@ class ConferenceMode : public CommandBase {
   ~ConferenceMode();
   void GetConferenceList();
   void SetConferenceInfo(const QString &qstrConferenceUuid,
-      const QString &qstrTitle, 
-      const QString &qstrContent, 
-      const QString &qstrMembers);
+                         const QString &qstrTitle, const QString &qstrContent,
+                         const QString &qstrMembers);
   void GetConferenceFiles(const QString &uuid);
   void GetMobileConferenceList();
   void GetMobileConferenceFiles(const QString &uuid);
 
  private:
-     void GetConferenceListReply(bool bResult, const QJsonObject &jsData);
-     void GetConferenceFilesReply(bool bResult, const QJsonObject &jsData);
-     void SetConferenceInfoReply(bool bResult, const QJsonObject &jsData);
+  void GetConferenceListReply(bool bResult, const QJsonObject &jsData);
+  void GetConferenceFilesReply(bool bResult, const QJsonObject &jsData);
+  void SetConferenceInfoReply(bool bResult, const QJsonObject &jsData);
   void GetMobileConferenceListReply(bool bResult, const QJsonObject &jsData);
   void GetMobileConferenceFilesReply(bool bResult, const QJsonObject &jsData);
 

@@ -30,7 +30,10 @@ LoginForm::LoginForm(QWidget *parent)
                 SLOT(on_service_is_readied()), Qt::QueuedConnection);
 }
 
-LoginForm::~LoginForm() { delete ui; }
+LoginForm::~LoginForm() {
+  delete ui;
+  Config::GetInstance()->Save();
+}
 
 void LoginForm::showEvent(QShowEvent *event) {
   Q_UNUSED(event);
@@ -54,8 +57,8 @@ void LoginForm::on_login_result(QString qstrResultInfo) {
 }
 
 void LoginForm::on_loginPushButton_clicked() {
-  ui->userLineEdit->setText("311715");
-  ui->passwordLineEdit->setText("123456");
+  // ui->userLineEdit->setText("311715");
+  // ui->passwordLineEdit->setText("123456");
 
   QString qstrUserId = ui->userLineEdit->text().trimmed();
 
@@ -91,5 +94,5 @@ void LoginForm::on_service_is_readied() {
           SLOT(on_login_result(QString)));
 
   // 自动登录，测试时使用。
-  on_loginPushButton_clicked();
+  // on_loginPushButton_clicked();
 }

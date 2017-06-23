@@ -37,7 +37,7 @@ void PersonalMode::GetAllPersoanlList()
     m_pMessage->sendMessage("personal", PM_GET_ALL_PERSONAL_LIST, QJsonObject());
 }
 
-void PersonalMode::GetPersonalListReply(bool bResult, QJsonObject jsData)
+void PersonalMode::GetPersonalListReply(bool bResult, const QJsonObject &jsData)
 {
     if (bResult)
     {

@@ -91,11 +91,11 @@ Scene_Record::Scene_Record(RecorderShared *sharedData, QWidget *parent)
           SLOT(receive_record_notify(QString, QString, QString)));
 
   ServiceThread *pService = ServiceThread::GetInstance();
-  m_pPersonalMode = pService->GetPersonalMode();
-  m_pConferenceMode = pService->GetConferenceMode();
-  m_pRecordControl = pService->GetRecordControl();
-  m_pRecordControl->GetDeviceList();
-  m_pMarkControl->GetAllConferenceMarkList();
+
+//   m_pConferenceMode = pService->GetConferenceMode();
+//   m_pRecordControl = pService->GetRecordControl();
+//   m_pRecordControl->GetDeviceList();
+//   m_pMarkControl->GetAllConferenceMarkList();
 }
 
 Scene_Record::~Scene_Record() {

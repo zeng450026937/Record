@@ -8,9 +8,8 @@ CommandBase::CommandBase(MessageBase *pMessage)
     //  使用 Qt::QueuedConnection是因�?action_trigger(...)
     //  信号会被消息接收线程发起，而希望在其他的工作线程中执行
     //  on_action_trigger(..)
-    connect(this, SIGNAL(action_trigger(QByteArray, bool, QJsonObject)),
-        this, SLOT(on_action_trigger(QByteArray, bool, QJsonObject)),
-        Qt::QueuedConnection);
+     connect(this, SIGNAL(action_trigger(QByteArray, bool, QJsonObject)),
+         this, SLOT(on_action_trigger(QByteArray, bool, QJsonObject)),Qt::QueuedConnection);
 }
 
 CommandBase::~CommandBase() {}

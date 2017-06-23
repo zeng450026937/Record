@@ -15,7 +15,6 @@ class Scene_Record_Warning;
 class NotifyDialog;
 class RecordControl;
 class ConferenceMode;
-class PersonalMode;
 class MarkControl;
 
 namespace Ui {
@@ -100,7 +99,6 @@ class Scene_Record : public QGroupBox {
   MarkControl   *m_pMarkControl;
   RecordControl *m_pRecordControl;
   ConferenceMode *m_pConferenceMode;
-  PersonalMode *m_pPersonalMode;
 };
 
 #endif  // SCENE_RECORD_H

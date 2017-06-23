@@ -27,11 +27,11 @@ class ConferenceMode : public CommandBase {
   void GetMobileConferenceFiles(const QString &uuid);
 
  private:
-     void GetConferenceListReply(bool bResult, QJsonObject jsData);
-     void GetConferenceFilesReply(bool bResult, QJsonObject jsData);
-     void SetConferenceInfoReply(bool bResult, QJsonObject jsData);
-  void GetMobileConferenceListReply(bool bResult, QJsonObject jsData);
-  void GetMobileConferenceFilesReply(bool bResult, QJsonObject jsData);
+     void GetConferenceListReply(bool bResult, const QJsonObject &jsData);
+     void GetConferenceFilesReply(bool bResult, const QJsonObject &jsData);
+     void SetConferenceInfoReply(bool bResult, const QJsonObject &jsData);
+  void GetMobileConferenceListReply(bool bResult, const QJsonObject &jsData);
+  void GetMobileConferenceFilesReply(bool bResult, const QJsonObject &jsData);
 
   RecorderShared *m_pRecrodShared;
 

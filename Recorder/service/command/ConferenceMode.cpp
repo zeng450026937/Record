@@ -45,7 +45,7 @@ void ConferenceMode::SetConferenceInfo(const QString &qstrConferenceUuid,
     m_pMessage->sendMessage(MB_CONFERENCE_MODE, PM_SET_CONVERENCE_INFO, data);
 }
 
-void ConferenceMode::SetConferenceInfoReply(bool bResult, QJsonObject jsData)
+void ConferenceMode::SetConferenceInfoReply(bool bResult, const QJsonObject &jsData)
 {
     m_pRecrodShared->receive_conferenceInfoSetted(bResult, jsData.toVariantMap());
 }
@@ -68,7 +68,7 @@ void ConferenceMode::GetMobileConferenceFiles(const QString &uuid) {
                           data);
 }
 
-void ConferenceMode::GetConferenceListReply(bool bResult, QJsonObject jsData) {
+void ConferenceMode::GetConferenceListReply(bool bResult, const QJsonObject &jsData) {
   if (bResult) {
     QVariantList lsRecordInfoes = jsData["list"].toVariant().toList();
     foreach (const auto &varInfo, lsRecordInfoes) {
@@ -77,7 +77,7 @@ void ConferenceMode::GetConferenceListReply(bool bResult, QJsonObject jsData) {
   }
 }
 
-void ConferenceMode::GetConferenceFilesReply(bool bResult, QJsonObject jsData) {
+void ConferenceMode::GetConferenceFilesReply(bool bResult, const QJsonObject &jsData) {
   if (bResult) {
     QVariantList lsRecordFiles = jsData["list"].toVariant().toList();
     Q_EMIT getConferenceFiles(RecorderShared::RT_CONFERENCE, lsRecordFiles);
@@ -85,7 +85,7 @@ void ConferenceMode::GetConferenceFilesReply(bool bResult, QJsonObject jsData) {
 }
 
 void ConferenceMode::GetMobileConferenceListReply(bool bResult,
-                                                  QJsonObject jsData) {
+                                                  const QJsonObject &jsData) {
   if (bResult) {
     QVariantList lsRecordInfoes = jsData["list"].toVariant().toList();
     foreach (const auto &varInfo, lsRecordInfoes) {
@@ -95,7 +95,7 @@ void ConferenceMode::GetMobileConferenceListReply(bool bResult,
 }
 
 void ConferenceMode::GetMobileConferenceFilesReply(bool bResult,
-                                                   QJsonObject jsData) {
+                                                     const QJsonObject &jsData) {
   if (bResult) {
     QVariantList lsRecordFiles = jsData["list"].toVariant().toList();
     Q_EMIT getConferenceFiles(RecorderShared::RT_MOBILE, lsRecordFiles);

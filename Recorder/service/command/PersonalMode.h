@@ -23,7 +23,7 @@ public:
     void GetAllPersoanlList();
 
 private:
-    void GetPersonalListReply(bool bResult, QJsonObject jsData); 
+    void GetPersonalListReply(bool bResult, const QJsonObject &jsData);
 
 private:
 

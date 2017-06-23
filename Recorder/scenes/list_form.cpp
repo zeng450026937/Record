@@ -51,8 +51,7 @@ void ListForm::update_display(const QVariantMap& info) {
   text = info.value("title").toString();
   if (text != _info.value("title").toString()) ui->titleLabel->setText(text);
 
-  text = info.value("userId").toString();
-  if (text.isEmpty()) {
+  if (info.value("recordType").toInt() != RecorderShared::RT_PERSONAL) {
     ui->userGroupBox->hide();
     ui->downloadButton->hide();
   } else {
@@ -94,22 +93,16 @@ void ListForm::update_display(const QVariantMap& info) {
 }
 
 void ListForm::on_downloadButton_clicked() {
-
   if (_download_status != DS_COMPELETED) {
     Scene_File_DL promptDialog;
     if (promptDialog.exec() == QDialog::Rejected) return;
 
     RecordDownloadService::GetInstance()->DownloadRecord(
-        this, _info["recordType"].toInt(), 
-        _info["title"].toString(),
-        _info["userName"].toString(),
-        _info["fileUuid"].toString(),
-        _info["conferenceUuid"].toString(), 
-        _info["deviceUuid"].toString(),
-        _info["createTime"].toString(),
-        _info["fileExtension"].toString());
+        this, _info["recordType"].toInt(), _info["title"].toString(),
+        _info["userName"].toString(), _info["fileUuid"].toString(),
+        _info["conferenceUuid"].toString(), _info["deviceUuid"].toString(),
+        _info["createTime"].toString(), _info["fileExtension"].toString());
   }
-
 }
 
 void ListForm::on_downloadButton_pressed() {

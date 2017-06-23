@@ -5,11 +5,11 @@
 #include "service/service_thread.h"
 #include "service/user_service_impl.h"
 
-#include <QStandardItem>
 #include <QDateTime>
 #include <QDebug>
 #include <QDir>
 #include <QFile>
+#include <QStandardItem>
 
 static QFile* gDebugLogInstance = 0;
 
@@ -100,8 +100,7 @@ QString RecorderShared::GetFolder(int type, QVariantMap& conf) {
   folderName.replace("-", "");
   folderName.replace(" ", "_");
   folderName += "_";
-  if (type == RT_PERSONAL)
-      folderName += conf.value("userName").toString();
+  if (type == RT_PERSONAL) folderName += conf.value("userName").toString();
 
   folderName += conf.value("title").toString();
 
@@ -224,17 +223,16 @@ QVariantMap RecorderShared::DeviceInfo(QString mac) {
 //   _service->GetConfService()->setTemplateInfo(Template);
 // }
 QVariantList RecorderShared::GetTemplateList() {
-    QStandardItemModel *pModel = ModelUpdater::GetModel(TemplateModel);
-    QVariantList lsTemplateInfo;
+  QStandardItemModel* pModel = ModelUpdater::GetModel(TemplateModel);
+  QVariantList lsTemplateInfo;
 
-    QStandardItem *pItem;
-    for (int iCount = pModel->rowCount(),i = 0; i<iCount; ++i)
-    {
-        pItem = pModel->item(i);
-        lsTemplateInfo << pItem->data(Qt::UserRole);
-    }
+  QStandardItem* pItem;
+  for (int iCount = pModel->rowCount(), i = 0; i < iCount; ++i) {
+    pItem = pModel->item(i);
+    lsTemplateInfo << pItem->data(Qt::UserRole);
+  }
 
-    return lsTemplateInfo;
+  return lsTemplateInfo;
 }
 
 void RecorderShared::receive_service_ready() {
@@ -254,10 +252,10 @@ void RecorderShared::receive_service_ready() {
                    SIGNAL(conferenceStoped(bool, QVariantMap)), this,
                    SLOT(receive_conferenceStoped(bool, QVariantMap)),
                    Qt::QueuedConnection);
-//   QObject::connect(_service->GetConfService(),
-//                    SIGNAL(conferenceInfoSetted(bool, QVariantMap)), this,
-//                    SLOT(receive_conferenceInfoSetted(bool, QVariantMap)),
-//                    Qt::QueuedConnection);
+  //   QObject::connect(_service->GetConfService(),
+  //                    SIGNAL(conferenceInfoSetted(bool, QVariantMap)), this,
+  //                    SLOT(receive_conferenceInfoSetted(bool, QVariantMap)),
+  //                    Qt::QueuedConnection);
 
   QObject::connect(_service->GetConfService(),
                    SIGNAL(personalConfCreated(bool, QVariantMap)), this,
@@ -291,22 +289,22 @@ void RecorderShared::receive_service_ready() {
                    SLOT(receive_deviceEnvironmentUpdate(QVariantMap)),
                    Qt::QueuedConnection);
 
-//   QObject::connect(_service->GetConfService(),
-//                    SIGNAL(templateInfoAdded(bool, QVariantMap)), this,
-//                    SLOT(receive_templateInfoAdded(bool, QVariantMap)),
-//                    Qt::QueuedConnection);
-//   QObject::connect(_service->GetConfService(),
-//                    SIGNAL(templateInfoDeleted(bool, QVariantMap)), this,
-//                    SLOT(receive_templateInfoDeleted(bool, QVariantMap)),
-//                    Qt::QueuedConnection);
-//   QObject::connect(_service->GetConfService(),
-//                    SIGNAL(templateInfoGot(bool, QVariantMap)), this,
-//                    SLOT(receive_templateInfoGot(bool, QVariantMap)),
-//                    Qt::QueuedConnection);
-//   QObject::connect(_service->GetConfService(),
-//                    SIGNAL(templateInfoSetted(bool, QVariantMap)), this,
-//                    SLOT(receive_templateInfoSetted(bool, QVariantMap)),
-//                    Qt::QueuedConnection);
+  //   QObject::connect(_service->GetConfService(),
+  //                    SIGNAL(templateInfoAdded(bool, QVariantMap)), this,
+  //                    SLOT(receive_templateInfoAdded(bool, QVariantMap)),
+  //                    Qt::QueuedConnection);
+  //   QObject::connect(_service->GetConfService(),
+  //                    SIGNAL(templateInfoDeleted(bool, QVariantMap)), this,
+  //                    SLOT(receive_templateInfoDeleted(bool, QVariantMap)),
+  //                    Qt::QueuedConnection);
+  //   QObject::connect(_service->GetConfService(),
+  //                    SIGNAL(templateInfoGot(bool, QVariantMap)), this,
+  //                    SLOT(receive_templateInfoGot(bool, QVariantMap)),
+  //                    Qt::QueuedConnection);
+  //   QObject::connect(_service->GetConfService(),
+  //                    SIGNAL(templateInfoSetted(bool, QVariantMap)), this,
+  //                    SLOT(receive_templateInfoSetted(bool, QVariantMap)),
+  //                    Qt::QueuedConnection);
   //     QObject::connect(_service->GetConfService(),SIGNAL(templateListGot(bool,QVariantList)),
   //                      this,SLOT(receive_templateListGot(bool,QVariantList)),Qt::QueuedConnection);
 
@@ -545,8 +543,8 @@ void RecorderShared::receive_deviceInfoListGetted(bool result,
 
 void RecorderShared::receive_deviceEnvironmentUpdate(QVariantMap info) {
   emit record_notify(info.value("deviceUuid").toString(),
-                     info.value("deviceName").toString(),
-                     info.value("status").toString());
+                     info.value("userName").toString(),
+                     info.value("vadStatus").toString());
 }
 
 void RecorderShared::receive_addMarkInfo(bool result, QVariantMap info) {
@@ -566,7 +564,8 @@ void RecorderShared::receive_templateInfoAdded(bool result, QVariantMap info) {
 }
 void RecorderShared::receive_templateInfoSetted(bool result, QVariantMap info) {
   if (result) {
-    int index = _template_uuid_list.indexOf(info.value("templateUuid").toString());
+    int index =
+        _template_uuid_list.indexOf(info.value("templateUuid").toString());
     if (index != -1) {
       ModelUpdater::UpdateRow(ModelUpdater::TemplateModel, index, info);
     }
@@ -577,7 +576,8 @@ void RecorderShared::receive_templateInfoSetted(bool result, QVariantMap info) {
 void RecorderShared::receive_templateInfoDeleted(bool result,
                                                  QVariantMap info) {
   if (result) {
-    int index = _template_uuid_list.indexOf(info.value("templateUuid").toString());
+    int index =
+        _template_uuid_list.indexOf(info.value("templateUuid").toString());
     if (index != -1) {
       _template_uuid_list.removeAt(index);
       ModelUpdater::RemoveRow(ModelUpdater::TemplateModel, index);
@@ -635,4 +635,3 @@ void RecorderShared::initialize() {
 
   if (_service->isRunning()) receive_service_ready();
 }
-

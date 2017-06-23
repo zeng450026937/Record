@@ -30,6 +30,7 @@ ConfDetail::ConfDetail(QWidget *parent)
           itemMap.insert("time",
                          qstrCreateTime.right(8));  // 8 == strlen("hh:mm:ss")
           itemMap.insert("recordType", type);
+          itemMap.insert("title", this->_info.value("title"));
           QListWidgetItem *listItem = new QListWidgetItem(
               item.toMap().value("uuid").toString(), ui->listWidget);
           ListForm *listItemWidget = new ListForm();

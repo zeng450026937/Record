@@ -40,6 +40,7 @@ public:
 signals:
 
     void  conference_receive_data_notify(QString qstrUuid, int iPercent);
+    void  startDownloadTick();
 
 protected slots:
     void on_binary_received(QByteArray binary);

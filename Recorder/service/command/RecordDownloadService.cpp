@@ -26,6 +26,12 @@ RecordDownloadService::RecordDownloadService(MessageBase *pMessager)
   m_pTempRecordInfo = new RecordBlockInfo();
   connect(m_pMessage, SIGNAL(notify_binary(QByteArray)), this,
           SLOT(on_binary_received(QByteArray)), Qt::QueuedConnection);
+  connect(this, &RecordDownloadService::startDownloadTick, this,
+      [=](){
+          if (m_mapReceiver.size() == 1) {
+            m_iDownloadStatusTimerId = startTimer(1000);
+      }
+  });
   AddActionProc(MB_CONFERENCE_MODE, RFDS_DOWNLOAD_FILE,
                 &RecordDownloadService::DownloadRecordReply);
   AddActionProc(MB_PERSONAL_MODE, RFDS_DOWNLOAD_FILE,
@@ -88,9 +94,7 @@ bool RecordDownloadService::DownloadRecord(
       break;
   }
 
-  if (m_mapReceiver.size() == 1) {
-    m_iDownloadStatusTimerId = startTimer(1000);
-  }
+  Q_EMIT startDownloadTick();
 
   return true;
 }
@@ -147,13 +151,13 @@ void RecordDownloadService::DownloadRecordReply(bool bResult,
         pReceiver->StartReceiveTrigger(iResult, jsData["totalSize"].toInt());
       } else {
         pReceiver->StartReceiveTrigger(iResult, 0);
-        m_mapReceiver.erase(itrFond);
         delete pReceiver;
+        m_mapReceiver.erase(itrFond);
       }
     } else {
       pReceiver->StartReceiveTrigger(jsData["result"].toInt(), 0);
-      m_mapReceiver.erase(itrFond);
       delete pReceiver;
+      m_mapReceiver.erase(itrFond);
     }
 
     if (m_mapReceiver.empty()) {
@@ -216,8 +220,8 @@ void RecordDownloadService::on_binary_received(QByteArray binary) {
     }
 
     if (bDownloadCompleted) {
-        m_mapReceiver.erase(itrFond);
         delete pReceiver;
+        m_mapReceiver.erase(itrFond);
     } else {
 
         DownloadAck(m_pTempRecordInfo->iRecordType, m_pTempRecordInfo->szFileUuid,

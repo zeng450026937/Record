@@ -1,18 +1,18 @@
 #ifndef LIST_FORM_H
 #define LIST_FORM_H
 
-#include <QWidget>
 #include <QVariant>
+#include <QWidget>
 
 namespace Ui {
 class ListForm;
 }
 
-class ListForm : public QWidget {// public RecordDownloadReceiver 
+class ListForm : public QWidget {  // public RecordDownloadReceiver
   Q_OBJECT
 
  public:
-  explicit ListForm();
+  explicit ListForm(bool isDetail = false);
   ~ListForm();
 
  protected:
@@ -40,6 +40,7 @@ class ListForm : public QWidget {// public RecordDownloadReceiver
   Ui::ListForm *ui;
   QVariantMap _info;
   int _download_status;
+  bool _isDetail;
 };
 
 #endif  // LIST_FORM_H

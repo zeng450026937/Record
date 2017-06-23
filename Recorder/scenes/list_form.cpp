@@ -1,17 +1,18 @@
 #include "list_form.h"
 #include <Recorder/recorder_shared.h>
-#include <service/command/RecordDownloadService.h>
 #include <service/command/RecordDownloadReceiver.h>
+#include <service/command/RecordDownloadService.h>
 #include <QDateTime>
 #include <QDebug>
 #include <QMouseEvent>
 #include <QScreen>
-#include "scenes/scene_record_warning.h"
 #include "scene_file_dl.h"
+#include "scenes/scene_record_warning.h"
 #include "ui_list_form.h"
 
-ListForm::ListForm()
+ListForm::ListForm(bool isDetail)
     : ui(new Ui::ListForm),
+      _isDetail(isDetail),
       _download_status(RecordDownloadReceiver::DS_UNEXSITS) {
   ui->setupUi(this);
 
@@ -26,7 +27,6 @@ ListForm::ListForm()
   ui->titleLabel->clear();
   ui->keywordLabel->clear();
   ui->locationLabel->clear();
-
 }
 
 ListForm::~ListForm() { delete ui; }
@@ -51,10 +51,12 @@ void ListForm::update_display(const QVariantMap& info) {
   text = info.value("title").toString();
   if (text != _info.value("title").toString()) ui->titleLabel->setText(text);
 
-  text = info.value("userId").toString();
-  if (text.isEmpty()) {
+  if (info.value("recordType").toBool() != RecorderShared::RT_PERSONAL) {
     ui->userGroupBox->hide();
-    ui->downloadButton->hide();
+    if (!_isDetail)
+      ui->downloadButton->hide();
+    else
+      ui->downloadButton->show();
   } else {
     if (text != _info.value("userId").toString()) {
       if (!ui->userGroupBox->isVisible()) ui->userGroupBox->show();
@@ -73,15 +75,15 @@ void ListForm::update_display(const QVariantMap& info) {
 
   if (_info.isEmpty()) {
     QIcon icon;
-    _download_status = RecordDownloadReceiver::GetDownloadStatus(info["fileUuid"].toString(),
-                                         info["conferenceUuid"].toString(),
-                                         info["deviceUuid"].toString());
+    _download_status = RecordDownloadReceiver::GetDownloadStatus(
+        info["fileUuid"].toString(), info["conferenceUuid"].toString(),
+        info["deviceUuid"].toString());
     switch (_download_status) {
-    case RecordDownloadReceiver::DS_UNCOMPLETED:
-    case RecordDownloadReceiver::DS_UNEXSITS:
+      case RecordDownloadReceiver::DS_UNCOMPLETED:
+      case RecordDownloadReceiver::DS_UNEXSITS:
         icon = QIcon(":/resource/u620.png");
         break;
-    case RecordDownloadReceiver::DS_COMPELETED:
+      case RecordDownloadReceiver::DS_COMPELETED:
         icon = QIcon(":/resource/u579.png");
         break;
     }
@@ -92,35 +94,29 @@ void ListForm::update_display(const QVariantMap& info) {
 
   _info = info;
   bool bAutoDownload = _info.value("autoDownload").toBool();
-  if (bAutoDownload)
-  {
-      _info.remove("autoDownload");
-      on_downloadButton_clicked();
+  if (bAutoDownload) {
+    _info.remove("autoDownload");
+    on_downloadButton_clicked();
   }
-
 }
 
 void ListForm::on_downloadButton_clicked() {
-
   if (_download_status != RecordDownloadReceiver::DS_COMPELETED) {
     Scene_File_DL promptDialog;
     if (promptDialog.exec() == QDialog::Rejected) return;
 
-    RecordDownloadReceiver *pDownloadReciver = new RecordDownloadReceiver();
+    RecordDownloadReceiver* pDownloadReciver = new RecordDownloadReceiver();
     connect(pDownloadReciver, SIGNAL(downloading_tick(int, int)), this,
-        SLOT(onDownloadingTick(int, int)));
-    connect(pDownloadReciver, SIGNAL(download_prompt(QString)), this,SLOT(onDownloadPrompt(QString)));
+            SLOT(onDownloadingTick(int, int)));
+    connect(pDownloadReciver, SIGNAL(download_prompt(QString)), this,
+            SLOT(onDownloadPrompt(QString)));
     RecordDownloadService::GetInstance()->DownloadRecord(
         pDownloadReciver, _info["recordType"].toInt(),
-        _info["title"].toString(),
-        _info["userName"].toString(),
-        _info["fileUuid"].toString(),
-        _info["conferenceUuid"].toString(), 
-        _info["deviceUuid"].toString(),
-        _info["createTime"].toString(),
+        _info["title"].toString(), _info["userName"].toString(),
+        _info["fileUuid"].toString(), _info["conferenceUuid"].toString(),
+        _info["deviceUuid"].toString(), _info["createTime"].toString(),
         _info["fileExtension"].toString());
   }
-
 }
 
 void ListForm::on_downloadButton_pressed() {

@@ -8,8 +8,8 @@
 #include "scene_record_modellist.h"
 #include "scene_record_warning.h"
 #include "scenes/notify_dialog.h"
-#include "service/command/MarkControl.h"
 #include "service/command/ConferenceMode.h"
+#include "service/command/MarkControl.h"
 #include "service/command/RecordControl.h"
 #include "service/command/RecordDownloadService.h"
 #include "service/service_thread.h"
@@ -85,19 +85,21 @@ Scene_Record::Scene_Record(RecorderShared *sharedData, QWidget *parent)
 
   connect(_sharedData, SIGNAL(conference_notify(int, bool, QVariantMap)), this,
           SLOT(receive_conference_notify(int, bool, QVariantMap)));
-//   connect(_sharedData, SIGNAL(download_notify(int, QString, int, bool)), this,
-//           SLOT(receive_download_notify( QString, int)));
+  //   connect(_sharedData, SIGNAL(download_notify(int, QString, int, bool)),
+  //   this,
+  //           SLOT(receive_download_notify( QString, int)));
   connect(_sharedData, SIGNAL(record_notify(QString, QString, QString)), this,
           SLOT(receive_record_notify(QString, QString, QString)));
 
   connect(RecordDownloadService::GetInstance(),
-      SIGNAL(conference_receive_data_notify(QString, int)),this,SLOT(receive_download_notify(QString,int)));
+          SIGNAL(conference_receive_data_notify(QString, int)), this,
+          SLOT(receive_download_notify(QString, int)));
 
   ServiceThread *pService = ServiceThread::GetInstance();
 
-//   m_pRecordControl = pService->GetRecordControl();
-//   m_pRecordControl->GetDeviceList();
-//   m_pMarkControl->GetAllConferenceMarkList();
+  m_pRecordControl = pService->GetRecordControl();
+  m_pRecordControl->GetDeviceList();
+  m_pMarkControl->GetAllConferenceMarkList();
 }
 
 Scene_Record::~Scene_Record() {

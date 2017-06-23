@@ -33,7 +33,7 @@ ConfDetail::ConfDetail(QWidget *parent)
           itemMap.insert("title", this->_info.value("title"));
           QListWidgetItem *listItem = new QListWidgetItem(
               item.toMap().value("uuid").toString(), ui->listWidget);
-          ListForm *listItemWidget = new ListForm();
+          ListForm *listItemWidget = new ListForm(true);
           listItem->setSizeHint(QSize(ui->listWidget->width() - 5,
                                       listItemWidget->size().height()));
           ui->listWidget->addItem(listItem);

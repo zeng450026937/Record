@@ -1,14 +1,14 @@
 #ifndef LIST_FORM_H
 #define LIST_FORM_H
 
-#include <service/command/RecordDownloadReceiver.h>
+#include <QWidget>
 #include <QVariant>
 
 namespace Ui {
 class ListForm;
 }
 
-class ListForm : public RecordDownloadReceiver {
+class ListForm : public QWidget {// public RecordDownloadReceiver 
   Q_OBJECT
 
  public:
@@ -34,15 +34,12 @@ class ListForm : public RecordDownloadReceiver {
 
   void onDownloadingTick(int iPercent, int iDownloadPerSecond);
 
- protected:
-  void onDownloadPrompt(QString qstrInfo) override;
+  void onDownloadPrompt(QString qstrInfo);
 
  private:
   Ui::ListForm *ui;
   QVariantMap _info;
   int _download_status;
-
- protected:
 };
 
 #endif  // LIST_FORM_H

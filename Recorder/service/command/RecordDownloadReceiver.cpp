@@ -33,8 +33,6 @@ class RecordDownloadReceiverPrivate {
 
 RecordDownloadReceiver::RecordDownloadReceiver()
     : m(new RecordDownloadReceiverPrivate()) {
-    connect(this, SIGNAL(download_prompt(QString)), this,
-        SLOT(onDownloadPrompt(QString)));
 }
 
 RecordDownloadReceiver::~RecordDownloadReceiver() { delete m; }
@@ -105,6 +103,11 @@ bool RecordDownloadReceiver::CreateReciveData(
     return true;
 }
 
+int RecordDownloadReceiver::GetDownloadedPercent()
+{
+    return ((double)m->pData->iWritten / m->pData->iFileSize) * 100;
+}
+
 bool RecordDownloadReceiver::StartReceiveTrigger(int iResult, int iFileSize) {
     if (iResult == RecordDownloadReceiver::EC_DOWNLOADING) {
         if (!m->pData->recordFile.open(QIODevice::Append)) {
@@ -112,8 +115,7 @@ bool RecordDownloadReceiver::StartReceiveTrigger(int iResult, int iFileSize) {
         }
 
         m->pData->iFileSize = iFileSize;
-        emit downloading_tick(
-            ((double)m->pData->iWritten / m->pData->iFileSize) * 100, 0);
+        emit downloading_tick(GetDownloadedPercent(), 0);
         emit download_prompt(QString());  // 提示UI切到正在下载状态
     }
     else {

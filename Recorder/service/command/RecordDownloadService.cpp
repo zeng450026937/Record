@@ -148,10 +148,12 @@ void RecordDownloadService::DownloadRecordReply(bool bResult,
       } else {
         pReceiver->StartReceiveTrigger(iResult, 0);
         m_mapReceiver.erase(itrFond);
+        delete pReceiver;
       }
     } else {
       pReceiver->StartReceiveTrigger(jsData["result"].toInt(), 0);
       m_mapReceiver.erase(itrFond);
+      delete pReceiver;
     }
 
     if (m_mapReceiver.empty()) {
@@ -202,24 +204,32 @@ void RecordDownloadService::on_binary_received(QByteArray binary) {
 
   ReciverMap::iterator itrFond = m_mapReceiver.find(baLocator);
   if (itrFond != m_mapReceiver.end()) {
+      bool bDownloadCompleted = m_pTempRecordInfo->iStatus == 1;
     RecordDownloadReceiver *&pReceiver = itrFond->second;
     pReceiver->WriteData(pData + iLocator, m_pTempRecordInfo->iDataSize,
-                         m_pTempRecordInfo->iStatus == 1);
-    if (m_pTempRecordInfo->iStatus == 0) {
-      DownloadAck(m_pTempRecordInfo->iRecordType, m_pTempRecordInfo->szFileUuid,
-                  m_pTempRecordInfo->szConferenceUuid,
-                  m_pTempRecordInfo->szDeviceUuid,
-                  m_pTempRecordInfo->iStartPos);
+        bDownloadCompleted);
+
+    if (RecorderShared::RT_CONFERENCE == m_pTempRecordInfo->iRecordType)
+    {
+        emit conference_receive_data_notify(m_pTempRecordInfo->szConferenceUuid,
+            bDownloadCompleted ? 100 : pReceiver->GetDownloadedPercent());
+    }
+
+    if (bDownloadCompleted) {
+        m_mapReceiver.erase(itrFond);
+        delete pReceiver;
     } else {
-      m_mapReceiver.erase(itrFond);
+
+        DownloadAck(m_pTempRecordInfo->iRecordType, m_pTempRecordInfo->szFileUuid,
+            m_pTempRecordInfo->szConferenceUuid,
+            m_pTempRecordInfo->szDeviceUuid,
+            m_pTempRecordInfo->iStartPos);
     }
 
     if (m_mapReceiver.empty()) {
       killTimer(m_iDownloadStatusTimerId);
     }
-  } else {
-    // 创建 list_form
-  }
+  } 
 }
 
 void RecordDownloadService::timerEvent(QTimerEvent *pEvent) {

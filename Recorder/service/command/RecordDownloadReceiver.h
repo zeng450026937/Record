@@ -1,9 +1,9 @@
 #pragma once
 
 #include <stdio.h>
-#include <QWidget>
+#include <QObject>
 
-class RecordDownloadReceiver : public QWidget {
+class RecordDownloadReceiver : public QObject {
     friend class RecordDownloadReceiverPrivate;
     friend class RecordDownloadService;
 
@@ -13,19 +13,18 @@ public:
 
     enum DownloadStatus { DS_UNEXSITS, DS_UNCOMPLETED, DS_COMPELETED };
 
+public:
+    RecordDownloadReceiver();
+    ~RecordDownloadReceiver();
+
+    static int GetDownloadStatus(const QString &qstrFileUuid,
+        const QString &qstrConferenceUuid,
+        const QString &qstrDeviceUuid);
+
 signals:
     void download_prompt(QString qstrInfo);
     void downloading_tick(int iPercent, int iDownloadPerSecond);
 
-protected:
-    RecordDownloadReceiver();
-    virtual ~RecordDownloadReceiver();
-
-    int GetDownloadStatus(const QString &qstrFileUuid,
-        const QString &qstrConferenceUuid,
-        const QString &qstrDeviceUuid);
-    protected slots:
-    virtual void onDownloadPrompt(QString qstrInfo) = 0;
 
 private:
     bool CreateReciveData(int iType,
@@ -36,6 +35,8 @@ private:
         const QString &qstrConferenceUuid,
         const QString &qstrDeviceUuid, QString qstrCreateTime,
         int *iStartPos);
+
+    int GetDownloadedPercent();
 
     bool StartReceiveTrigger(int iResult, int iFileSize);
 

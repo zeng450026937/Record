@@ -1,16 +1,18 @@
 #include "list_form.h"
 #include <Recorder/recorder_shared.h>
 #include <service/command/RecordDownloadService.h>
+#include <service/command/RecordDownloadReceiver.h>
 #include <QDateTime>
 #include <QDebug>
 #include <QMouseEvent>
+#include <QScreen>
+#include "scenes/scene_record_warning.h"
 #include "scene_file_dl.h"
 #include "ui_list_form.h"
 
 ListForm::ListForm()
-    : RecordDownloadReceiver(),
-      ui(new Ui::ListForm),
-      _download_status(DS_UNEXSITS) {
+    : ui(new Ui::ListForm),
+      _download_status(RecordDownloadReceiver::DS_UNEXSITS) {
   ui->setupUi(this);
 
   QIcon icon = QIcon(":/resource/u620.png");
@@ -25,8 +27,6 @@ ListForm::ListForm()
   ui->keywordLabel->clear();
   ui->locationLabel->clear();
 
-  connect(this, SIGNAL(downloading_tick(int, int)), this,
-          SLOT(onDownloadingTick(int, int)));
 }
 
 ListForm::~ListForm() { delete ui; }
@@ -73,15 +73,15 @@ void ListForm::update_display(const QVariantMap& info) {
 
   if (_info.isEmpty()) {
     QIcon icon;
-    _download_status = GetDownloadStatus(info["fileUuid"].toString(),
+    _download_status = RecordDownloadReceiver::GetDownloadStatus(info["fileUuid"].toString(),
                                          info["conferenceUuid"].toString(),
                                          info["deviceUuid"].toString());
     switch (_download_status) {
-      case DS_UNCOMPLETED:
-      case DS_UNEXSITS:
+    case RecordDownloadReceiver::DS_UNCOMPLETED:
+    case RecordDownloadReceiver::DS_UNEXSITS:
         icon = QIcon(":/resource/u620.png");
         break;
-      case DS_COMPELETED:
+    case RecordDownloadReceiver::DS_COMPELETED:
         icon = QIcon(":/resource/u579.png");
         break;
     }
@@ -91,16 +91,27 @@ void ListForm::update_display(const QVariantMap& info) {
   }
 
   _info = info;
+  bool bAutoDownload = _info.value("autoDownload").toBool();
+  if (bAutoDownload)
+  {
+      _info.remove("autoDownload");
+      on_downloadButton_clicked();
+  }
+
 }
 
 void ListForm::on_downloadButton_clicked() {
 
-  if (_download_status != DS_COMPELETED) {
+  if (_download_status != RecordDownloadReceiver::DS_COMPELETED) {
     Scene_File_DL promptDialog;
     if (promptDialog.exec() == QDialog::Rejected) return;
 
+    RecordDownloadReceiver *pDownloadReciver = new RecordDownloadReceiver();
+    connect(pDownloadReciver, SIGNAL(downloading_tick(int, int)), this,
+        SLOT(onDownloadingTick(int, int)));
+    connect(pDownloadReciver, SIGNAL(download_prompt(QString)), this,SLOT(onDownloadPrompt(QString)));
     RecordDownloadService::GetInstance()->DownloadRecord(
-        this, _info["recordType"].toInt(), 
+        pDownloadReciver, _info["recordType"].toInt(),
         _info["title"].toString(),
         _info["userName"].toString(),
         _info["fileUuid"].toString(),
@@ -163,8 +174,6 @@ void ListForm::onDownloadingTick(int iPercent, int iDownloadPerSecond) {
 #undef DS_KB
 }
 
-#include <QScreen>
-#include "scenes/scene_record_warning.h"
 void ListForm::onDownloadPrompt(QString qstrInfo) {
   if (qstrInfo.isEmpty()) {
     ui->downloadButton->setIcon(QIcon(":/resource/u1610.png"));

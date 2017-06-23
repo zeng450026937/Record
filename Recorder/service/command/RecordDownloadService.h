@@ -17,7 +17,7 @@ class ClipFileDatabase;
 
 class RecordDownloadReceiver;
 class MessageBase;
-class RecordDownloadService : CommandBase
+class RecordDownloadService :public CommandBase
 {
     Q_OBJECT
 
@@ -35,8 +35,11 @@ public:
         const QString &qstrCreateTime,
         const QString &qstrFileExtension);
 
-    void SetDataBase(DataBase_Impl *pDatabase);
     void SetConfServiceImpl(ConfServiceImpl *pConfServiceImpl);
+
+signals:
+
+    void  conference_receive_data_notify(QString qstrUuid, int iPercent);
 
 protected slots:
     void on_binary_received(QByteArray binary);

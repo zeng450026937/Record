@@ -70,10 +70,6 @@ class RecorderShared : public QObject, public ModelUpdater {
   void SelectDevice(bool selected, QVariantMap& device);
   QVariantMap DeviceInfo(QString mac);
 
-  // template interface
-  // void AddTemplate(QVariantMap& Template);
-//   void RemoveTemplate(QString& uuid);
-//   void SetTemplate(QVariantMap& Template);
    QVariantList GetTemplateList();
 
  signals:
@@ -81,7 +77,8 @@ class RecorderShared : public QObject, public ModelUpdater {
   void conference_notify(int state, bool result, QVariantMap conf);
   void record_notify(QString device_mac, QString device_name, QString status);
 
-  void download_notify(int type, QString uuid, int percentage, bool completed);
+  // void download_data_notify(int iRow);
+  // void download_notify(int type, QString uuid, int percentage, bool completed);
 
  public slots:
   void receive_service_ready();
@@ -92,17 +89,15 @@ class RecorderShared : public QObject, public ModelUpdater {
   void receive_conferenceStoped(bool result, QVariantMap info);
 
   void receive_conferenceInfoSetted(bool result, QVariantMap info);
-  // void on_conference_list_got_trigger(bool result);
 
-  void receive_downloadConferenceCompleted(int type, QString uuid,
-                                           int percentage, int speed,
-                                           int completed);
+//   void receive_downloadConferenceCompleted(int type, QString uuid,
+//                                            int percentage, int speed,
+//                                            int completed);
 
-  void receive_personalConfCreated(bool result, QVariantMap info);
-  void receive_personalConfSetted(bool result, QVariantMap info);
-  void receive_personalConfDeleted(bool result, QVariantMap info);
-  //   void ReciveRecordInfoes(QVariantList& lsRecordInfoes);
-  //   void on_all_personal_list_got_trigger(bool result);
+//  void receive_donwloadConfNotify(bool bResult,const QString &qstrConferenceUuid);
+  void receive_personalConfCreated(bool result, QVariantMap &info);
+  void receive_personalConfSetted(bool result,QVariantMap &info);
+  void receive_personalConfDeleted(bool result, QVariantMap &info);
 
   void receive_deviceInfoUpdate(QVariantMap info);
   void receive_deviceInfoListGetted(bool result, QVariantList list);

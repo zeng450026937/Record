@@ -14,7 +14,6 @@ class Scene_Record_Finish;
 class Scene_Record_Warning;
 class NotifyDialog;
 class RecordControl;
-class ConferenceMode;
 class MarkControl;
 
 namespace Ui {
@@ -59,8 +58,7 @@ class Scene_Record : public QGroupBox {
   void on_infoButton_pressed();
 
   void receive_device_select_stateChanged(bool checked, QVariantMap device);
-  void receive_download_notify(int type, QString uuid, int percentage,
-                               bool completed);
+  void receive_download_notify(QString uuid, int percentage);
 
   void on_rec_start_btn_clicked();
   void on_stop_rec_btn_clicked();
@@ -98,7 +96,6 @@ class Scene_Record : public QGroupBox {
 
   MarkControl   *m_pMarkControl;
   RecordControl *m_pRecordControl;
-  ConferenceMode *m_pConferenceMode;
 };
 
 #endif  // SCENE_RECORD_H

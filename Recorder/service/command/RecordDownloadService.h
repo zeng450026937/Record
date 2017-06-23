@@ -27,6 +27,8 @@ public:
 
     bool DownloadRecord(RecordDownloadReceiver *pDownloadReceiver,
         int iType,
+        const QString qstrConferenceTitle,
+        const QString &qstrUserName,
         const QString &qstrFileUuid,
         const QString &qstrConferenceUuid,
         const QString &qstrDeviceUuid,

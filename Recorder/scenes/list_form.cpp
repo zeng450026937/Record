@@ -94,33 +94,22 @@ void ListForm::update_display(const QVariantMap& info) {
 }
 
 void ListForm::on_downloadButton_clicked() {
+
   if (_download_status != DS_COMPELETED) {
     Scene_File_DL promptDialog;
     if (promptDialog.exec() == QDialog::Rejected) return;
 
-    switch (_info["recordType"].toInt()) {
-      case RecorderShared::RT_PERSONAL:
-        RecordDownloadService::GetInstance()->DownloadRecord(
-            this, RecorderShared::RT_PERSONAL, _info["fileUuid"].toString(),
-            _info["conferenceUuid"].toString(), _info["deviceUuid"].toString(),
-            _info["createTime"].toString(), _info["fileExtension"].toString());
-        break;
-      case RecorderShared::RT_CONFERENCE:
-        RecordDownloadService::GetInstance()->DownloadRecord(
-            this, RecorderShared::RT_CONFERENCE, _info["fileUuid"].toString(),
-            _info["uuid"].toString(), _info["deviceUuid"].toString(),
-            _info["createTime"].toString(), _info["fileExtension"].toString());
-        break;
-      case RecorderShared::RT_MOBILE:
-        RecordDownloadService::GetInstance()->DownloadRecord(
-            this, RecorderShared::RT_MOBILE, _info["fileUuid"].toString(),
-            _info["conferenceUuid"].toString(), _info["deviceUuid"].toString(),
-            _info["createTime"].toString(), _info["fileExtension"].toString());
-        break;
-      default:
-        break;
-    }
+    RecordDownloadService::GetInstance()->DownloadRecord(
+        this, _info["recordType"].toInt(), 
+        _info["title"].toString(),
+        _info["userName"].toString(),
+        _info["fileUuid"].toString(),
+        _info["conferenceUuid"].toString(), 
+        _info["deviceUuid"].toString(),
+        _info["createTime"].toString(),
+        _info["fileExtension"].toString());
   }
+
 }
 
 void ListForm::on_downloadButton_pressed() {

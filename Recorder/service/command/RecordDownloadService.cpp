@@ -45,15 +45,19 @@ RecordDownloadService *RecordDownloadService::GetInstance() {
 }
 
 bool RecordDownloadService::DownloadRecord(
-    RecordDownloadReceiver *pDownloadReceiver, int iType,
+    RecordDownloadReceiver *pDownloadReceiver, 
+    int iType,
+    const QString qstrConferenceTitle,
+    const QString &qstrUserName,
     const QString &qstrFileUuid, const QString &qstrConferenceUuid,
     const QString &qstrDeviceUuid, const QString &qstrCreateTime,
     const QString &qstrFileExtension) {
+
   int iStartPos = 0;
-  if (!pDownloadReceiver->CreateReciveData(
-          iType, qstrFileExtension.isEmpty() ? "amr" : qstrFileExtension,
-          qstrFileUuid, qstrConferenceUuid, qstrDeviceUuid, qstrCreateTime,
-          &iStartPos)) {
+  if (!pDownloadReceiver->CreateReciveData(iType, qstrConferenceTitle, qstrUserName,
+      qstrFileExtension.isEmpty() ? "amr" : qstrFileExtension, qstrFileUuid, 
+      qstrConferenceUuid, qstrDeviceUuid, qstrCreateTime, &iStartPos)) 
+  {
     return false;
   }
 

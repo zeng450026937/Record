@@ -100,7 +100,9 @@ QString RecorderShared::GetFolder(int type, QVariantMap& conf) {
   folderName.replace("-", "");
   folderName.replace(" ", "_");
   folderName += "_";
-  if (type == RT_PERSONAL) folderName += conf.value("userName").toString();
+  if (type == RT_PERSONAL)
+      folderName += conf.value("userName").toString();
+
   folderName += conf.value("title").toString();
 
   dir.setPath(folder + "/" + folderName);

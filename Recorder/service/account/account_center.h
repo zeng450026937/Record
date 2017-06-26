@@ -56,7 +56,7 @@ class AccountCenter : public QObject {
   QMap<QNetworkReply *, int> currentRequest;
 
   const QString PROTOCOL = "https://";
-  // const QString HOST = "aqapi.101.com";
+  //const QString HOST = "aqapi.101.com";
   const QString HOST = "ucbetapi.101.com";
   const QString ORG_NAME = "ND";
 

@@ -37,47 +37,42 @@ void ListForm::mousePressEvent(QMouseEvent* event) {
 }
 
 void ListForm::update_display(const QVariantMap& info) {
-  QString text = info.value("date").toString();
-  if (text != _info.value("date").toString()) {
-    ui->dateLabel->setText(QDate::fromString(text, "yyyy-MM-dd")
-                               .toString("yyyy年MM月dd\346\227\245"));
-  }
+  _info = info;
+  QString text = _info.value("date").toString();
+  ui->dateLabel->setText(QDate::fromString(text, "yyyy-MM-dd")
+                             .toString("yyyy年MM月dd\346\227\245"));
 
-  text = info.value("time").toString();
-  if (text != _info.value("time").toString()) {
-    ui->timeLabel->setText(text);
-  }
+  text = _info.value("time").toString();
+  ui->timeLabel->setText(text);
 
-  text = info.value("title").toString();
-  if (text != _info.value("title").toString()) ui->titleLabel->setText(text);
+  text = _info.value("title").toString();
+  ui->titleLabel->setText(text);
 
-  if (info.value("recordType").toBool() != RecorderShared::RT_PERSONAL) {
+  if (_info.value("recordType").toBool() != RecorderShared::RT_PERSONAL) {
     ui->userGroupBox->hide();
     if (!_isDetail)
       ui->downloadButton->hide();
     else
       ui->downloadButton->show();
   } else {
-    if (text != _info.value("userId").toString()) {
-      if (!ui->userGroupBox->isVisible()) ui->userGroupBox->show();
+    if (!ui->userGroupBox->isVisible()) ui->userGroupBox->show();
 
-      QString user_name = info.value("userName").toString();
-      ui->idLabel->setText(user_name + "(" + text + ")");
-    }
+    QString user_id = _info.value("userId").toString();
+    QString user_name = _info.value("userName").toString();
+    ui->idLabel->setText(user_name + "(" + user_id + ")");
 
-    text = info.value("gpsAddress").toString();
-    if (text != _info.value("gpsAddress").toString())
-      ui->locationLabel->setText(text);
+    text = _info.value("gpsAddress").toString();
+    ui->locationLabel->setText(text);
 
-    text = info.value("tag").toString();
-    if (text != _info.value("tag").toString()) ui->keywordLabel->setText(text);
+    text = _info.value("tag").toString();
+    ui->keywordLabel->setText(text);
   }
 
   if (_info.isEmpty()) {
     QIcon icon;
     _download_status = RecordDownloadReceiver::GetDownloadStatus(
-        info["fileUuid"].toString(), info["conferenceUuid"].toString(),
-        info["deviceUuid"].toString());
+        _info["fileUuid"].toString(), _info["conferenceUuid"].toString(),
+        _info["deviceUuid"].toString());
     switch (_download_status) {
       case RecordDownloadReceiver::DS_UNCOMPLETED:
       case RecordDownloadReceiver::DS_UNEXSITS:
@@ -92,12 +87,31 @@ void ListForm::update_display(const QVariantMap& info) {
     ui->downloadButton->setIconSize(ui->downloadButton->size());
   }
 
-  _info = info;
-  bool bAutoDownload = _info.value("autoDownload").toBool();
-  if (bAutoDownload) {
-    _info.remove("autoDownload");
-    on_downloadButton_clicked();
-  }
+  //  bool bAutoDownload = _info.value("autoDownload", false).toBool();
+  //  if (bAutoDownload) {
+  //    _info.remove("autoDownload");
+
+  //    RecordDownloadService* pDownloadService =
+  //        RecordDownloadService::GetInstance();
+
+  //    if (!pDownloadService->ResumeDownload(_info["recordType"].toInt(),
+  //                                          _info["fileUuid"].toString(),
+  //                                          _info["conferenceUuid"].toString(),
+  //                                          _info["deviceUuid"].toString())) {
+  //      RecordDownloadReceiver* pDownloadReciver = new
+  //      RecordDownloadReceiver();
+  //      connect(pDownloadReciver, SIGNAL(downloading_tick(int, int)), this,
+  //              SLOT(onDownloadingTick(int, int)));
+  //      connect(pDownloadReciver, SIGNAL(download_prompt(QString)), this,
+  //              SLOT(onDownloadPrompt(QString)));
+  //      pDownloadService->DownloadRecord(
+  //          pDownloadReciver, _info["recordType"].toInt(),
+  //          _info["title"].toString(), _info["userName"].toString(),
+  //          _info["fileUuid"].toString(), _info["conferenceUuid"].toString(),
+  //          _info["deviceUuid"].toString(), _info["createTime"].toString(),
+  //          _info["fileExtension"].toString());
+  //    }
+  //  }
 }
 
 void ListForm::on_downloadButton_clicked() {

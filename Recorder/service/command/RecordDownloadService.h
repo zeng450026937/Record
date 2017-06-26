@@ -35,6 +35,17 @@ public:
         const QString &qstrCreateTime,
         const QString &qstrFileExtension);
 
+    bool IsExsitsReceiver(
+            const QString &qstrFileUuid,
+            const QString &qstrConferenceUuid,
+            const QString &qstrDeviceUuid);
+
+    bool ResumeDownload(
+            int iType,
+            const QString &qstrFileUuid,
+            const QString &qstrConferenceUuid,
+            const QString &qstrDeviceUuid);
+
     void SetConfServiceImpl(ConfServiceImpl *pConfServiceImpl);
 
 signals:

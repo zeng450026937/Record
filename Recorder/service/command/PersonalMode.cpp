@@ -3,6 +3,7 @@
 #include <recorder_shared.h>
 #include <QJsonArray>
 #include "common/config.h"
+#include "service/command/RecordDownloadService.h"
 #include "service/conf_service_impl.h"
 #include "service/messager/message_base.h"
 #include "service/storage/database_impl.h"
@@ -12,7 +13,7 @@
 #define PM_GET_ALL_PERSONAL_LIST "getAllPersonalList"
 
 #define PM_NOTYFY_NEW_DATA_RECV "notifyNewDataRecv"
-#define PM_NOTYFY_RECORD_ADD    "notifyPersonRecordAdd"
+#define PM_NOTYFY_RECORD_ADD "notifyPersonRecordAdd"
 #define PM_NOTYFY_RECORD_UPDATE "notifyPersonRecordUpdate"
 #define PM_NOTYFY_RECORD_DELETE "notifyPersonRecordDelete"
 
@@ -21,32 +22,31 @@ PersonalMode::PersonalMode(MessageBase *pMessage)
       m_pConfig(Config::GetInstance()),
       m_pConfService(NULL),
       m_pRecordShared(nullptr) {
-
   AddActionProc(MB_PERSONAL_MODE, PM_GET_PERSONAL_LIST,
                 &PersonalMode::GetPersonalListReply);
   AddActionProc(MB_PERSONAL_MODE, PM_GET_ALL_PERSONAL_LIST,
                 &PersonalMode::GetPersonalListReply);
 
   AddActionProc(MB_PERSONAL_MODE, PM_NOTYFY_RECORD_ADD,
-      &PersonalMode::NotifyPersonRecordAddTrigger);
+                &PersonalMode::NotifyPersonRecordAddTrigger);
   AddActionProc(MB_PERSONAL_MODE, PM_NOTYFY_RECORD_UPDATE,
-      &PersonalMode::NotifyPersonRecordAddTrigger);
+                &PersonalMode::NotifyPersonRecordAddTrigger);
   AddActionProc(MB_PERSONAL_MODE, PM_NOTYFY_RECORD_DELETE,
-      &PersonalMode::NotifyPersonRecordDeleteTrigger);
+                &PersonalMode::NotifyPersonRecordDeleteTrigger);
 
   AddActionProc(MB_MOBILE_MODE, PM_NOTYFY_RECORD_ADD,
-      &PersonalMode::NotifyMobileRecordAddTrigger);
+                &PersonalMode::NotifyMobileRecordAddTrigger);
   AddActionProc(MB_MOBILE_MODE, PM_NOTYFY_RECORD_UPDATE,
-      &PersonalMode::NotifyMobileRecordAddTrigger);
+                &PersonalMode::NotifyMobileRecordAddTrigger);
   AddActionProc(MB_MOBILE_MODE, PM_NOTYFY_RECORD_DELETE,
-      &PersonalMode::NotifyPersonRecordDeleteTrigger);
+                &PersonalMode::NotifyPersonRecordDeleteTrigger);
 
   AddActionProc(MB_CONFERENCE_MODE, PM_NOTYFY_RECORD_ADD,
-      &PersonalMode::NotifyConferenceRecordAddTrigger);
+                &PersonalMode::NotifyConferenceRecordAddTrigger);
   AddActionProc(MB_CONFERENCE_MODE, PM_NOTYFY_RECORD_UPDATE,
-      &PersonalMode::NotifyConferenceRecordUpdateTrigger);
+                &PersonalMode::NotifyConferenceRecordUpdateTrigger);
   AddActionProc(MB_CONFERENCE_MODE, PM_NOTYFY_RECORD_DELETE,
-      &PersonalMode::NotifyPersonRecordDeleteTrigger);
+                &PersonalMode::NotifyPersonRecordDeleteTrigger);
 }
 
 PersonalMode::~PersonalMode() {}
@@ -73,29 +73,39 @@ void PersonalMode::GetPersonalListReply(bool bResult,
   }
 }
 
-void PersonalMode::NotifyPersonRecordAddTrigger(bool bResult, const QJsonObject &jsData)
-{
-    m_pRecordShared->receive_ConfCreated(RecorderShared::RT_PERSONAL, bResult, jsData.toVariantMap());
+void PersonalMode::NotifyPersonRecordAddTrigger(bool bResult,
+                                                const QJsonObject &jsData) {
+  qDebug() << jsData;
+  m_pRecordShared->receive_ConfCreated(RecorderShared::RT_PERSONAL, bResult,
+                                       jsData.toVariantMap());
 }
 
-void PersonalMode::NotifyConferenceRecordAddTrigger(bool bResult, const QJsonObject &jsData)
-{
-    QVariantMap vmInfo = jsData.toVariantMap();
-    vmInfo.insert("autoDownload", true);
-    m_pRecordShared->receive_ConfCreated(RecorderShared::RT_CONFERENCE, bResult, vmInfo);
+void PersonalMode::NotifyConferenceRecordAddTrigger(bool bResult,
+                                                    const QJsonObject &jsData) {
+  m_pRecordShared->receive_ConfCreated(RecorderShared::RT_CONFERENCE, bResult,
+                                       jsData.toVariantMap());
+
+  RecordDownloadService *pDownloadService =
+      RecordDownloadService::GetInstance();
+
+  pDownloadService->ResumeDownload(
+      _info["recordType"].toInt(), _info["fileUuid"].toString(),
+      _info["conferenceUuid"].toString(), _info["deviceUuid"].toString());
 }
 
-void PersonalMode::NotifyMobileRecordAddTrigger(bool bResult, const QJsonObject &jsData)
-{
-    m_pRecordShared->receive_ConfCreated(RecorderShared::RT_MOBILE, bResult, jsData.toVariantMap());
+void PersonalMode::NotifyMobileRecordAddTrigger(bool bResult,
+                                                const QJsonObject &jsData) {
+  m_pRecordShared->receive_ConfCreated(RecorderShared::RT_MOBILE, bResult,
+                                       jsData.toVariantMap());
 }
 
-void PersonalMode::NotifyPersonRecordDeleteTrigger(bool bResult, const QJsonObject &jsData)
-{
-    m_pRecordShared->receive_ConfDeleted(bResult, jsData.toVariantMap());
+void PersonalMode::NotifyPersonRecordDeleteTrigger(bool bResult,
+                                                   const QJsonObject &jsData) {
+  m_pRecordShared->receive_ConfDeleted(bResult, jsData.toVariantMap());
 }
 
-void PersonalMode::NotifyConferenceRecordUpdateTrigger(bool bResult, const QJsonObject &jsData)
-{
-    m_pRecordShared->receive_ConfCreated(RecorderShared::RT_CONFERENCE, bResult, jsData.toVariantMap());
+void PersonalMode::NotifyConferenceRecordUpdateTrigger(
+    bool bResult, const QJsonObject &jsData) {
+  m_pRecordShared->receive_ConfCreated(RecorderShared::RT_CONFERENCE, bResult,
+                                       jsData.toVariantMap());
 }

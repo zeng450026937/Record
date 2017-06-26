@@ -41,6 +41,7 @@ private:
     bool StartReceiveTrigger(int iResult, int iFileSize);
 
     bool WriteData(const char *pData, int iDataSize, bool bCompleted);
+    int GetWriteSize();
 
     void TickDownloadStatus();
 

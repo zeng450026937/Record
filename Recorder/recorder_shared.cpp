@@ -5,11 +5,11 @@
 #include "service/service_thread.h"
 #include "service/user_service_impl.h"
 
-#include <QStandardItem>
 #include <QDateTime>
 #include <QDebug>
 #include <QDir>
 #include <QFile>
+#include <QStandardItem>
 
 static QFile* gDebugLogInstance = 0;
 
@@ -100,8 +100,7 @@ QString RecorderShared::GetFolder(int type, QVariantMap& conf) {
   folderName.replace("-", "");
   folderName.replace(" ", "_");
   folderName += "_";
-  if (type == RT_PERSONAL)
-      folderName += conf.value("userName").toString();
+  if (type == RT_PERSONAL) folderName += conf.value("userName").toString();
 
   folderName += conf.value("title").toString();
 
@@ -214,57 +213,57 @@ QVariantMap RecorderShared::DeviceInfo(QString mac) {
 }
 
 QVariantList RecorderShared::GetTemplateList() {
-    QStandardItemModel *pModel = ModelUpdater::GetModel(TemplateModel);
-    QVariantList lsTemplateInfo;
+  QStandardItemModel* pModel = ModelUpdater::GetModel(TemplateModel);
+  QVariantList lsTemplateInfo;
 
-    QStandardItem *pItem;
-    for (int iCount = pModel->rowCount(),i = 0; i<iCount; ++i)
-    {
-        pItem = pModel->item(i);
-        lsTemplateInfo << pItem->data(Qt::UserRole);
-    }
+  QStandardItem* pItem;
+  for (int iCount = pModel->rowCount(), i = 0; i < iCount; ++i) {
+    pItem = pModel->item(i);
+    lsTemplateInfo << pItem->data(Qt::UserRole);
+  }
 
-    return lsTemplateInfo;
+  return lsTemplateInfo;
 }
 
 void RecorderShared::receive_service_ready() {
-    
-//     QObject::connect(_service->GetConfService(),
-//                    SIGNAL(conferenceCreated(bool, QVariantMap)), this,
-//                    SLOT(receive_conferenceCreated(bool, QVariantMap)),
-//                    Qt::QueuedConnection);
-//   QObject::connect(_service->GetConfService(),
-//                    SIGNAL(conferenceStarted(bool, QVariantMap)), this,
-//                    SLOT(receive_conferenceStarted(bool, QVariantMap)),
-//                    Qt::QueuedConnection);
-//   QObject::connect(_service->GetConfService(),
-//                    SIGNAL(conferencePaused(bool, QVariantMap)), this,
-//                    SLOT(receive_conferencePaused(bool, QVariantMap)),
-//                    Qt::QueuedConnection);
-//   QObject::connect(_service->GetConfService(),
-//                    SIGNAL(conferenceStoped(bool, QVariantMap)), this,
-//                    SLOT(receive_conferenceStoped(bool, QVariantMap)),
-//                    Qt::QueuedConnection);
+  //     QObject::connect(_service->GetConfService(),
+  //                    SIGNAL(conferenceCreated(bool, QVariantMap)), this,
+  //                    SLOT(receive_conferenceCreated(bool, QVariantMap)),
+  //                    Qt::QueuedConnection);
+  //   QObject::connect(_service->GetConfService(),
+  //                    SIGNAL(conferenceStarted(bool, QVariantMap)), this,
+  //                    SLOT(receive_conferenceStarted(bool, QVariantMap)),
+  //                    Qt::QueuedConnection);
+  //   QObject::connect(_service->GetConfService(),
+  //                    SIGNAL(conferencePaused(bool, QVariantMap)), this,
+  //                    SLOT(receive_conferencePaused(bool, QVariantMap)),
+  //                    Qt::QueuedConnection);
+  //   QObject::connect(_service->GetConfService(),
+  //                    SIGNAL(conferenceStoped(bool, QVariantMap)), this,
+  //                    SLOT(receive_conferenceStoped(bool, QVariantMap)),
+  //                    Qt::QueuedConnection);
 
-// 
-//   QObject::connect(_service->GetConfService(),
-//                    SIGNAL(personalConfCreated(bool, QVariantMap)), this,
-//                    SLOT(receive_personalConfCreated(bool, QVariantMap)),
-//                    Qt::QueuedConnection);
-//   QObject::connect(_service->GetConfService(),
-//                    SIGNAL(personalConfSetted(bool, QVariantMap)), this,
-//                    SLOT(receive_personalConfSetted(bool, QVariantMap)),
-//                    Qt::QueuedConnection);
-//   QObject::connect(_service->GetConfService(),
-//                    SIGNAL(personalConfDeleted(bool, QVariantMap)), this,
-//                    SLOT(receive_personalConfDeleted(bool, QVariantMap)),
-//                    Qt::QueuedConnection);
+  //
+  //   QObject::connect(_service->GetConfService(),
+  //                    SIGNAL(personalConfCreated(bool, QVariantMap)), this,
+  //                    SLOT(receive_personalConfCreated(bool, QVariantMap)),
+  //                    Qt::QueuedConnection);
+  //   QObject::connect(_service->GetConfService(),
+  //                    SIGNAL(personalConfSetted(bool, QVariantMap)), this,
+  //                    SLOT(receive_personalConfSetted(bool, QVariantMap)),
+  //                    Qt::QueuedConnection);
+  //   QObject::connect(_service->GetConfService(),
+  //                    SIGNAL(personalConfDeleted(bool, QVariantMap)), this,
+  //                    SLOT(receive_personalConfDeleted(bool, QVariantMap)),
+  //                    Qt::QueuedConnection);
 
-//   QObject::connect(
-//       _service->GetConfService(),
-//       SIGNAL(downloadConferenceCompleted(int, QString, int, int, int)), this,
-//       SLOT(receive_downloadConferenceCompleted(int, QString, int, int, int)),
-//       Qt::QueuedConnection);
+  //   QObject::connect(
+  //       _service->GetConfService(),
+  //       SIGNAL(downloadConferenceCompleted(int, QString, int, int, int)),
+  //       this,
+  //       SLOT(receive_downloadConferenceCompleted(int, QString, int, int,
+  //       int)),
+  //       Qt::QueuedConnection);
 
   //   QObject::connect(_service->GetConfService(),
   //                    SIGNAL(deviceInfoListGetted(bool, QVariantList)), this,
@@ -278,35 +277,30 @@ void RecorderShared::receive_service_ready() {
                    SIGNAL(deviceEnvironmentUpdate(QVariantMap)), this,
                    SLOT(receive_deviceEnvironmentUpdate(QVariantMap)),
                    Qt::QueuedConnection);
-
 }
 
 void RecorderShared::receive_conferenceCreated(bool result, QVariantMap info) {
+  if (result) {
+    QString uuid = info.value("conferenceUuid").toString();
 
+    info.insert("recordType", RT_CONFERENCE);
+    QString qstrCreateTime = info["createTime"].toString();
+    info.insert("date", qstrCreateTime.left(10));  // 10 == strlen("yyyy-MM-dd")
+    info.insert("time", qstrCreateTime.right(8));  // 8 == strlen("hh:mm:ss")
 
-    if (result) {
-        QString uuid = info.value("conferenceUuid").toString();
+    int index = _conference_uuid_list.indexOf(uuid);
 
-        info.insert("recordType", RT_CONFERENCE);
-        QString qstrCreateTime = info["createTime"].toString();
-        info.insert("date",qstrCreateTime.left(10));  // 10 == strlen("yyyy-MM-dd")
-        info.insert("time",qstrCreateTime.right(8));  // 8 == strlen("hh:mm:ss")
-
-        int index = _conf_uuid_list.indexOf(uuid);
-
-        if (index == -1) {
-            _conf_uuid_list << uuid;
-            ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel, info);
-        }
-        else {
-            ModelUpdater::UpdateRow(ModelUpdater::ConferenceRecordInfoModel, index,
-                info);
-        }
+    if (index == -1) {
+      _conference_uuid_list << uuid;
+      ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel, info);
+    } else {
+      ModelUpdater::UpdateRow(ModelUpdater::ConferenceRecordInfoModel, index,
+                              info);
     }
-    else {
-        qDebug() << "create conference failed";
-    }
-    emit conference_notify(kConfCreated, result, info);
+  } else {
+    qDebug() << "create conference failed";
+  }
+  emit conference_notify(kConfCreated, result, info);
 }
 void RecorderShared::receive_conferenceStarted(bool result, QVariantMap info) {
   if (!result) qDebug() << "start conference failed";
@@ -322,16 +316,16 @@ void RecorderShared::receive_conferenceStoped(bool result, QVariantMap info) {
   emit conference_notify(kConfStoped, result, info);
 }
 
-void RecorderShared::receive_ConfCreated(int type, bool result, QVariantMap &info)
-{
-    if (result) {
-        QString uuid = info.value("conferenceUuid").toString();
+void RecorderShared::receive_ConfCreated(int type, bool result,
+                                         QVariantMap& info) {
+  if (result) {
+    QString uuid = info.value("conferenceUuid").toString();
     int index = _conference_uuid_list.indexOf(uuid);
 
     info.insert("recordType", type);
     QString qstrCreateTime = info["createTime"].toString();
-    info.insert("date",qstrCreateTime.left(10));  // 10 == strlen("yyyy-MM-dd")
-    info.insert("time",qstrCreateTime.right(8));  // 8 == strlen("hh:mm:ss")
+    info.insert("date", qstrCreateTime.left(10));  // 10 == strlen("yyyy-MM-dd")
+    info.insert("time", qstrCreateTime.right(8));  // 8 == strlen("hh:mm:ss")
 
     if (index == -1) {
       _conference_uuid_list << uuid;
@@ -342,28 +336,26 @@ void RecorderShared::receive_ConfCreated(int type, bool result, QVariantMap &inf
     }
   } else {
     qDebug() << "create personal conference failed";
-    }
+  }
 }
 
-void RecorderShared::receive_ConfDeleted(bool result, QVariantMap &info)
-{
-    QString uuid = info.value("conferenceUuid").toString();
+void RecorderShared::receive_ConfDeleted(bool result, QVariantMap& info) {
+  QString uuid = info.value("conferenceUuid").toString();
 
-    if (result) {
-      int index = _conference_uuid_list.indexOf(uuid);
+  if (result) {
+    int index = _conference_uuid_list.indexOf(uuid);
 
-      if (index == -1) {
-      } else {
-        _conference_uuid_list.removeAll(uuid);
-        ModelUpdater::RemoveRow(ModelUpdater::ConferenceRecordInfoModel, index);
-      }
+    if (index == -1) {
     } else {
-      qDebug() << "delete personal conference failed";
+      _conference_uuid_list.removeAll(uuid);
+      ModelUpdater::RemoveRow(ModelUpdater::ConferenceRecordInfoModel, index);
     }
+  } else {
+    qDebug() << "delete personal conference failed";
+  }
 }
 
-
-//void RecorderShared::receive_conferenceInfoSetted(bool result,
+// void RecorderShared::receive_conferenceInfoSetted(bool result,
 //                                                  QVariantMap info) {
 //  QString uuid = info.value("conferenceUuid").toString();
 //  if (result) {
@@ -398,61 +390,66 @@ void RecorderShared::receive_ConfDeleted(bool result, QVariantMap &info)
 //   }
 // }
 
-// void RecorderShared::receive_downloadConferenceCompleted(int type, QString uuid,
+// void RecorderShared::receive_downloadConferenceCompleted(int type, QString
+// uuid,
 //                                                          int percentage,
 //                                                          int speed,
 //                                                          int completed) {
-  //   int index(-1);
-  //   QVariantMap info;
-  //
-  //   if (type == 1) {
-  //     info = _service->GetConfService()->conferenceInfo(uuid);
-  //     info.insert("speed", speed);
-  //     info.insert("percentage", percentage);
-  //
-  //     index = _conf_uuid_list.indexOf(uuid);
-  //
-  //     if (index != -1) {
-  //       ModelUpdater::UpdateRow(ModelUpdater::ConferenceRecordInfoModel,
-  //       index,
-  //                               info);
-  //     }
-  //   } else if (type == 0) {
-  //     info = _service->GetConfService()->personalConfInfo(uuid);
-  //     info.insert("speed", speed);
-  //     info.insert("percentage", percentage);
-  //
-  //     index = _conference_uuid_list.indexOf(uuid);
-  //
-  //     if (index != -1) {
-  //       ModelUpdater::UpdateRow(ModelUpdater::ConferenceRecordInfoModel,
-  //       index,
-  //                               info);
-  //     }
-  //   }
+//   int index(-1);
+//   QVariantMap info;
+//
+//   if (type == 1) {
+//     info = _service->GetConfService()->conferenceInfo(uuid);
+//     info.insert("speed", speed);
+//     info.insert("percentage", percentage);
+//
+//     index = _conf_uuid_list.indexOf(uuid);
+//
+//     if (index != -1) {
+//       ModelUpdater::UpdateRow(ModelUpdater::ConferenceRecordInfoModel,
+//       index,
+//                               info);
+//     }
+//   } else if (type == 0) {
+//     info = _service->GetConfService()->personalConfInfo(uuid);
+//     info.insert("speed", speed);
+//     info.insert("percentage", percentage);
+//
+//     index = _conference_uuid_list.indexOf(uuid);
+//
+//     if (index != -1) {
+//       ModelUpdater::UpdateRow(ModelUpdater::ConferenceRecordInfoModel,
+//       index,
+//                               info);
+//     }
+//   }
 
 //   emit download_notify(type, uuid, percentage, completed);
 // }
 
 // #include <service/command/RecordDownloadService.h>
 // #include <service/command/RecordDownloadReceiver.h>
-// void RecorderShared::receive_donwloadConfNotify(bool bResult, const QString &qstrConferenceUuid)
+// void RecorderShared::receive_donwloadConfNotify(bool bResult, const QString
+// &qstrConferenceUuid)
 // {
 //     if (bResult)
 //     {
-//         
+//
 //         int index = _conference_uuid_list.indexOf(qstrConferenceUuid);
 //         if (index != -1)
 //         {
 //             download_data_notify(index);
-// //             QStandardItemModel *pModel = ModelUpdater::GetModel(ConferenceRecordInfoModel);
-// // 
+// //             QStandardItemModel *pModel =
+// ModelUpdater::GetModel(ConferenceRecordInfoModel);
+// //
 // //             QModelIndex modelIndex = pModel->index(index,0);
 // //             QStandardItem *pItem = pModel->item(index);
 // //             QVariantMap _info = pItem->data(Qt::UserRole).toMap();
-// // 
-// //             RecordDownloadReceiver *pDownloadReceiver = new RecordDownloadReceiver();
-// //             RecordDownloadService *pDownloadService = RecordDownloadService::GetInstance();
+// //
+// //             RecordDownloadReceiver *pDownloadReceiver = new
+// RecordDownloadReceiver();
+// //             RecordDownloadService *pDownloadService =
+// RecordDownloadService::GetInstance();
 // //             pDownloadService->DownloadRecord(pDownloadReceiver,
 // //                 _info["recordType"].toInt(),
 // //                 _info["title"].toString(),
@@ -462,13 +459,12 @@ void RecorderShared::receive_ConfDeleted(bool result, QVariantMap &info)
 // //                 _info["deviceUuid"].toString(),
 // //                 _info["createTime"].toString(),
 // //                 _info["fileExtension"].toString());
-// 
+//
 //             //ui->file_listView->indexWidget(modelIndex);
-// 
+//
 //         }
 //     }
 // }
-
 
 // #include <model/model_editor.h>
 // void RecorderShared::ReciveRecordInfoes(QVariantList& lsRecordInfoes) {
@@ -556,7 +552,8 @@ void RecorderShared::receive_templateInfoAdded(bool result, QVariantMap info) {
 }
 void RecorderShared::receive_templateInfoSetted(bool result, QVariantMap info) {
   if (result) {
-    int index = _template_uuid_list.indexOf(info.value("templateUuid").toString());
+    int index =
+        _template_uuid_list.indexOf(info.value("templateUuid").toString());
     if (index != -1) {
       ModelUpdater::UpdateRow(ModelUpdater::TemplateModel, index, info);
     }
@@ -567,7 +564,8 @@ void RecorderShared::receive_templateInfoSetted(bool result, QVariantMap info) {
 void RecorderShared::receive_templateInfoDeleted(bool result,
                                                  QVariantMap info) {
   if (result) {
-    int index = _template_uuid_list.indexOf(info.value("templateUuid").toString());
+    int index =
+        _template_uuid_list.indexOf(info.value("templateUuid").toString());
     if (index != -1) {
       _template_uuid_list.removeAt(index);
       ModelUpdater::RemoveRow(ModelUpdater::TemplateModel, index);
@@ -625,4 +623,3 @@ void RecorderShared::initialize() {
 
   if (_service->isRunning()) receive_service_ready();
 }
-

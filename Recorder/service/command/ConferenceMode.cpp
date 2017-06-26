@@ -46,7 +46,7 @@ void ConferenceMode::SetConferenceInfo(const QString &qstrConferenceUuid,
 
 void ConferenceMode::SetConferenceInfoReply(bool bResult,
                                             const QJsonObject &jsData) {
-  m_pRecrodShared->receive_conferenceInfoSetted(bResult, jsData.toVariantMap());
+  m_pRecrodShared->receive_ConfCreated(RecorderShared::RT_CONFERENCE, bResult, jsData.toVariantMap());
 }
 
 void ConferenceMode::GetConferenceFiles(const QString &uuid) {

@@ -286,6 +286,12 @@ void RecorderShared::receive_conferenceCreated(bool result, QVariantMap info) {
 
     if (result) {
         QString uuid = info.value("conferenceUuid").toString();
+
+        info.insert("recordType", RT_CONFERENCE);
+        QString qstrCreateTime = info["createTime"].toString();
+        info.insert("date",qstrCreateTime.left(10));  // 10 == strlen("yyyy-MM-dd")
+        info.insert("time",qstrCreateTime.right(8));  // 8 == strlen("hh:mm:ss")
+
         int index = _conf_uuid_list.indexOf(uuid);
 
         if (index == -1) {
@@ -316,24 +322,65 @@ void RecorderShared::receive_conferenceStoped(bool result, QVariantMap info) {
   emit conference_notify(kConfStoped, result, info);
 }
 
-void RecorderShared::receive_conferenceInfoSetted(bool result,
-                                                  QVariantMap info) {
-  QString uuid = info.value("conferenceUuid").toString();
-  if (result) {
-    int index = _conf_uuid_list.indexOf(uuid);
+void RecorderShared::receive_ConfCreated(int type, bool result, QVariantMap &info)
+{
+    if (result) {
+        QString uuid = info.value("conferenceUuid").toString();
+    int index = _conference_uuid_list.indexOf(uuid);
+
+    info.insert("recordType", type);
+    QString qstrCreateTime = info["createTime"].toString();
+    info.insert("date",qstrCreateTime.left(10));  // 10 == strlen("yyyy-MM-dd")
+    info.insert("time",qstrCreateTime.right(8));  // 8 == strlen("hh:mm:ss")
 
     if (index == -1) {
-      _conf_uuid_list << uuid;
+      _conference_uuid_list << uuid;
       ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel, info);
     } else {
       ModelUpdater::UpdateRow(ModelUpdater::ConferenceRecordInfoModel, index,
                               info);
     }
   } else {
-    qDebug() << "set conference info failed";
-  }
-  emit conference_notify(kConfCreated, result, info);
+    qDebug() << "create personal conference failed";
+    }
 }
+
+void RecorderShared::receive_ConfDeleted(bool result, QVariantMap &info)
+{
+    QString uuid = info.value("conferenceUuid").toString();
+
+    if (result) {
+      int index = _conference_uuid_list.indexOf(uuid);
+
+      if (index == -1) {
+      } else {
+        _conference_uuid_list.removeAll(uuid);
+        ModelUpdater::RemoveRow(ModelUpdater::ConferenceRecordInfoModel, index);
+      }
+    } else {
+      qDebug() << "delete personal conference failed";
+    }
+}
+
+
+//void RecorderShared::receive_conferenceInfoSetted(bool result,
+//                                                  QVariantMap info) {
+//  QString uuid = info.value("conferenceUuid").toString();
+//  if (result) {
+//    int index = _conf_uuid_list.indexOf(uuid);
+
+//    if (index == -1) {
+//      _conf_uuid_list << uuid;
+//      ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel, info);
+//    } else {
+//      ModelUpdater::UpdateRow(ModelUpdater::ConferenceRecordInfoModel, index,
+//                              info);
+//    }
+//  } else {
+//    qDebug() << "set conference info failed";
+//  }
+//  emit conference_notify(kConfCreated, result, info);
+//}
 
 // void RecorderShared::on_conference_list_got_trigger(bool result) {
 //   QVariantList list = _service->GetConfService()->conferenceList();
@@ -422,61 +469,6 @@ void RecorderShared::receive_conferenceInfoSetted(bool result,
 //     }
 // }
 
-void RecorderShared::receive_personalConfCreated(bool result,
-    QVariantMap &info) {
-
-    if (result) {
-        QString uuid = info.value("conferenceUuid").toString();
-    int index = _conference_uuid_list.indexOf(uuid);
-
-    if (index == -1) {
-      _conference_uuid_list << uuid;
-      ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel, info);
-    } else {
-      ModelUpdater::UpdateRow(ModelUpdater::ConferenceRecordInfoModel, index,
-                              info);
-    }
-  } else {
-    qDebug() << "create personal conference failed";
-  }
-}
-
-void RecorderShared::receive_personalConfSetted(bool result, QVariantMap &info) {
-
-    if (result) {
-        QString uuid = info.value("conferenceUuid").toString();
-        int index = _conference_uuid_list.indexOf(uuid);
-
-        if (index == -1) {
-            _conference_uuid_list << uuid;
-            ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel, info);
-        }
-        else {
-            ModelUpdater::UpdateRow(ModelUpdater::ConferenceRecordInfoModel, index,
-                info);
-        }
-    }
-    else {
-        qDebug() << "set personal conference failed";
-    }
-}
-
-void RecorderShared::receive_personalConfDeleted(bool result,
-                                                 QVariantMap &info) {
-  QString uuid = info.value("conferenceUuid").toString();
-
-  if (result) {
-    int index = _conference_uuid_list.indexOf(uuid);
-
-    if (index == -1) {
-    } else {
-      _conference_uuid_list.removeAll(uuid);
-      ModelUpdater::RemoveRow(ModelUpdater::ConferenceRecordInfoModel, index);
-    }
-  } else {
-    qDebug() << "delete personal conference failed";
-  }
-}
 
 // #include <model/model_editor.h>
 // void RecorderShared::ReciveRecordInfoes(QVariantList& lsRecordInfoes) {

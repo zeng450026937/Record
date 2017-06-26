@@ -88,16 +88,15 @@ class RecorderShared : public QObject, public ModelUpdater {
   void receive_conferencePaused(bool result, QVariantMap info);
   void receive_conferenceStoped(bool result, QVariantMap info);
 
-  void receive_conferenceInfoSetted(bool result, QVariantMap info);
+  //void receive_conferenceInfoSetted(bool result, QVariantMap info);
 
 //   void receive_downloadConferenceCompleted(int type, QString uuid,
 //                                            int percentage, int speed,
 //                                            int completed);
 
 //  void receive_donwloadConfNotify(bool bResult,const QString &qstrConferenceUuid);
-  void receive_personalConfCreated(bool result, QVariantMap &info);
-  void receive_personalConfSetted(bool result,QVariantMap &info);
-  void receive_personalConfDeleted(bool result, QVariantMap &info);
+  void receive_ConfCreated(int type, bool result, QVariantMap &info);
+  void receive_ConfDeleted(bool result, QVariantMap &info);
 
   void receive_deviceInfoUpdate(QVariantMap info);
   void receive_deviceInfoListGetted(bool result, QVariantList list);

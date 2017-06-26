@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <service/messager/CommandBase.h>
 #include <QVariantList>
@@ -23,11 +23,11 @@ class PersonalMode : public CommandBase {
 private:
     void GetPersonalListReply(bool bResult, const QJsonObject &jsData);
 
-    void NotifyPersonRecordAddTrigger(bool bResult, const QJsonObject &jsData);
     void NotifyConferenceRecordAddTrigger(bool bResult, const QJsonObject &jsData);
-    void NotifyNewDataRecvTrigger(bool bResult, const QJsonObject &jsData);
+    void NotifyConferenceRecordUpdateTrigger(bool bResult, const QJsonObject &jsData);
+    void NotifyPersonRecordAddTrigger(bool bResult, const QJsonObject &jsData);
+    void NotifyMobileRecordAddTrigger(bool bResult, const QJsonObject &jsData);
     void NotifyPersonRecordDeleteTrigger(bool bResult, const QJsonObject &jsData);
-    void NotifyPersonRecordUpdateTrigger(bool bResult, const QJsonObject &jsData);
  private:
   RecorderShared *m_pRecordShared;
   Config *m_pConfig;

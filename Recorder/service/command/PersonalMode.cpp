@@ -3,7 +3,8 @@
 #include <recorder_shared.h>
 #include <QJsonArray>
 #include "common/config.h"
-#include "service/command/RecordDownloadService.h"
+#include "RecordDownloadReceiver.h"
+#include "RecordDownloadService.h"
 #include "service/conf_service_impl.h"
 #include "service/messager/message_base.h"
 #include "service/storage/database_impl.h"
@@ -64,8 +65,6 @@ void PersonalMode::GetAllPersoanlList() {
 void PersonalMode::GetPersonalListReply(bool bResult,
                                         const QJsonObject &jsData) {
   if (bResult) {
-    QJsonDocument jsDoc(jsData);
-    QString qstr = jsDoc.toJson();
     QVariantList lsRecordInfo = jsData["list"].toVariant().toList();
     foreach (const auto &varInfo, lsRecordInfo) {
       m_pRecordShared->AddPersonalRecordInfo(varInfo.toMap());
@@ -82,21 +81,35 @@ void PersonalMode::NotifyPersonRecordAddTrigger(bool bResult,
 
 void PersonalMode::NotifyConferenceRecordAddTrigger(bool bResult,
                                                     const QJsonObject &jsData) {
-  m_pRecordShared->receive_ConfCreated(RecorderShared::RT_CONFERENCE, bResult,
-                                       jsData.toVariantMap());
 
-  RecordDownloadService *pDownloadService =
-      RecordDownloadService::GetInstance();
+    QVariantMap vmInfo = jsData.toVariantMap();
+    RecordDownloadService *pDownloadService = RecordDownloadService::GetInstance();
+    QString qstrFileUuid = vmInfo["fileUuid"].toString();
+    QString qstrConferenceUuid = vmInfo["conferenceUuid"].toString();
+    QString qstrDeviceUuid = vmInfo["deviceUuid"].toString();
+    QString qstrUserId = vmInfo["userId"].toString();
+    if (pDownloadService->IsExsitReceiver(qstrFileUuid, qstrConferenceUuid, qstrDeviceUuid))
+    {
+        pDownloadService->ResumeDownload(RecorderShared::RT_CONFERENCE, qstrUserId, qstrFileUuid, qstrConferenceUuid, qstrDeviceUuid);
+    }
+    else
+    {
+        RecordDownloadReceiver *pReceiver = new RecordDownloadReceiver();
+        pDownloadService->DownloadRecord(
+            pReceiver, RecorderShared::RT_CONFERENCE,
+            vmInfo["title"].toString(), qstrUserId, 
+            qstrFileUuid, qstrConferenceUuid, qstrDeviceUuid, vmInfo["createTime"].toString(),
+            vmInfo["fileExtension"].toString());
+    }
 
-  pDownloadService->ResumeDownload(
-      _info["recordType"].toInt(), _info["fileUuid"].toString(),
-      _info["conferenceUuid"].toString(), _info["deviceUuid"].toString());
+  m_pRecordShared->receive_ConfCreated(RecorderShared::RT_CONFERENCE, bResult,vmInfo);
 }
 
 void PersonalMode::NotifyMobileRecordAddTrigger(bool bResult,
                                                 const QJsonObject &jsData) {
+
   m_pRecordShared->receive_ConfCreated(RecorderShared::RT_MOBILE, bResult,
-                                       jsData.toVariantMap());
+      jsData.toVariantMap());
 }
 
 void PersonalMode::NotifyPersonRecordDeleteTrigger(bool bResult,

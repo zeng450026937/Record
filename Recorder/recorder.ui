@@ -132,7 +132,7 @@ border-radius:0;</string>
          <property name="spacing">
           <number>0</number>
          </property>
-         <item row="0" column="12">
+         <item row="0" column="10">
           <widget class="QPushButton" name="close_btn">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -276,27 +276,35 @@ color:black;
            </property>
           </widget>
          </item>
-         <item row="0" column="7">
+         <item row="0" column="6">
           <widget class="QLabel" name="user_lable">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>100</width>
+             <height>0</height>
+            </size>
+           </property>
            <property name="styleSheet">
             <string notr="true">border:0;</string>
            </property>
            <property name="text">
             <string>admin</string>
            </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
          <item row="0" column="8">
-          <widget class="QLabel" name="hello_lable">
-           <property name="styleSheet">
-            <string notr="true">border:0;</string>
-           </property>
-           <property name="text">
-            <string>，你好</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="10">
           <widget class="QPushButton" name="min_btn">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -430,7 +438,7 @@ color:black;
            </property>
           </widget>
          </item>
-         <item row="0" column="11">
+         <item row="0" column="9">
           <widget class="QPushButton" name="max_btn">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -479,7 +487,7 @@ border: none;
            </property>
           </widget>
          </item>
-         <item row="0" column="9">
+         <item row="0" column="7">
           <spacer name="horizontalSpacer_3">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -510,47 +518,6 @@ border: none;
             </size>
            </property>
           </spacer>
-         </item>
-         <item row="0" column="6">
-          <widget class="QPushButton" name="loginPushButton">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>40</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>40</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">QPushButton:hover{
-background-color: rgb(85, 170, 255);
-color:white;
-border: none;
-}
-QPushButton{
-border: none;
-background-color: transparent;
-}
-QPushButton:pressed{
-padding-top:3px;
-padding-left:2px;
-color:white;
-}</string>
-           </property>
-           <property name="text">
-            <string>登录</string>
-           </property>
-          </widget>
          </item>
         </layout>
        </widget>

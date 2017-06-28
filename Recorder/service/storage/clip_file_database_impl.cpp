@@ -69,6 +69,7 @@ QVariantList ClipFileDatabaseImpl::GetFileList(QString uuid) {
       }
       list << file;
     }
+
   } else {
     qDebug() << query.executedQuery();
     qDebug() << query.lastError();

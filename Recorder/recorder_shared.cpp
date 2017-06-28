@@ -152,9 +152,9 @@ void RecorderShared::AddPersonalRecordInfo(QVariantMap& vmRecordInfo) {
   vmRecordInfo.insert("recordType", RT_PERSONAL);
   QString qstrCreateTime = vmRecordInfo["createTime"].toString();
   vmRecordInfo.insert("date",
-                      qstrCreateTime.left(10));  // 10 == strlen("yyyy-MM-dd")
+                      qstrCreateTime.left(10).remove('-'));  // 10 == strlen("yyyy-MM-dd")
   vmRecordInfo.insert("time",
-                      qstrCreateTime.right(8));  // 8 == strlen("hh:mm:ss")
+                      qstrCreateTime.right(8).remove(':'));  // 8 == strlen("hh:mm:ss")
 
   ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel,
                           vmRecordInfo);
@@ -165,9 +165,9 @@ void RecorderShared::AddConferenceRecordInfo(QVariantMap& vmRecordInfo) {
   vmRecordInfo.insert("recordType", RT_CONFERENCE);
   QString qstrCreateTime = vmRecordInfo["createTime"].toString();
   vmRecordInfo.insert("date",
-                      qstrCreateTime.left(10));  // 10 == strlen("yyyy-MM-dd")
+                      qstrCreateTime.left(10).remove('-'));  // 10 == strlen("yyyy-MM-dd")
   vmRecordInfo.insert("time",
-                      qstrCreateTime.right(8));  // 8 == strlen("hh:mm:ss")
+                      qstrCreateTime.right(8).remove(':'));  // 8 == strlen("hh:mm:ss")
   ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel,
                           vmRecordInfo);
   _conference_uuid_list << vmRecordInfo.value("uuid").toString();
@@ -180,9 +180,9 @@ void RecorderShared::AddMobileRecordInfo(QVariantMap& vmRecordInfo) {
   vmRecordInfo.insert("recordType", RT_MOBILE);
   QString qstrCreateTime = vmRecordInfo["createTime"].toString();
   vmRecordInfo.insert("date",
-                      qstrCreateTime.left(10));  // 10 == strlen("yyyy-MM-dd")
+                      qstrCreateTime.left(10).remove('-'));  // 10 == strlen("yyyy-MM-dd")
   vmRecordInfo.insert("time",
-                      qstrCreateTime.right(8));  // 8 == strlen("hh:mm:ss")
+                      qstrCreateTime.right(8).remove(':'));  // 8 == strlen("hh:mm:ss")
   ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel,
                           vmRecordInfo);
   _conference_uuid_list << vmRecordInfo.value("uuid").toString();
@@ -285,8 +285,8 @@ void RecorderShared::receive_conferenceCreated(bool result, QVariantMap info) {
 
     info.insert("recordType", RT_CONFERENCE);
     QString qstrCreateTime = info["createTime"].toString();
-    info.insert("date", qstrCreateTime.left(10));  // 10 == strlen("yyyy-MM-dd")
-    info.insert("time", qstrCreateTime.right(8));  // 8 == strlen("hh:mm:ss")
+    info.insert("date", qstrCreateTime.left(10).remove('-'));  // 10 == strlen("yyyy-MM-dd")
+    info.insert("time", qstrCreateTime.right(8).remove(':'));  // 8 == strlen("hh:mm:ss")
 
     int index = _conference_uuid_list.indexOf(uuid);
 
@@ -316,27 +316,28 @@ void RecorderShared::receive_conferenceStoped(bool result, QVariantMap info) {
   emit conference_notify(kConfStoped, result, info);
 }
 
-void RecorderShared::receive_ConfCreated(int type, bool result,
-                                         QVariantMap& info) {
-  if (result) {
-    QString uuid = info.value("conferenceUuid").toString();
-    int index = _conference_uuid_list.indexOf(uuid);
+void RecorderShared::receive_ConfCreated(int type, bool result,QVariantMap& info) {
+    if (result) {
+        QString uuid = info.value("conferenceUuid").toString();
+        int index = _conference_uuid_list.indexOf(info.value("conferenceUuid").toString());
 
-    info.insert("recordType", type);
-    QString qstrCreateTime = info["createTime"].toString();
-    info.insert("date", qstrCreateTime.left(10));  // 10 == strlen("yyyy-MM-dd")
-    info.insert("time", qstrCreateTime.right(8));  // 8 == strlen("hh:mm:ss")
+        info.insert("recordType", type);
+        QString qstrCreateTime = info["createTime"].toString();
+        info.insert("date", qstrCreateTime.left(10).remove('-'));  // 10 == strlen("yyyy-MM-dd")
+        info.insert("time", qstrCreateTime.right(8).remove(':'));  // 8 == strlen("hh:mm:ss")
 
-    if (index == -1) {
-      _conference_uuid_list << uuid;
-      ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel, info);
-    } else {
-      ModelUpdater::UpdateRow(ModelUpdater::ConferenceRecordInfoModel, index,
-                              info);
+        if (index == -1) {
+            _conference_uuid_list << uuid;
+            ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel, info);
+        }
+        else {
+            ModelUpdater::UpdateRow(ModelUpdater::ConferenceRecordInfoModel, index,
+                info);
+        }
     }
-  } else {
-    qDebug() << "create personal conference failed";
-  }
+    else {
+        qDebug() << "create personal conference failed";
+    }
 }
 
 void RecorderShared::receive_ConfDeleted(bool result, QVariantMap& info) {

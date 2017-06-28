@@ -72,7 +72,6 @@ Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent)
 
   connect(_scene_file_clip, SIGNAL(output_file(QString, int)), this,
           SLOT(clip_finished(QString, int)));
-  // connect(_scene_file_dl,SIGNAL(redownload(QString)),this,SLOT(download_conference(QString)));
 
   connect(ui->time_slider, SIGNAL(select_value_changed(int)), this,
           SLOT(time_slider_selected_changed(int)));
@@ -100,8 +99,6 @@ Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent)
   m_pConferenceMode->GetConferenceList();
   m_pConferenceMode->GetMobileConferenceList();
 
-  // ui->file_listView
-  // _sharedData->GetModel()
 }
 
 Scene_File::~Scene_File() {

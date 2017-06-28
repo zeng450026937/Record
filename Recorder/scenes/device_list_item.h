@@ -15,7 +15,7 @@ class DeviceListItem : public QWidget
 public:
     explicit DeviceListItem(QWidget *parent = 0);
     ~DeviceListItem();
-
+    
     void update_display(QVariantMap info);
 
 signals:

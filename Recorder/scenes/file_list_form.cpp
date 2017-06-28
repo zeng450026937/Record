@@ -28,7 +28,7 @@ FileListForm::FileListForm(QWidget* parent)
   ui->listView->setSelectionBehavior(QAbstractItemView::SelectRows);
   ui->listView->setWrapping(false);
   ui->listView->setModel(proxyModel);
-
+  
   ListItemDelegate* listDelegate = new ListItemDelegate(this);
   ui->listView->setItemDelegateForColumn(0, listDelegate);
 

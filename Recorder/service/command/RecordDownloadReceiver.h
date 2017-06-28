@@ -11,7 +11,11 @@ class RecordDownloadReceiver : public QObject {
 public:
     enum ErrorCode { EC_DOWNLOADING, EC_FILE_UNEXSISTS, EC_ARGS_INVALID };
 
-    enum DownloadStatus { DS_UNEXSITS, DS_UNCOMPLETED, DS_COMPELETED };
+    enum DownloadStatus { 
+        DS_UNEXSITS, 
+        DS_UNCOMPLETED,
+        DS_DOWNLOADING,
+        DS_COMPELETED };
 
 public:
     RecordDownloadReceiver();
@@ -29,7 +33,7 @@ signals:
 private:
     bool CreateReciveData(int iType,
         const QString &qstrTitle,
-        const QString &qstrUserName,
+        const QString &qstrUserId,
         const QString &qstrFileExtension,
         const QString &qstrFileUuid,
         const QString &qstrConferenceUuid,

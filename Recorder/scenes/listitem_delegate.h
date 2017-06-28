@@ -10,6 +10,8 @@ class ListItemDelegate : public QStyledItemDelegate {
  public:
   explicit ListItemDelegate(QObject *parent = 0);
   ~ListItemDelegate();
+
+
  signals:
   void itemClicked(const QVariantMap &info);
 
@@ -36,6 +38,8 @@ class ListItemDelegate : public QStyledItemDelegate {
   virtual bool editorEvent(QEvent *event, QAbstractItemModel *model,
                            const QStyleOptionViewItem &option,
                            const QModelIndex &index);
+
+private:
 };
 
 #endif  // LISTITEMDELEGATE_H

@@ -3,6 +3,7 @@
 
 #include <QVariant>
 #include <QWidget>
+#include <QStandardItem>
 
 namespace Ui {
 class ListForm;
@@ -21,8 +22,10 @@ class ListForm : public QWidget {  // public RecordDownloadReceiver
  signals:
   void itemClicked(const QVariantMap &info);
 
- public slots:
+  public:
+
   void update_display(const QVariantMap &info);
+  void CheckAndAliveData();
 
  private slots:
 
@@ -41,6 +44,8 @@ class ListForm : public QWidget {  // public RecordDownloadReceiver
   QVariantMap _info;
   int _download_status;
   bool _isDetail;
+
+ 
 };
 
 #endif  // LIST_FORM_H

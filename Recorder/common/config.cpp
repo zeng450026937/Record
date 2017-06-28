@@ -68,7 +68,10 @@ Config* Config::Config::GetInstance() {
   return s_pSinglton;
 }
 
-Config::USER& Config::GetUser() { return _user; }
+Config::USER& Config::GetUser()
+{ 
+    return _user; 
+}
 
 void Config::Save() {
   QSettings::setPath(QSettings::IniFormat, QSettings::UserScope,

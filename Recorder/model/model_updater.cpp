@@ -181,8 +181,6 @@ ModelUpdater::ModelUpdater()
       _mark_model(new QStandardItemModel()),
       _template_model(new QStandardItemModel()),
       _record_mark_model(new QStandardItemModel())
-//     _personal_model(new QStandardItemModel()),
-//     _all_conference_model(new QStandardItemModel())
 {
   _device_header << "display";
   _device_header << "used";

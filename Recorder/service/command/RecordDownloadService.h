@@ -28,23 +28,29 @@ public:
     bool DownloadRecord(RecordDownloadReceiver *pDownloadReceiver,
         int iType,
         const QString qstrConferenceTitle,
-        const QString &qstrUserName,
+        const QString &qstrUserId,
         const QString &qstrFileUuid,
         const QString &qstrConferenceUuid,
         const QString &qstrDeviceUuid,
         const QString &qstrCreateTime,
         const QString &qstrFileExtension);
 
-    bool IsExsitsReceiver(
+    RecordDownloadReceiver *GetDownloadReciver(
+        const QString &qstrFileUuid,
+        const QString &qstrConferenceUuid,
+        const QString &qstrDeviceUuid);
+
+    bool ResumeDownload(
+            int iType,
+            const QString &qstrUserId,
             const QString &qstrFileUuid,
             const QString &qstrConferenceUuid,
             const QString &qstrDeviceUuid);
 
-    bool ResumeDownload(
-            int iType,
-            const QString &qstrFileUuid,
-            const QString &qstrConferenceUuid,
-            const QString &qstrDeviceUuid);
+    bool IsExsitReceiver(
+        const QString &qstrFileUuid,
+        const QString &qstrConferenceUuid,
+        const QString &qstrDeviceUuid);
 
     void SetConfServiceImpl(ConfServiceImpl *pConfServiceImpl);
 
@@ -60,7 +66,7 @@ protected:
     void timerEvent(QTimerEvent *pEvent);
 
 private:
-    void DownloadAck(int iType,const char *pFileUuid, const char *pConferenceUuid, const char *pDeviceId, int iStartPos);
+    void DownloadAck(int iType,const char *pUserId,const char *pFileUuid, const char *pConferenceUuid, const char *pDeviceId, int iStartPos);
     void DownloadRecordReply(bool bResult, const QJsonObject &jsData);
 
 private:

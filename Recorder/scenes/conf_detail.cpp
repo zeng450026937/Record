@@ -39,6 +39,7 @@ ConfDetail::ConfDetail(QWidget *parent)
           ui->listWidget->addItem(listItem);
           ui->listWidget->setItemWidget(listItem, listItemWidget);
           listItemWidget->update_display(itemMap);
+          listItemWidget->CheckAndAliveData();
 
           QObject::connect(listItemWidget, &ListForm::itemClicked, this,
                            &ConfDetail::selectFile);
@@ -53,8 +54,10 @@ void ConfDetail::setInfo(const QVariantMap &info) {
   _info = info;
   ui->listWidget->clear();
   ui->titleLabel->setText(_info.value("title").toString());
-  ui->dateLabel->setText(_info.value("date").toString());
-  ui->timeLabel->setText(_info.value("time").toString());
+
+  QString qstrCreateTime = info["createTime"].toString();
+  ui->dateLabel->setText(qstrCreateTime.left(10));
+  ui->timeLabel->setText(qstrCreateTime.right(8));
   if (conf_mode) {
     switch (_info.value("recordType").toInt()) {
       case RecorderShared::RT_PERSONAL:

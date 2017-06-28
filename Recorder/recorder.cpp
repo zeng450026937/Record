@@ -2,7 +2,7 @@
 #include <QDesktopWidget>
 #include <QGraphicsEffect>
 #include "ui_recorder.h"
-
+#include <common/config.h>
 #include "recorder_shared.h"
 #include "scenes/scene_file.h"
 #include "scenes/scene_record.h"
@@ -42,8 +42,8 @@ Recorder::Recorder(QWidget *parent)
 
   ui->stackedWidget->setCurrentWidget(_scene_record);
   ui->record_btn->setChecked(true);
-  ui->user_lable->hide();
-  ui->hello_lable->hide();
+  QString qstrTemp = Config::GetInstance()->GetUser().user_name + tr(" 你好");
+  ui->user_lable->setText(qstrTemp);
 
   ui->titlebar->installEventFilter(this);
   ui->stackedWidget->installEventFilter(this);

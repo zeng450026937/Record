@@ -37,7 +37,7 @@ RecordDownloadReceiver::RecordDownloadReceiver()
 RecordDownloadReceiver::~RecordDownloadReceiver() { delete m; }
 
 bool RecordDownloadReceiver::CreateReciveData(
-    int iType, const QString &qstrTitle, const QString &qstrUserName,
+    int iType, const QString &qstrTitle, const QString &qstrUserId,
     const QString &qstrFileExtension, const QString &qstrFileUuid,
     const QString &qstrConferenceUuid, const QString &qstrDeviceUuid,
     QString qstrCreateTime, int *iStartPos) {
@@ -69,10 +69,10 @@ bool RecordDownloadReceiver::CreateReciveData(
       if (!downloadDir.exists()) downloadDir.mkdir(m->pData->qstrFilePath);
 
       m->pData->qstrFilePath +=
-          QString("\\%1.%2").arg(qstrUserName, qstrFileExtension);
+          QString("\\%1.%2").arg(qstrUserId, qstrFileExtension);
     } else {
       m->pData->qstrFilePath +=
-          QString("_%1.%2").arg(qstrUserName, qstrFileExtension);
+          QString("_%1.%2").arg(qstrUserId, qstrFileExtension);
     }
 
     m->pData->iRecordId =

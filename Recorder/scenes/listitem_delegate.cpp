@@ -6,8 +6,10 @@
 #include <QVector>
 #include "list_form.h"
 
-ListItemDelegate::ListItemDelegate(QObject *parent)
-    : QStyledItemDelegate(parent) {}
+ListItemDelegate::ListItemDelegate( QObject *parent)
+    : QStyledItemDelegate(parent)
+
+{}
 
 ListItemDelegate::~ListItemDelegate() {}
 
@@ -29,8 +31,11 @@ void ListItemDelegate::paint(QPainter *painter,
       QObject::connect(widget, SIGNAL(itemClicked(QVariantMap)), this,
                        SIGNAL(itemClicked(QVariantMap)));
     } else {
-      ListForm *widget = qobject_cast<ListForm *>(view->indexWidget(index));
-      if (widget) widget->update_display(index.data(Qt::UserRole).toMap());
+      ListForm *widget = qobject_cast<ListForm *>(view->indexWidget(index)); 
+      if (widget) 
+      {
+          widget->update_display(index.data(Qt::UserRole).toMap());
+      }
     }
   }
 

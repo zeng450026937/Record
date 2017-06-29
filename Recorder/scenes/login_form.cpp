@@ -57,7 +57,6 @@ void LoginForm::on_login_result(QString qstrResultInfo) {
 }
 
 void LoginForm::on_loginPushButton_clicked() {
-
   QString qstrUserId = ui->userLineEdit->text().trimmed();
 
   QStringList lsUserId = _service->GetLoginWhiteList()->whiteList();
@@ -92,8 +91,7 @@ void LoginForm::on_service_is_readied() {
           SLOT(on_login_result(QString)));
 
   // 自动登录，测试时使用。
-//   ui->userLineEdit->setText("311715");
-//   ui->passwordLineEdit->setText("123456");
-//   on_loginPushButton_clicked();
-
+  ui->userLineEdit->setText("311715");
+  ui->passwordLineEdit->setText("123456");
+  on_loginPushButton_clicked();
 }

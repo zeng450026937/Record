@@ -34,14 +34,22 @@ void DeviceListItemA::update_display(QVariantMap info) {
           "border-image: url(:/resource/u1418.png);");
     }
 
-    ui->batteryLabe->setText(_info.value("batteryPercent").toString() + "%");
+    int percent = _info.value("batteryPercent").toString().toInt();
+    if (percent <= 0) {
+      ui->batteryLabe->setText(
+          QObject::tr("\350\216\267\345\217\226\344\270\255\342\200\246"));
+      ui->timeLable->setText(
+          QObject::tr("\350\216\267\345\217\226\344\270\255\342\200\246"));
+    } else {
+      ui->batteryLabe->setText(_info.value("batteryPercent").toString() + "%");
 
-    int seconds = _info.value("batteryTime").toString().toInt() * 60;
-    QScopedPointer<QTime> time(new QTime((seconds / 3600) % 60,
-                                         (seconds / 60) % 60, seconds % 60,
-                                         (seconds * 1000) % 1000));
+      int seconds = _info.value("batteryTime").toString().toInt() * 60;
+      QScopedPointer<QTime> time(new QTime((seconds / 3600) % 60,
+                                           (seconds / 60) % 60, seconds % 60,
+                                           (seconds * 1000) % 1000));
 
-    ui->timeLable->setText(time->toString("h小时mm分钟"));
+      ui->timeLable->setText(time->toString("h小时mm分钟"));
+    }
 
     this->setToolTip(QObject::tr("DEVICE : ") +
                      _info.value("deviceName").toString());

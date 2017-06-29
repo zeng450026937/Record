@@ -26,9 +26,8 @@ RecordDownloadService::RecordDownloadService(MessageBase *pMessager)
   m_pTempRecordInfo = new RecordBlockInfo();
   connect(m_pMessage, SIGNAL(notify_binary(QByteArray)), this,
           SLOT(on_binary_received(QByteArray)), Qt::QueuedConnection);
-  connect(this, &RecordDownloadService::startDownloadTick, this, [=]() {
-      m_iDownloadStatusTimerId = startTimer(1000);
-  });
+  connect(this, &RecordDownloadService::startDownloadTick, this,
+          [=]() { m_iDownloadStatusTimerId = startTimer(1000); });
   AddActionProc(MB_CONFERENCE_MODE, RFDS_DOWNLOAD_FILE,
                 &RecordDownloadService::DownloadRecordReply);
   AddActionProc(MB_PERSONAL_MODE, RFDS_DOWNLOAD_FILE,
@@ -37,19 +36,19 @@ RecordDownloadService::RecordDownloadService(MessageBase *pMessager)
                 &RecordDownloadService::DownloadRecordReply);
 }
 
-RecordDownloadReceiver * RecordDownloadService::GetDownloadReciver(const QString &qstrFileUuid, const QString &qstrConferenceUuid, const QString &qstrDeviceUuid)
-{
-    QByteArray baLocator;
-    baLocator.append(qstrConferenceUuid);
-    baLocator.append(qstrDeviceUuid);
-    baLocator.append(qstrFileUuid);
-    auto itrFound = m_mapReceiver.find(baLocator);
-    if (itrFound != m_mapReceiver.end())
-    {
-        return itrFound->second;
-    }
+RecordDownloadReceiver *RecordDownloadService::GetDownloadReciver(
+    const QString &qstrFileUuid, const QString &qstrConferenceUuid,
+    const QString &qstrDeviceUuid) {
+  QByteArray baLocator;
+  baLocator.append(qstrConferenceUuid);
+  baLocator.append(qstrDeviceUuid);
+  baLocator.append(qstrFileUuid);
+  auto itrFound = m_mapReceiver.find(baLocator);
+  if (itrFound != m_mapReceiver.end()) {
+    return itrFound->second;
+  }
 
-    return nullptr;
+  return nullptr;
 }
 
 RecordDownloadService *RecordDownloadService::GetInstance() {
@@ -68,8 +67,6 @@ bool RecordDownloadService::DownloadRecord(
     const QString &qstrFileUuid, const QString &qstrConferenceUuid,
     const QString &qstrDeviceUuid, const QString &qstrCreateTime,
     const QString &qstrFileExtension) {
-
-
   int iStartPos = 0;
   if (!pDownloadReceiver->CreateReciveData(
           iType, qstrConferenceTitle, qstrUserId,
@@ -105,14 +102,12 @@ bool RecordDownloadService::DownloadRecord(
       break;
   }
 
-  if (m_mapReceiver.size() == 1)
-    Q_EMIT startDownloadTick();
+  if (m_mapReceiver.size() == 1) Q_EMIT startDownloadTick();
 
   return true;
 }
 
-bool RecordDownloadService::ResumeDownload(int iType, 
-                                            const QString &qstrUserId,
+bool RecordDownloadService::ResumeDownload(int iType, const QString &qstrUserId,
                                            const QString &qstrFileUuid,
                                            const QString &qstrConferenceUuid,
                                            const QString &qstrDeviceUuid) {
@@ -150,17 +145,15 @@ bool RecordDownloadService::ResumeDownload(int iType,
   return false;
 }
 
-bool RecordDownloadService::IsExsitReceiver(
-    const QString &qstrFileUuid,
-    const QString &qstrConferenceUuid,
-    const QString &qstrDeviceUuid)
-{
-    QByteArray baLocator;
-    baLocator.append(qstrConferenceUuid);
-    baLocator.append(qstrDeviceUuid);
-    baLocator.append(qstrFileUuid);
-    
-    return m_mapReceiver.end() != m_mapReceiver.find(baLocator);
+bool RecordDownloadService::IsExsitReceiver(const QString &qstrFileUuid,
+                                            const QString &qstrConferenceUuid,
+                                            const QString &qstrDeviceUuid) {
+  QByteArray baLocator;
+  baLocator.append(qstrConferenceUuid);
+  baLocator.append(qstrDeviceUuid);
+  baLocator.append(qstrFileUuid);
+
+  return m_mapReceiver.end() != m_mapReceiver.find(baLocator);
 }
 
 void RecordDownloadService::SetConfServiceImpl(
@@ -168,11 +161,12 @@ void RecordDownloadService::SetConfServiceImpl(
   m_pConfService = pConfServiceImpl;
 }
 
-void RecordDownloadService::DownloadAck(int iType, const char *pUserId, const char *pFileUuid,
+void RecordDownloadService::DownloadAck(int iType, const char *pUserId,
+                                        const char *pFileUuid,
                                         const char *pConferenceUuid,
                                         const char *pDeviceId, int iStartPos) {
-    QJsonObject jsData;
-    jsData.insert("userId", pUserId);
+  QJsonObject jsData;
+  jsData.insert("userId", pUserId);
   jsData.insert("fileUuid", pFileUuid);
   jsData.insert("conferenceUuid", pConferenceUuid);
   jsData.insert("deviceUuid", pDeviceId);
@@ -287,12 +281,10 @@ void RecordDownloadService::on_binary_received(QByteArray binary) {
       delete pReceiver;
       m_mapReceiver.erase(itrFond);
     } else {
-      DownloadAck(m_pTempRecordInfo->iRecordType,
-                  m_pTempRecordInfo->szUserId,
-                  m_pTempRecordInfo->szFileUuid,
-                  m_pTempRecordInfo->szConferenceUuid,
-                  m_pTempRecordInfo->szDeviceUuid,
-                  m_pTempRecordInfo->iStartPos);
+      DownloadAck(
+          m_pTempRecordInfo->iRecordType, m_pTempRecordInfo->szUserId,
+          m_pTempRecordInfo->szFileUuid, m_pTempRecordInfo->szConferenceUuid,
+          m_pTempRecordInfo->szDeviceUuid, m_pTempRecordInfo->iStartPos);
     }
 
     if (m_mapReceiver.empty()) {
@@ -302,8 +294,13 @@ void RecordDownloadService::on_binary_received(QByteArray binary) {
 }
 
 void RecordDownloadService::timerEvent(QTimerEvent *pEvent) {
-  for (auto itrBegin = m_mapReceiver.begin(), itrEnd = m_mapReceiver.end();
-       itrBegin != itrEnd; ++itrBegin) {
+  auto itrBegin = m_mapReceiver.begin();
+  while (itrBegin != m_mapReceiver.end()) {
     itrBegin->second->TickDownloadStatus();
+    if (itrBegin->second->isTimeOut()) {
+      itrBegin = m_mapReceiver.erase(itrBegin);
+    } else {
+      ++itrBegin;
+    }
   }
 }

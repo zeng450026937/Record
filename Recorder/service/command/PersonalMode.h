@@ -20,14 +20,20 @@ class PersonalMode : public CommandBase {
   void GetPersonalList();
   void GetAllPersoanlList();
 
-private:
-    void GetPersonalListReply(bool bResult, const QJsonObject &jsData);
+ private:
+  void GetPersonalListReply(bool bResult, const QJsonObject &jsData);
 
-    void NotifyConferenceRecordAddTrigger(bool bResult, const QJsonObject &jsData);
-    void NotifyConferenceRecordUpdateTrigger(bool bResult, const QJsonObject &jsData);
-    void NotifyPersonRecordAddTrigger(bool bResult, const QJsonObject &jsData);
-    void NotifyMobileRecordAddTrigger(bool bResult, const QJsonObject &jsData);
-    void NotifyPersonRecordDeleteTrigger(bool bResult, const QJsonObject &jsData);
+  void NotifyConferenceRecordAddTrigger(bool bResult,
+                                        const QJsonObject &jsData);
+  void NotifyConferenceRecordUpdateTrigger(bool bResult,
+                                           const QJsonObject &jsData);
+  void NotifyPersonRecordAddTrigger(bool bResult, const QJsonObject &jsData);
+  void NotifyMobileRecordAddTrigger(bool bResult, const QJsonObject &jsData);
+  void NotifyPersonRecordDeleteTrigger(bool bResult, const QJsonObject &jsData);
+  void GetConferenceInfoTrigger(bool bResult, const QJsonObject &jsData);
+  void GetPersonalInfoTrigger(bool bResult, const QJsonObject &jsData);
+  void GetMobileInfoTrigger(bool bResult, const QJsonObject &jsData);
+
  private:
   RecorderShared *m_pRecordShared;
   Config *m_pConfig;

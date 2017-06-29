@@ -151,10 +151,12 @@ QVariantList RecorderShared::GetFileList(QString uuid) {
 void RecorderShared::AddPersonalRecordInfo(QVariantMap& vmRecordInfo) {
   vmRecordInfo.insert("recordType", RT_PERSONAL);
   QString qstrCreateTime = vmRecordInfo["createTime"].toString();
-  vmRecordInfo.insert("date",
-                      qstrCreateTime.left(10).remove('-'));  // 10 == strlen("yyyy-MM-dd")
-  vmRecordInfo.insert("time",
-                      qstrCreateTime.right(8).remove(':'));  // 8 == strlen("hh:mm:ss")
+  vmRecordInfo.insert(
+      "date",
+      qstrCreateTime.left(10).remove('-'));  // 10 == strlen("yyyy-MM-dd")
+  vmRecordInfo.insert(
+      "time",
+      qstrCreateTime.right(8).remove(':'));  // 8 == strlen("hh:mm:ss")
 
   ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel,
                           vmRecordInfo);
@@ -164,10 +166,12 @@ void RecorderShared::AddPersonalRecordInfo(QVariantMap& vmRecordInfo) {
 void RecorderShared::AddConferenceRecordInfo(QVariantMap& vmRecordInfo) {
   vmRecordInfo.insert("recordType", RT_CONFERENCE);
   QString qstrCreateTime = vmRecordInfo["createTime"].toString();
-  vmRecordInfo.insert("date",
-                      qstrCreateTime.left(10).remove('-'));  // 10 == strlen("yyyy-MM-dd")
-  vmRecordInfo.insert("time",
-                      qstrCreateTime.right(8).remove(':'));  // 8 == strlen("hh:mm:ss")
+  vmRecordInfo.insert(
+      "date",
+      qstrCreateTime.left(10).remove('-'));  // 10 == strlen("yyyy-MM-dd")
+  vmRecordInfo.insert(
+      "time",
+      qstrCreateTime.right(8).remove(':'));  // 8 == strlen("hh:mm:ss")
   ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel,
                           vmRecordInfo);
   _conference_uuid_list << vmRecordInfo.value("uuid").toString();
@@ -179,10 +183,12 @@ void RecorderShared::AddConferenceRecordInfo(QVariantMap& vmRecordInfo) {
 void RecorderShared::AddMobileRecordInfo(QVariantMap& vmRecordInfo) {
   vmRecordInfo.insert("recordType", RT_MOBILE);
   QString qstrCreateTime = vmRecordInfo["createTime"].toString();
-  vmRecordInfo.insert("date",
-                      qstrCreateTime.left(10).remove('-'));  // 10 == strlen("yyyy-MM-dd")
-  vmRecordInfo.insert("time",
-                      qstrCreateTime.right(8).remove(':'));  // 8 == strlen("hh:mm:ss")
+  vmRecordInfo.insert(
+      "date",
+      qstrCreateTime.left(10).remove('-'));  // 10 == strlen("yyyy-MM-dd")
+  vmRecordInfo.insert(
+      "time",
+      qstrCreateTime.right(8).remove(':'));  // 8 == strlen("hh:mm:ss")
   ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel,
                           vmRecordInfo);
   _conference_uuid_list << vmRecordInfo.value("uuid").toString();
@@ -285,8 +291,10 @@ void RecorderShared::receive_conferenceCreated(bool result, QVariantMap info) {
 
     info.insert("recordType", RT_CONFERENCE);
     QString qstrCreateTime = info["createTime"].toString();
-    info.insert("date", qstrCreateTime.left(10).remove('-'));  // 10 == strlen("yyyy-MM-dd")
-    info.insert("time", qstrCreateTime.right(8).remove(':'));  // 8 == strlen("hh:mm:ss")
+    info.insert("date", qstrCreateTime.left(10).remove(
+                            '-'));  // 10 == strlen("yyyy-MM-dd")
+    info.insert("time", qstrCreateTime.right(8).remove(
+                            ':'));  // 8 == strlen("hh:mm:ss")
 
     int index = _conference_uuid_list.indexOf(uuid);
 
@@ -316,28 +324,30 @@ void RecorderShared::receive_conferenceStoped(bool result, QVariantMap info) {
   emit conference_notify(kConfStoped, result, info);
 }
 
-void RecorderShared::receive_ConfCreated(int type, bool result,QVariantMap& info) {
-    if (result) {
-        QString uuid = info.value("conferenceUuid").toString();
-        int index = _conference_uuid_list.indexOf(info.value("conferenceUuid").toString());
+void RecorderShared::receive_ConfCreated(int type, bool result,
+                                         QVariantMap& info) {
+  if (result) {
+    QString uuid = info.value("conferenceUuid").toString();
+    int index =
+        _conference_uuid_list.indexOf(info.value("conferenceUuid").toString());
 
-        info.insert("recordType", type);
-        QString qstrCreateTime = info["createTime"].toString();
-        info.insert("date", qstrCreateTime.left(10).remove('-'));  // 10 == strlen("yyyy-MM-dd")
-        info.insert("time", qstrCreateTime.right(8).remove(':'));  // 8 == strlen("hh:mm:ss")
+    info.insert("recordType", type);
+    QString qstrCreateTime = info["createTime"].toString();
+    info.insert("date", qstrCreateTime.left(10).remove(
+                            '-'));  // 10 == strlen("yyyy-MM-dd")
+    info.insert("time", qstrCreateTime.right(8).remove(
+                            ':'));  // 8 == strlen("hh:mm:ss")
 
-        if (index == -1) {
-            _conference_uuid_list << uuid;
-            ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel, info);
-        }
-        else {
-            ModelUpdater::UpdateRow(ModelUpdater::ConferenceRecordInfoModel, index,
-                info);
-        }
+    if (index == -1) {
+      _conference_uuid_list << uuid;
+      ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel, info);
+    } else {
+      ModelUpdater::UpdateRow(ModelUpdater::ConferenceRecordInfoModel, index,
+                              info);
     }
-    else {
-        qDebug() << "create personal conference failed";
-    }
+  } else {
+    qDebug() << "create personal conference failed";
+  }
 }
 
 void RecorderShared::receive_ConfDeleted(bool result, QVariantMap& info) {
@@ -504,17 +514,23 @@ void RecorderShared::receive_ConfDeleted(bool result, QVariantMap& info) {
 
 void RecorderShared::receive_deviceInfoUpdate(QVariantMap info) {
   int index = _device_mac_list.indexOf(info.value("deviceUuid").toString());
+  QString uuid = info.value("deviceUuid").toString();
 
   if (index == -1) {
-    _device_mac_list << info.value("deviceUuid").toString();
+    _device_mac_list << uuid;
     ModelUpdater::AppendRow(ModelUpdater::DeviceModel, info);
   } else {
-    if (_selected_device.contains(info.value("deviceUuid").toString()))
-      info.insert("selected", true);
-    else
-      info.insert("selected", false);
+    if (info.value("status").toString() != "offline") {
+      if (_selected_device.contains(info.value("deviceUuid").toString()))
+        info.insert("selected", true);
+      else
+        info.insert("selected", false);
 
-    ModelUpdater::UpdateRow(ModelUpdater::DeviceModel, index, info);
+      ModelUpdater::UpdateRow(ModelUpdater::DeviceModel, index, info);
+    } else {
+      _device_mac_list.removeAll(uuid);
+      ModelUpdater::RemoveRow(ModelUpdater::DeviceModel, index);
+    }
   }
 }
 void RecorderShared::receive_deviceInfoListGetted(bool result,

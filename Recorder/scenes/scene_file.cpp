@@ -98,7 +98,6 @@ Scene_File::Scene_File(RecorderShared *sharedData, QWidget *parent)
   m_pPersonalMode->GetPersonalList();
   m_pConferenceMode->GetConferenceList();
   m_pConferenceMode->GetMobileConferenceList();
-
 }
 
 Scene_File::~Scene_File() {
@@ -737,26 +736,28 @@ void Scene_File::on_file_clicked(const QVariantMap &info) {
 
   qDebug() << path;
 
-  if (QFile(path).exists() && QFile(path).size() > 0) {
-    this->update_play_info(path);
+  if (_file_list.count() > 0) {
+    if (QFile(path).exists() && QFile(path).size() > 0) {
+      this->update_play_info(path);
 
-    ui->file_mark_tableView->setEnabled(true);
-    ui->stackedWidget->setEnabled(true);
-  } else {
-    ui->file_mark_tableView->setEnabled(false);
-    ui->stackedWidget->setEnabled(false);
+      ui->file_mark_tableView->setEnabled(true);
+      ui->stackedWidget->setEnabled(true);
+    } else {
+      ui->file_mark_tableView->setEnabled(false);
+      ui->stackedWidget->setEnabled(false);
 
-    QFileInfo fileinfo(_file.value("fullpath").toString());
-    QPoint pos = this->parentWidget()
-                     ->parentWidget()
-                     ->parentWidget()
-                     ->geometry()
-                     .topLeft() +
-                 this->geometry().center();
-    Scene_Record_Warning::ShowMessage(
-        pos, QString("%1 文件丢失").arg(fileinfo.baseName()));
+      QFileInfo fileinfo(_file.value("fullpath").toString());
+      QPoint pos = this->parentWidget()
+                       ->parentWidget()
+                       ->parentWidget()
+                       ->geometry()
+                       .topLeft() +
+                   this->geometry().center();
+      Scene_Record_Warning::ShowMessage(
+          pos, QString("%1 文件丢失").arg(fileinfo.baseName()));
 
-    _player->stop();
+      _player->stop();
+    }
   }
 }
 

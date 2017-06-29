@@ -290,8 +290,8 @@ void Scene_Record::on_rec_start_btn_clicked() {
     }
 
     _conf_info.insert("devices", _conf_device);
-    if (_conf_info.value("title").isNull())
-      _conf_info.insert("title", "Default");
+    //    if (_conf_info.value("title").isNull())
+    //      _conf_info.insert("title", "Default");
 
     m_pRecordControl->CreateConference(
         _conf_info["title"].toString(), _conf_info["content"].toString(),
@@ -559,15 +559,13 @@ void Scene_Record::on_pause_btn_clicked(bool checked) {
 void Scene_Record::updata_time_slider() {
   QString format = "hh:mm:ss";
 
-  if (ui->time_Slider->value() < ui->time_Slider->maximum()) {
-    ui->time_Slider->setValue(ui->time_Slider->value() + 1);
-    _current_time = _current_time.addMSecs(_last_time.elapsed());
-  } else {
+  _current_time = _current_time.addMSecs(_last_time.elapsed());
+
+  ui->time_Slider->setValue(QTime(0, 0, 0, 0).secsTo(_current_time));
+
+  if (ui->time_Slider->value() >= ui->time_Slider->maximum()) {
     _total_time.setHMS(_total_time.hour() + 1, 0, 0, 0);
     ui->time_Slider->setRange(0, QTime(0, 0, 0, 0).secsTo(_total_time));
-    ui->time_Slider->setValue(ui->time_Slider->value() + 1);
-    _current_time = _current_time.addMSecs(_last_time.elapsed());
-
     ui->total_time_lable->setText(_total_time.toString(format));
   }
 

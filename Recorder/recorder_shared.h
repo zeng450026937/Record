@@ -70,7 +70,7 @@ class RecorderShared : public QObject, public ModelUpdater {
   void SelectDevice(bool selected, QVariantMap& device);
   QVariantMap DeviceInfo(QString mac);
 
-   QVariantList GetTemplateList();
+  QVariantList GetTemplateList();
 
  signals:
   void connection_notify(int state, QString text);
@@ -78,7 +78,8 @@ class RecorderShared : public QObject, public ModelUpdater {
   void record_notify(QString device_mac, QString device_name, QString status);
 
   // void download_data_notify(int iRow);
-  // void download_notify(int type, QString uuid, int percentage, bool completed);
+  // void download_notify(int type, QString uuid, int percentage, bool
+  // completed);
 
  public slots:
   void receive_service_ready();
@@ -88,15 +89,16 @@ class RecorderShared : public QObject, public ModelUpdater {
   void receive_conferencePaused(bool result, QVariantMap info);
   void receive_conferenceStoped(bool result, QVariantMap info);
 
-  //void receive_conferenceInfoSetted(bool result, QVariantMap info);
+  // void receive_conferenceInfoSetted(bool result, QVariantMap info);
 
-//   void receive_downloadConferenceCompleted(int type, QString uuid,
-//                                            int percentage, int speed,
-//                                            int completed);
+  //   void receive_downloadConferenceCompleted(int type, QString uuid,
+  //                                            int percentage, int speed,
+  //                                            int completed);
 
-//  void receive_donwloadConfNotify(bool bResult,const QString &qstrConferenceUuid);
-  void receive_ConfCreated(int type, bool result, QVariantMap &info);
-  void receive_ConfDeleted(bool result, QVariantMap &info);
+  //  void receive_donwloadConfNotify(bool bResult,const QString
+  //  &qstrConferenceUuid);
+  void receive_ConfCreated(int type, bool result, QVariantMap& info);
+  void receive_ConfDeleted(bool result, QVariantMap& info);
 
   void receive_deviceInfoUpdate(QVariantMap info);
   void receive_deviceInfoListGetted(bool result, QVariantList list);

@@ -16,11 +16,16 @@ struct ReceiverData {
   QString qstrFilePath;
   int iFileSize;
   int iWritten;
+  int iCounter;
 
   int iDownloadPerSecond;
 
   ReceiverData()
-      : iRecordId(0), iFileSize(0.0), iWritten(0), iDownloadPerSecond(0) {}
+      : iRecordId(0),
+        iFileSize(0.0),
+        iWritten(0),
+        iDownloadPerSecond(0),
+        iCounter(0) {}
 };
 
 class RecordDownloadReceiverPrivate {
@@ -35,6 +40,10 @@ RecordDownloadReceiver::RecordDownloadReceiver()
     : m(new RecordDownloadReceiverPrivate()) {}
 
 RecordDownloadReceiver::~RecordDownloadReceiver() { delete m; }
+
+bool RecordDownloadReceiver::isTimeOut() {
+  return m->pData->iCounter > 3 ? true : false;
+}
 
 bool RecordDownloadReceiver::CreateReciveData(
     int iType, const QString &qstrTitle, const QString &qstrUserId,
@@ -51,6 +60,11 @@ bool RecordDownloadReceiver::CreateReciveData(
     if (m->pData->recordFile.exists()) {
       m->pData->iWritten = m->pData->recordFile.size();
     } else {
+      QFileInfo fileInfo(m->pData->qstrFilePath);
+      QDir downloadDir = fileInfo.absoluteDir();
+      if (!downloadDir.exists())
+        downloadDir.mkpath(fileInfo.absoluteDir().absolutePath());
+
       m->pData->iWritten = 0;
     }
 
@@ -100,11 +114,12 @@ int RecordDownloadReceiver::GetDownloadedPercent() {
 bool RecordDownloadReceiver::StartReceiveTrigger(int iResult, int iFileSize) {
   if (iResult == RecordDownloadReceiver::EC_DOWNLOADING) {
     if (!m->pData->recordFile.isOpen()) {
-      m->pData->recordFile.open(QIODevice::Append);
+      m->pData->recordFile.open(QIODevice::WriteOnly | QIODevice::Append);
     }
 
     m->pData->iFileSize = iFileSize;
-    emit downloading_tick(GetDownloadedPercent(), 0);
+    int percent = GetDownloadedPercent();
+    emit downloading_tick(percent >= 100 ? 99 : percent, 0);
     emit download_prompt(QString());  // 提示UI切到正在下载状态
   } else {
     switch (iResult) {
@@ -130,6 +145,9 @@ bool RecordDownloadReceiver::StartReceiveTrigger(int iResult, int iFileSize) {
 
 bool RecordDownloadReceiver::WriteData(const char *pData, int iDataSize,
                                        bool bCompleted) {
+  if (!m->pData->recordFile.isOpen()) {
+    m->pData->recordFile.open(QIODevice::WriteOnly | QIODevice::Append);
+  }
   m->pData->recordFile.write(pData, iDataSize);
   m->pData->iWritten += iDataSize;
   m->pData->iDownloadPerSecond += iDataSize;
@@ -139,6 +157,7 @@ bool RecordDownloadReceiver::WriteData(const char *pData, int iDataSize,
 
     m->pData->recordFile.close();
     pDownloadDB->SetDownloadCompeletedById(m->pData->iRecordId);
+    qDebug() << "completed:" << m->pData->qstrFilePath;
     delete m->pData;
     emit downloading_tick(100, 0);
   }
@@ -149,9 +168,15 @@ bool RecordDownloadReceiver::WriteData(const char *pData, int iDataSize,
 int RecordDownloadReceiver::GetWriteSize() { return m->pData->iWritten; }
 
 void RecordDownloadReceiver::TickDownloadStatus() {
-  emit downloading_tick(
-      ((double)m->pData->iWritten / m->pData->iFileSize) * 100,
-      m->pData->iDownloadPerSecond);
+  int percent = GetDownloadedPercent();
+  emit downloading_tick(percent >= 100 ? 99 : percent,
+                        m->pData->iDownloadPerSecond);
+
+  if (m->pData->iDownloadPerSecond <= 0) {
+    m->pData->iCounter++;
+  } else {
+    m->pData->iCounter = 0;
+  }
   m->pData->iDownloadPerSecond = 0;
 }
 

@@ -40,7 +40,7 @@ void LoginControl::ConnectToServer() {
   jsRoot.insert("data", jsData);
 
   QJsonDocument jsDoc(jsRoot);
-  m_pMessage->connectTo(jsDoc.toJson(), pConfig->TEST_SERVER);
+  m_pMessage->connectTo(jsDoc.toJson(), pConfig->_server_address);
 }
 
 void LoginControl::HandleHeartBeat(bool bResult, const QJsonObject &jsData) {

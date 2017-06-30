@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QFile>
 #include <QString>
+#include "RecordDownloadService.h"
 #include "common/config.h"
 #include "service/service_thread.h"
 #include "storage/download_database.h"
@@ -42,7 +43,7 @@ RecordDownloadReceiver::RecordDownloadReceiver()
 RecordDownloadReceiver::~RecordDownloadReceiver() { delete m; }
 
 bool RecordDownloadReceiver::isTimeOut() {
-  return m->pData->iCounter > 3 ? true : false;
+  return m->pData->iCounter > 10 ? true : false;
 }
 
 bool RecordDownloadReceiver::CreateReciveData(
@@ -74,20 +75,35 @@ bool RecordDownloadReceiver::CreateReciveData(
     QRegExp regExp("[-: ]");
     qstrCreateTime.replace(regExp, "");
 
-    m->pData->qstrFilePath =
-        QString("%1\\%2%3")
-            .arg(pConfig->_output_dir, qstrCreateTime, qstrTitle);
-
-    if (iType == RecorderShared::RT_CONFERENCE) {
-      QDir downloadDir(m->pData->qstrFilePath);
-      if (!downloadDir.exists()) downloadDir.mkdir(m->pData->qstrFilePath);
-
-      m->pData->qstrFilePath +=
-          QString("\\%1.%2").arg(qstrUserId, qstrFileExtension);
-    } else {
-      m->pData->qstrFilePath +=
-          QString("_%1.%2").arg(qstrUserId, qstrFileExtension);
+    QString title = qstrTitle;
+    if (title.isEmpty()) {
+      if (iType == RecorderShared::RT_CONFERENCE) {
+        title = QObject::tr("\344\274\232\350\256\256\345\275\225\351\237\263");
+      } else if (iType == RecorderShared::RT_PERSONAL) {
+        title = QObject::tr("\344\270\252\344\272\272\345\275\225\351\237\263");
+      } else if (iType == RecorderShared::RT_MOBILE) {
+        title = QObject::tr("\347\247\273\345\212\250\344\274\232\350\256\256");
+      }
     }
+
+    m->pData->qstrFilePath =
+        QString("%1/%2%3").arg(pConfig->_output_dir, qstrCreateTime, title);
+
+    QString fileName;
+    QDir downloadDir(m->pData->qstrFilePath);
+    if (!downloadDir.exists()) downloadDir.mkdir(m->pData->qstrFilePath);
+
+    fileName = QString("/%1.%2").arg(qstrUserId, qstrFileExtension);
+
+    int count(0);
+    while (QFile(m->pData->qstrFilePath + fileName).exists()) {
+      ++count;
+      QFileInfo info(m->pData->qstrFilePath + fileName);
+      fileName = QString("/") + info.baseName() + QString("(%1).").arg(count) +
+                 info.suffix();
+    }
+
+    m->pData->qstrFilePath += fileName;
 
     m->pData->iRecordId =
         pDownloadDB->InsertDownloadInfo(iType, qstrFileUuid, qstrConferenceUuid,
@@ -114,12 +130,12 @@ int RecordDownloadReceiver::GetDownloadedPercent() {
 bool RecordDownloadReceiver::StartReceiveTrigger(int iResult, int iFileSize) {
   if (iResult == RecordDownloadReceiver::EC_DOWNLOADING) {
     if (!m->pData->recordFile.isOpen()) {
-      m->pData->recordFile.open(QIODevice::WriteOnly | QIODevice::Append);
+      m->pData->recordFile.open(QIODevice::ReadWrite | QIODevice::Append);
     }
 
     m->pData->iFileSize = iFileSize;
     int percent = GetDownloadedPercent();
-    emit downloading_tick(percent >= 100 ? 99 : percent, 0);
+    emit downloading_tick(percent, 0, DS_DOWNLOADING);
     emit download_prompt(QString());  // 提示UI切到正在下载状态
   } else {
     switch (iResult) {
@@ -146,7 +162,7 @@ bool RecordDownloadReceiver::StartReceiveTrigger(int iResult, int iFileSize) {
 bool RecordDownloadReceiver::WriteData(const char *pData, int iDataSize,
                                        bool bCompleted) {
   if (!m->pData->recordFile.isOpen()) {
-    m->pData->recordFile.open(QIODevice::WriteOnly | QIODevice::Append);
+    m->pData->recordFile.open(QIODevice::ReadWrite | QIODevice::Append);
   }
   m->pData->recordFile.write(pData, iDataSize);
   m->pData->iWritten += iDataSize;
@@ -155,11 +171,34 @@ bool RecordDownloadReceiver::WriteData(const char *pData, int iDataSize,
     DownloadDatabase *pDownloadDB =
         ServiceThread::GetInstance()->GetDownloadDB();
 
+    m->pData->recordFile.reset();
+
+    QString format = QString::fromLatin1(m->pData->recordFile.read(4));
+    if (format == "RIFF") {
+      quint32 totalLen = m->pData->recordFile.size() - 8;
+
+      m->pData->recordFile.putChar(totalLen);
+      m->pData->recordFile.putChar(totalLen >> 8);
+      m->pData->recordFile.putChar(totalLen >> 16);
+      m->pData->recordFile.putChar(totalLen >> 24);
+
+      quint32 datalen = m->pData->recordFile.size() - 44;
+
+      m->pData->recordFile.reset();
+      m->pData->recordFile.seek(40);
+
+      m->pData->recordFile.putChar(datalen);
+      m->pData->recordFile.putChar(datalen >> 8);
+      m->pData->recordFile.putChar(datalen >> 16);
+      m->pData->recordFile.putChar(datalen >> 24);
+    }
+
+    m->pData->recordFile.flush();
     m->pData->recordFile.close();
     pDownloadDB->SetDownloadCompeletedById(m->pData->iRecordId);
     qDebug() << "completed:" << m->pData->qstrFilePath;
     delete m->pData;
-    emit downloading_tick(100, 0);
+    emit downloading_tick(100, 0, DS_COMPELETED);
   }
 
   return true;
@@ -169,14 +208,18 @@ int RecordDownloadReceiver::GetWriteSize() { return m->pData->iWritten; }
 
 void RecordDownloadReceiver::TickDownloadStatus() {
   int percent = GetDownloadedPercent();
-  emit downloading_tick(percent >= 100 ? 99 : percent,
-                        m->pData->iDownloadPerSecond);
+  emit downloading_tick(percent, m->pData->iDownloadPerSecond, DS_DOWNLOADING);
 
   if (m->pData->iDownloadPerSecond <= 0) {
     m->pData->iCounter++;
   } else {
     m->pData->iCounter = 0;
   }
+
+  if (this->isTimeOut())
+    emit downloading_tick(percent, m->pData->iDownloadPerSecond,
+                          DS_UNCOMPLETED);
+
   m->pData->iDownloadPerSecond = 0;
 }
 
@@ -184,12 +227,17 @@ int RecordDownloadReceiver::GetDownloadStatus(const QString &qstrFileUuid,
                                               const QString &qstrConferenceUuid,
                                               const QString &qstrDeviceUuid) {
   DownloadDatabase *pDownloadDB = ServiceThread::GetInstance()->GetDownloadDB();
+  RecordDownloadReceiver *pReceiver =
+      RecordDownloadService::GetInstance()->GetDownloadReciver(
+          qstrFileUuid, qstrConferenceUuid, qstrDeviceUuid);
 
   QString qstrFilePath;
   bool bCompeleted = false;
   if (pDownloadDB->GetCompeleteStatus(qstrFileUuid, qstrConferenceUuid,
                                       qstrDeviceUuid, &qstrFilePath,
                                       &bCompeleted)) {
+    if (pReceiver) return DS_DOWNLOADING;
+
     if (QFile(qstrFilePath).exists()) {
       return bCompeleted ? DS_COMPELETED : DS_UNCOMPLETED;
     }

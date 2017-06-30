@@ -55,6 +55,7 @@ void UserServiceImpl::on_connection_status(int iStatus) {
         _warning = false;
       }
       _message->stopConnection();
+      DoWebsocketConnect();
       break;
     case MessageBase::CS_CLOSED:
       if (_warning) {

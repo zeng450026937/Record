@@ -284,12 +284,9 @@ void Scene_File::update_file_list(QVariantList &list) {
 
     int start_time = var.toMap().value("start_time").toInt();
 
-    QString folder;
-    folder = _sharedData->GetFolder(_type, _conf);
-
     QString name;
     if (start_time < 0)
-      name = folder + " : " + fileinfo.baseName();
+      name = fileinfo.baseName();
     else
       name = QString("剪辑%1").arg(++num) + " : " + fileinfo.baseName();
 
@@ -737,6 +734,13 @@ void Scene_File::on_file_clicked(const QVariantMap &info) {
   qDebug() << path;
 
   if (_file_list.count() > 0) {
+    ui->comboBox->setEnabled(true);
+  } else {
+    ui->comboBox->setEnabled(false);
+  }
+  ui->comboBox->currentTextChanged(QFileInfo(path).baseName());
+
+  if (_file_list.count() > 0) {
     if (QFile(path).exists() && QFile(path).size() > 0) {
       this->update_play_info(path);
 
@@ -1109,7 +1113,7 @@ void Scene_File::on_comboBox_currentIndexChanged(int index) {
     ui->file_mark_tableView->setEnabled(false);
     ui->stackedWidget->setEnabled(false);
 
-    QFileInfo fileinfo(_file.value("fullpath").toString());
+    QFileInfo fileinfo(_file.value("path").toString());
     QPoint pos = this->parentWidget()
                      ->parentWidget()
                      ->parentWidget()
@@ -1118,14 +1122,6 @@ void Scene_File::on_comboBox_currentIndexChanged(int index) {
                  this->geometry().center();
     Scene_Record_Warning::ShowMessage(
         pos, QString("%1 文件丢失").arg(fileinfo.baseName()));
-
-    //     if (_file.value("start_time").toInt() < 0) {
-    //       if (_type == 1) {
-    //         _sharedData->CheckConferenceFile(_conf);
-    //       } else if (_type == 0) {
-    //         _sharedData->CheckPersonalFile(_conf);
-    //       }
-    //     }
 
     _player->stop();
   }

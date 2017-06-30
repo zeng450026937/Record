@@ -1,14 +1,15 @@
 #include "recorder.h"
+#include <common/config.h>
 #include <QDesktopWidget>
 #include <QGraphicsEffect>
-#include "ui_recorder.h"
-#include <common/config.h>
 #include "recorder_shared.h"
 #include "scenes/scene_file.h"
 #include "scenes/scene_record.h"
 #include "scenes/scene_record_warning.h"
 #include "scenes/scene_setting.h"
 #include "service/service_thread.h"
+#include "service/user_service_impl.h"
+#include "ui_recorder.h"
 
 Recorder::Recorder(QWidget *parent)
     : QWidget(parent),
@@ -49,6 +50,11 @@ Recorder::Recorder(QWidget *parent)
   ui->stackedWidget->installEventFilter(this);
 
   this->setWindowFlags(Qt::FramelessWindowHint);  //去掉标题栏
+
+  UserServiceImpl *user_service =
+      ServiceThread::GetInstance()->GetUserService();
+  QObject::connect(user_service, SIGNAL(loginResult(QString)), this,
+                   SLOT(on_login_result(QString)));
 }
 
 Recorder::~Recorder() {
@@ -148,5 +154,12 @@ void Recorder::on_setting_btn_clicked(bool checked) {
     ui->record_btn->setChecked(false);
     ui->file_btn->setChecked(false);
     ui->setting_btn->setChecked(true);
+  }
+}
+
+void Recorder::on_login_result(QString result) {
+  if (!result.isEmpty()) {
+    QPoint pos = this->geometry().center();
+    Scene_Record_Warning::ShowMessage(pos, result);
   }
 }

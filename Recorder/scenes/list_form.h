@@ -1,9 +1,9 @@
 #ifndef LIST_FORM_H
 #define LIST_FORM_H
 
+#include <QStandardItem>
 #include <QVariant>
 #include <QWidget>
-#include <QStandardItem>
 
 namespace Ui {
 class ListForm;
@@ -22,8 +22,7 @@ class ListForm : public QWidget {  // public RecordDownloadReceiver
  signals:
   void itemClicked(const QVariantMap &info);
 
-  public:
-
+ public:
   void update_display(const QVariantMap &info);
   void CheckAndAliveData();
 
@@ -35,7 +34,7 @@ class ListForm : public QWidget {  // public RecordDownloadReceiver
 
   void on_downloadButton_released();
 
-  void onDownloadingTick(int iPercent, int iDownloadPerSecond);
+  void onDownloadingTick(int iPercent, int iDownloadPerSecond, int status);
 
   void onDownloadPrompt(QString qstrInfo);
 
@@ -44,8 +43,6 @@ class ListForm : public QWidget {  // public RecordDownloadReceiver
   QVariantMap _info;
   int _download_status;
   bool _isDetail;
-
- 
 };
 
 #endif  // LIST_FORM_H

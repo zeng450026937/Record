@@ -47,7 +47,7 @@ void ListForm::update_display(const QVariantMap &info) {
   switch (info.value("recordType").toInt()) {
     case RecorderShared::RT_PERSONAL: {
       text = info.value("title").toString();
-      if (text.isEmpty()) text = "个人录音";
+      if (text.isEmpty()) text = tr("个人录音");
 
       ui->titleLabel->setText(text);
       if (!ui->userGroupBox->isVisible()) ui->userGroupBox->show();
@@ -64,12 +64,11 @@ void ListForm::update_display(const QVariantMap &info) {
     } break;
     case RecorderShared::RT_CONFERENCE: {
       text = info.value("title").toString();
-      ui->titleLabel->setText(text);
-      if (text.isEmpty()) text = "会议录音";
 
       if (!_isDetail) {
         ui->downloadButton->hide();
         ui->userGroupBox->hide();
+        if (text.isEmpty()) text = tr("会议录音");
       } else {
         ui->downloadButton->show();
         ui->userGroupBox->show();
@@ -83,12 +82,16 @@ void ListForm::update_display(const QVariantMap &info) {
         text = info.value("tag").toString();
         ui->keywordLabel->setText(text);
       }
+
+      ui->titleLabel->setText(text);
+
     } break;
     case RecorderShared::RT_MOBILE: {
-      ui->titleLabel->setText(tr("移动会议"));
+      text = info.value("title").toString();
       if (!_isDetail) {
         ui->downloadButton->hide();
         ui->userGroupBox->hide();
+        if (text.isEmpty()) text = tr("移动会议");
       } else {
         ui->downloadButton->show();
         ui->userGroupBox->show();
@@ -102,6 +105,9 @@ void ListForm::update_display(const QVariantMap &info) {
         text = info.value("tag").toString();
         ui->keywordLabel->setText(text);
       }
+
+      ui->titleLabel->setText(text);
+
     } break;
     default:
       break;
@@ -120,6 +126,9 @@ void ListForm::update_display(const QVariantMap &info) {
       case RecordDownloadReceiver::DS_COMPELETED:
         icon = QIcon(":/resource/u579.png");
         break;
+      case RecordDownloadReceiver::DS_DOWNLOADING:
+        icon = QIcon(":/resource/u1610.png");
+        break;
     }
     ui->downloadButton->setIcon(icon);
     ui->downloadButton->setIconSize(ui->downloadButton->size());
@@ -134,8 +143,8 @@ void ListForm::CheckAndAliveData() {
       _info["deviceUuid"].toString());
 
   if (pReceiver != nullptr) {
-    connect(pReceiver, SIGNAL(downloading_tick(int, int)), this,
-            SLOT(onDownloadingTick(int, int)));
+    connect(pReceiver, SIGNAL(downloading_tick(int, int, int)), this,
+            SLOT(onDownloadingTick(int, int, int)));
     connect(pReceiver, SIGNAL(download_prompt(QString)), this,
             SLOT(onDownloadPrompt(QString)));
   }
@@ -147,8 +156,8 @@ void ListForm::on_downloadButton_clicked() {
     if (promptDialog.exec() == QDialog::Rejected) return;
 
     RecordDownloadReceiver *pDownloadReciver = new RecordDownloadReceiver();
-    connect(pDownloadReciver, SIGNAL(downloading_tick(int, int)), this,
-            SLOT(onDownloadingTick(int, int)));
+    connect(pDownloadReciver, SIGNAL(downloading_tick(int, int, int)), this,
+            SLOT(onDownloadingTick(int, int, int)));
     connect(pDownloadReciver, SIGNAL(download_prompt(QString)), this,
             SLOT(onDownloadPrompt(QString)));
     RecordDownloadService::GetInstance()->DownloadRecord(
@@ -176,8 +185,9 @@ void ListForm::on_downloadButton_released() {
   ui->downloadButton->setIconSize(size);
 }
 
-void ListForm::onDownloadingTick(int iPercent, int iDownloadPerSecond) {
-  if (iPercent == 100) {
+void ListForm::onDownloadingTick(int iPercent, int iDownloadPerSecond,
+                                 int status) {
+  if (iPercent == 100 && status == RecordDownloadReceiver::DS_COMPELETED) {
     ui->speedLabel->setVisible(false);
     ui->percentageLabel->setVisible(false);
     ui->downloadButton->setIcon(QIcon(":/resource/u579.png"));
@@ -185,24 +195,37 @@ void ListForm::onDownloadingTick(int iPercent, int iDownloadPerSecond) {
     return;
   }
 
+  if (status == RecordDownloadReceiver::DS_UNCOMPLETED) {
+    ui->speedLabel->setVisible(false);
+    ui->percentageLabel->setVisible(false);
+    ui->downloadButton->setIcon(QIcon(":/resource/u620.png"));
+  }
+
+  if (status == RecordDownloadReceiver::DS_DOWNLOADING) {
+    ui->downloadButton->setIcon(QIcon(":/resource/u1610.png"));
+    if (!ui->speedLabel->isVisible()) ui->speedLabel->setVisible(true);
+    if (!ui->percentageLabel->isVisible())
+      ui->percentageLabel->setVisible(true);
+
 #define DS_PB (1024LL * 1024LL * 1024LL * 1024LL * 1024LL)
 #define DS_TB (1024LL * 1024LL * 1024LL * 1024LL)
 #define DS_GB (1024 * 1024 * 1024)
 #define DS_MB (1024 * 1024)
 #define DS_KB (1024)
 
-  ui->percentageLabel->setText(QString::number(iPercent) + "%");
-  char szData[16] = "NaUN/s";
-  if (iDownloadPerSecond >= DS_GB) {
-    sprintf_s(szData, 16, "%.2lfGB/s", (double)iDownloadPerSecond / DS_GB);
-  } else if (iDownloadPerSecond >= DS_MB) {
-    sprintf_s(szData, 16, "%.2lfMB/s", (double)iDownloadPerSecond / DS_MB);
-  } else if (iDownloadPerSecond >= DS_KB) {
-    sprintf_s(szData, 16, "%.2lfKB/s", (double)iDownloadPerSecond / DS_KB);
-  } else if (iDownloadPerSecond >= 0) {
-    sprintf_s(szData, 16, "%dB/s", iDownloadPerSecond);
+    ui->percentageLabel->setText(QString::number(iPercent) + "%");
+    char szData[16] = "NaUN/s";
+    if (iDownloadPerSecond >= DS_GB) {
+      sprintf_s(szData, 16, "%.2lfGB/s", (double)iDownloadPerSecond / DS_GB);
+    } else if (iDownloadPerSecond >= DS_MB) {
+      sprintf_s(szData, 16, "%.2lfMB/s", (double)iDownloadPerSecond / DS_MB);
+    } else if (iDownloadPerSecond >= DS_KB) {
+      sprintf_s(szData, 16, "%.2lfKB/s", (double)iDownloadPerSecond / DS_KB);
+    } else if (iDownloadPerSecond >= 0) {
+      sprintf_s(szData, 16, "%dB/s", iDownloadPerSecond);
+    }
+    ui->speedLabel->setText(QString(szData));
   }
-  ui->speedLabel->setText(QString(szData));
 
 #undef DS_PB
 #undef DS_TB

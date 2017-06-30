@@ -49,7 +49,6 @@ class Scene_File : public QGroupBox {
   //     void show_download_dlg(const QString& uuid);
   //     void download_conference(const QString& uuid);
 
-
   void clip_file_btn_clicked();
 
   void menu_triggered(QAction *action);

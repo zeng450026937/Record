@@ -100,9 +100,11 @@ void PersonalMode::NotifyConferenceRecordAddTrigger(bool bResult,
                                      qstrFileUuid, qstrConferenceUuid,
                                      qstrDeviceUuid);
   } else {
+    QVariantMap confInfo = m_pRecordShared->ConferenceInfo(qstrConferenceUuid);
+    if (confInfo.isEmpty()) return;
     RecordDownloadReceiver *pReceiver = new RecordDownloadReceiver();
     pDownloadService->DownloadRecord(
-        pReceiver, RecorderShared::RT_CONFERENCE, vmInfo["title"].toString(),
+        pReceiver, RecorderShared::RT_CONFERENCE, confInfo["title"].toString(),
         qstrUserId, qstrFileUuid, qstrConferenceUuid, qstrDeviceUuid,
         vmInfo["createTime"].toString(), vmInfo["fileExtension"].toString());
   }

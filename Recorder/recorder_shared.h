@@ -69,6 +69,7 @@ class RecorderShared : public QObject, public ModelUpdater {
   void RefreshDeviceList();
   void SelectDevice(bool selected, QVariantMap& device);
   QVariantMap DeviceInfo(QString mac);
+  QVariantMap ConferenceInfo(QString uuid);
 
   QVariantList GetTemplateList();
 

@@ -53,7 +53,7 @@ ConfDetail::~ConfDetail() { delete ui; }
 void ConfDetail::setInfo(const QVariantMap &info) {
   _info = info;
   ui->listWidget->clear();
-  ui->titleLabel->setText(_info.value("title").toString());
+  QString title = _info.value("title").toString();
 
   QString qstrCreateTime = info["createTime"].toString();
   ui->dateLabel->setText(qstrCreateTime.left(10));
@@ -64,9 +64,11 @@ void ConfDetail::setInfo(const QVariantMap &info) {
 
         break;
       case RecorderShared::RT_CONFERENCE:
+        if (title.isEmpty()) title = tr("会议录音");
         conf_mode->GetConferenceFiles(_info.value("conferenceUuid").toString());
         break;
       case RecorderShared::RT_MOBILE:
+        if (title.isEmpty()) title = tr("移动会议");
         conf_mode->GetMobileConferenceFiles(
             _info.value("conferenceUuid").toString());
         break;
@@ -74,4 +76,5 @@ void ConfDetail::setInfo(const QVariantMap &info) {
         break;
     }
   }
+  ui->titleLabel->setText(title);
 }

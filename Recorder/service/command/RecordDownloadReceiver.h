@@ -30,7 +30,7 @@ class RecordDownloadReceiver : public QObject {
 
  signals:
   void download_prompt(QString qstrInfo);
-  void downloading_tick(int iPercent, int iDownloadPerSecond);
+  void downloading_tick(int iPercent, int iDownloadPerSecond, int status);
 
  private:
   bool CreateReciveData(int iType, const QString &qstrTitle,

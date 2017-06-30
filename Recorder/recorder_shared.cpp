@@ -160,7 +160,7 @@ void RecorderShared::AddPersonalRecordInfo(QVariantMap& vmRecordInfo) {
 
   ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel,
                           vmRecordInfo);
-  _conference_uuid_list << vmRecordInfo.value("conference_uuid").toString();
+  _conference_uuid_list << vmRecordInfo.value("conferenceUuid").toString();
 }
 
 void RecorderShared::AddConferenceRecordInfo(QVariantMap& vmRecordInfo) {
@@ -174,7 +174,7 @@ void RecorderShared::AddConferenceRecordInfo(QVariantMap& vmRecordInfo) {
       qstrCreateTime.right(8).remove(':'));  // 8 == strlen("hh:mm:ss")
   ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel,
                           vmRecordInfo);
-  _conference_uuid_list << vmRecordInfo.value("uuid").toString();
+  _conference_uuid_list << vmRecordInfo.value("conferenceUuid").toString();
 
   // TODO: 下载接口暂未实现，后续处理。
   //_conf_service->getMarkInfo(vmRecordInfo.value("uuid").toString());
@@ -191,7 +191,7 @@ void RecorderShared::AddMobileRecordInfo(QVariantMap& vmRecordInfo) {
       qstrCreateTime.right(8).remove(':'));  // 8 == strlen("hh:mm:ss")
   ModelUpdater::AppendRow(ModelUpdater::ConferenceRecordInfoModel,
                           vmRecordInfo);
-  _conference_uuid_list << vmRecordInfo.value("uuid").toString();
+  _conference_uuid_list << vmRecordInfo.value("conferenceUuid").toString();
 }
 
 // mark interface
@@ -216,6 +216,19 @@ void RecorderShared::SelectDevice(bool selected, QVariantMap& device) {
 }
 QVariantMap RecorderShared::DeviceInfo(QString mac) {
   return _service->GetConfService()->deviceInfo(mac);
+}
+
+QVariantMap RecorderShared::ConferenceInfo(QString uuid) {
+  QStandardItemModel* pModel =
+      ModelUpdater::GetModel(ConferenceRecordInfoModel);
+
+  int index = _conference_uuid_list.indexOf(uuid);
+
+  if (index == -1) return QVariantMap();
+
+  QStandardItem* pItem = pModel->item(index);
+
+  return pItem->data(Qt::UserRole).toMap();
 }
 
 QVariantList RecorderShared::GetTemplateList() {

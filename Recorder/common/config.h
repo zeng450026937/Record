@@ -46,6 +46,7 @@ class Config {
   bool _auto_download;
 
   QString _device_uuid;
+  QString _faker;
 
   const char *const DEVICE_TYPE = "PC";
   const char *const DEFAULT_SERVER = "ws://118.191.2.215:12080";

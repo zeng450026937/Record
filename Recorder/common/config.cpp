@@ -51,6 +51,7 @@ Config::Config() {
 
   _server_address = server;
   _hackers = settings.value("hackers", (bool)false).toBool();
+  _faker = settings.value("faker", "").toString();
 
   _debug_output = settings.value("debug_output", (bool)true).toBool();
   _auto_download = settings.value("auto_download", (bool)false).toBool();
@@ -68,10 +69,7 @@ Config* Config::Config::GetInstance() {
   return s_pSinglton;
 }
 
-Config::USER& Config::GetUser()
-{ 
-    return _user; 
-}
+Config::USER& Config::GetUser() { return _user; }
 
 void Config::Save() {
   QSettings::setPath(QSettings::IniFormat, QSettings::UserScope,
@@ -104,6 +102,7 @@ void Config::Save() {
 
   if (_auto_download) settings.setValue("auto_download", _auto_download);
   if (_hackers) settings.setValue("hackers", _hackers);
+  if (!_faker.isEmpty()) settings.setValue("faker", _faker);
 
   settings.endGroup();
 }
@@ -122,6 +121,7 @@ inline void Config::Reset() {
   _qa_test = false;
   _auto_download = false;
   _hackers = false;
+  _faker = "";
 }
 
 inline Config& Config::operator=(const Config& rhs) {
@@ -138,6 +138,7 @@ inline Config& Config::operator=(const Config& rhs) {
   _qa_test = rhs._qa_test;
   _hackers = rhs._hackers;
   _auto_download = rhs._auto_download;
+  _faker = rhs._faker;
 
   return *this;
 }

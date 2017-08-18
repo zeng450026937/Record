@@ -18,7 +18,10 @@ void DeviceListItemA::update_display(QVariantMap info) {
   if (_info != info) {
     _info = info;
 
-    ui->nameLabel->setText(_info.value("userName").toString());
+    QString user_id = info.value("userId").toString();
+    QString user_name = info.value("userName").toString();
+    ui->nameLabel->setText(user_name + "(" + user_id + ")");
+
     ui->statusLable->setText(_info.value("status").toString());
 
     int iper = _info.value("batteryPercent").toString().toInt();
@@ -33,6 +36,7 @@ void DeviceListItemA::update_display(QVariantMap info) {
       ui->batteryLabe->setStyleSheet(
           "border-image: url(:/resource/u1418.png);");
     }
+    ui->deviceNameLabel->setText(_info.value("deviceName").toString());
 
     int percent = _info.value("batteryPercent").toString().toInt();
     if (percent <= 0) {

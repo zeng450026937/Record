@@ -2,12 +2,15 @@
 #include <Recorder/recorder_shared.h>
 #include <service/command/RecordDownloadReceiver.h>
 #include <service/command/RecordDownloadService.h>
+#include <service/storage/download_database.h>
+#include <service_thread.h>
 #include <QDateTime>
 #include <QDebug>
 #include <QMouseEvent>
 #include <QScreen>
 #include "scene_file_dl.h"
 #include "scenes/scene_record_warning.h"
+#include "service/command/ConferenceMode.h"
 #include "ui_list_form.h"
 
 ListForm::ListForm(bool isDetail)
@@ -61,26 +64,43 @@ void ListForm::update_display(const QVariantMap &info) {
 
       text = info.value("tag").toString();
       ui->keywordLabel->setText(text);
+
+      QTime duration(0, 0, 0, 0);
+      duration = duration.addMSecs(info.value("duration").toInt());
+      ui->durationLabel->setText(duration.toString("HH:mm:ss"));
+
     } break;
     case RecorderShared::RT_CONFERENCE: {
       text = info.value("title").toString();
 
       if (!_isDetail) {
         ui->downloadButton->hide();
-        ui->userGroupBox->hide();
+        ui->userGroupBox->show();
+        ui->idLabel->hide();
+        ui->keywordIcon->hide();
+        int fileCount = info.value("fileCount", 0).toInt();
+        if (fileCount <= 0) {
+          fileCount = info.value("deviceList").toList().count();
+        }
+        ui->keywordLabel->setText(QString("%1 录音").arg(fileCount));
+        ui->locationIcon->hide();
+        ui->locationLabel->hide();
+        ui->durationLabel->hide();
         if (text.isEmpty()) text = tr("会议录音");
       } else {
         ui->downloadButton->show();
         ui->userGroupBox->show();
+        ui->idLabel->hide();
+        ui->locationIcon->hide();
+        ui->keywordIcon->hide();
+        ui->durationLabel->hide();
         QString user_id = info.value("userId").toString();
         QString user_name = info.value("userName").toString();
-        ui->idLabel->setText(user_name + "(" + user_id + ")");
+        ui->keywordLabel->setText(user_name + "(" + user_id + ")");
 
-        text = info.value("gpsAddress").toString();
-        ui->locationLabel->setText(text);
-
-        text = info.value("tag").toString();
-        ui->keywordLabel->setText(text);
+        QTime duration(0, 0, 0, 0);
+        duration = duration.addMSecs(info.value("duration").toInt());
+        ui->locationLabel->setText(duration.toString("HH:mm:ss"));
       }
 
       ui->titleLabel->setText(text);
@@ -88,10 +108,19 @@ void ListForm::update_display(const QVariantMap &info) {
     } break;
     case RecorderShared::RT_MOBILE: {
       text = info.value("title").toString();
+      ui->titleLabel->setText(text);
       if (!_isDetail) {
         ui->downloadButton->hide();
-        ui->userGroupBox->hide();
+        ui->userGroupBox->show();
+        ui->idLabel->hide();
+        ui->durationLabel->hide();
+        ui->locationIcon->hide();
+        ui->locationLabel->hide();
+        ui->keywordIcon->hide();
+        ui->keywordLabel->setText(
+            QString("%1 录音").arg(info.value("fileCount").toInt()));
         if (text.isEmpty()) text = tr("移动会议");
+        ui->titleLabel->setText(text);
       } else {
         ui->downloadButton->show();
         ui->userGroupBox->show();
@@ -104,9 +133,11 @@ void ListForm::update_display(const QVariantMap &info) {
 
         text = info.value("tag").toString();
         ui->keywordLabel->setText(text);
-      }
 
-      ui->titleLabel->setText(text);
+        QTime duration(0, 0, 0, 0);
+        duration = duration.addMSecs(info.value("duration").toInt());
+        ui->durationLabel->setText(duration.toString("HH:mm:ss"));
+      }
 
     } break;
     default:

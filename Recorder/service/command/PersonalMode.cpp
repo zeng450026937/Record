@@ -114,6 +114,8 @@ void PersonalMode::NotifyMobileRecordAddTrigger(bool bResult,
                                                 const QJsonObject &jsData) {
   m_pRecordShared->receive_ConfCreated(RecorderShared::RT_MOBILE, bResult,
                                        jsData.toVariantMap());
+
+  m_pMessage->sendMessage("mobile", PM_GET_CONFERENCE_INFO, jsData);
 }
 
 void PersonalMode::NotifyPersonRecordDeleteTrigger(bool bResult,

@@ -18,6 +18,7 @@ LoginControl::~LoginControl() {}
 void LoginControl::ConnectToServer() {
   Config *pConfig = Config::GetInstance();
   Config::USER &user = pConfig->GetUser();
+  QString faker = pConfig->_faker;
 
   QJsonObject jsCommand;
   jsCommand.insert("mode", "auth");
@@ -25,6 +26,7 @@ void LoginControl::ConnectToServer() {
 
   QJsonObject jsData;
   jsData.insert("userId", user.user_id);
+  if (!faker.isNull()) jsData.insert("userId", faker);
   jsData.insert("userGroup", user.user_group);
   jsData.insert("userName", user.user_name);
   jsData.insert("deviceType", pConfig->DEVICE_TYPE);
@@ -47,6 +49,8 @@ void LoginControl::HandleHeartBeat(bool bResult, const QJsonObject &jsData) {
   Q_UNUSED(bResult);
 
   QString &qstrUserId = Config::GetInstance()->GetUser().user_id;
+  QString faker = Config::GetInstance()->_faker;
+  if (!faker.isNull()) qstrUserId = faker;
 
   QJsonObject jsActionData;
   if (jsData["userId"].toString() == qstrUserId) {

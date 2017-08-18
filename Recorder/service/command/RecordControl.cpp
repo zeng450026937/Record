@@ -1,6 +1,7 @@
 
 #include "RecordControl.h"
 #include <recorder_shared.h>
+#include <QDebug>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>

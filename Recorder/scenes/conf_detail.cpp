@@ -1,5 +1,9 @@
 #include "conf_detail.h"
+#include <service/command/RecordDownloadService.h>
+#include <service/storage/download_database.h>
+#include <service_thread.h>
 #include <QDebug>
+#include <QFile>
 #include "conf_form.h"
 #include "list_form.h"
 #include "recorder_shared.h"
@@ -31,9 +35,11 @@ ConfDetail::ConfDetail(QWidget *parent)
                          qstrCreateTime.right(8));  // 8 == strlen("hh:mm:ss")
           itemMap.insert("recordType", type);
           itemMap.insert("title", this->_info.value("title"));
+
           QListWidgetItem *listItem = new QListWidgetItem(
               item.toMap().value("uuid").toString(), ui->listWidget);
           ListForm *listItemWidget = new ListForm(true);
+          listItemWidget->setParent(ui->listWidget);
           listItem->setSizeHint(QSize(ui->listWidget->width() - 5,
                                       listItemWidget->size().height()));
           ui->listWidget->addItem(listItem);

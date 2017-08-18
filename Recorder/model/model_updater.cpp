@@ -180,8 +180,7 @@ ModelUpdater::ModelUpdater()
       _conference_model(new QStandardItemModel()),
       _mark_model(new QStandardItemModel()),
       _template_model(new QStandardItemModel()),
-      _record_mark_model(new QStandardItemModel())
-{
+      _record_mark_model(new QStandardItemModel()) {
   _device_header << "display";
   _device_header << "used";
   _device_header << "selected";
@@ -200,6 +199,7 @@ ModelUpdater::ModelUpdater()
   _conference_header << "title";
   _conference_header << "recordType";
   _conference_header << "search";
+  _conference_header << "createTime";
   _conference_header << "completed";
 
   _conference_model->setHorizontalHeaderLabels(_conference_header);

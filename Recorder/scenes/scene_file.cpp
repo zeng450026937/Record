@@ -148,8 +148,8 @@ void Scene_File::init_filter_menu() {
   connect(filter_menu, SIGNAL(triggered(QAction *)), this,
           SLOT(menu_triggered(QAction *)));
 
-  filter_action1->setChecked(true);
-  filter_menu->triggered(filter_action1);
+  filter_action4->setChecked(true);
+  filter_menu->triggered(filter_action4);
 }
 
 bool Scene_File::event(QEvent *e) {
@@ -619,6 +619,8 @@ void Scene_File::on_clearBtn_clicked() {
       filter_menu->actions().at(i)->setIconVisibleInMenu(false);
     }
   }
+
+  this->on_typeComboBox_currentIndexChanged(ui->typeComboBox->currentIndex());
 }
 
 // void Scene_File::show_download_dlg(const QString& uuid)
@@ -1166,16 +1168,24 @@ void Scene_File::on_end_time_textChanged(const QString &arg1) {
 
 void Scene_File::on_sortBtn_clicked(bool checked) {
   if (checked)
-    sortFilter_proxyModel->sort(2, Qt::AscendingOrder);
+    sortFilter_proxyModel->sort(8, Qt::AscendingOrder);
   else
-    sortFilter_proxyModel->sort(2, Qt::DescendingOrder);
+    sortFilter_proxyModel->sort(8, Qt::DescendingOrder);
 }
 
 void Scene_File::on_typeComboBox_currentIndexChanged(int index) {
   sortFilter_proxyModel->setFilterKeyColumn(6);
   switch (index) {
     case 0:
-      sortFilter_proxyModel->setFilterFixedString("");
+      sortFilter_proxyModel->setFilterKeyColumn(3);
+      {
+        int count = filter_menu->actions().count();
+        for (int i = 0; i < count; i++) {
+          if (filter_menu->actions().at(i)->isChecked()) {
+            this->menu_triggered(filter_menu->actions().at(i));
+          }
+        }
+      }
       break;
     case 1:
       _type = RecorderShared::RT_CONFERENCE;
@@ -1191,9 +1201,8 @@ void Scene_File::on_typeComboBox_currentIndexChanged(int index) {
   }
   if (index != 0)
     sortFilter_proxyModel->setFilterFixedString(QString::number(_type));
-  sortFilter_proxyModel->sort(3, Qt::DescendingOrder);
 
-  ui->sortBtn->setChecked(false);
+  emit ui->sortBtn->clicked(ui->sortBtn->isChecked());
 }
 
 void Scene_File::on_searchButton_clicked() {

@@ -1,5 +1,6 @@
 
 #include "LoginControl.h"
+#include <QDebug>
 #include <QJsonDocument>
 #include <QJsonObject>
 
@@ -26,7 +27,8 @@ void LoginControl::ConnectToServer() {
 
   QJsonObject jsData;
   jsData.insert("userId", user.user_id);
-  if (!faker.isNull()) jsData.insert("userId", faker);
+  if (!faker.isEmpty())
+    jsData.insert("userId", faker);
   jsData.insert("userGroup", user.user_group);
   jsData.insert("userName", user.user_name);
   jsData.insert("deviceType", pConfig->DEVICE_TYPE);
@@ -41,6 +43,8 @@ void LoginControl::ConnectToServer() {
   jsRoot.insert("command", jsCommand);
   jsRoot.insert("data", jsData);
 
+  qDebug() << jsRoot << faker;
+
   QJsonDocument jsDoc(jsRoot);
   m_pMessage->connectTo(jsDoc.toJson(), pConfig->_server_address);
 }
@@ -48,9 +52,10 @@ void LoginControl::ConnectToServer() {
 void LoginControl::HandleHeartBeat(bool bResult, const QJsonObject &jsData) {
   Q_UNUSED(bResult);
 
-  QString &qstrUserId = Config::GetInstance()->GetUser().user_id;
+  QString qstrUserId = Config::GetInstance()->GetUser().user_id;
   QString faker = Config::GetInstance()->_faker;
-  if (!faker.isNull()) qstrUserId = faker;
+  if (!faker.isEmpty())
+    qstrUserId = faker;
 
   QJsonObject jsActionData;
   if (jsData["userId"].toString() == qstrUserId) {

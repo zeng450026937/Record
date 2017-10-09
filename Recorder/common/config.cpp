@@ -50,7 +50,7 @@ Config::Config() {
   }
 
   _server_address = server;
-  _hackers = settings.value("hackers", (bool)false).toBool();
+  _hackers = settings.value("hackers", (bool)true).toBool();
   _faker = settings.value("faker", "").toString();
 
   _debug_output = settings.value("debug_output", (bool)true).toBool();

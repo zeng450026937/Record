@@ -1,7 +1,4 @@
 #include "RecordDownloadService.h"
-#include <Winsock2.h>
-#include <service/messager/message_base.h>
-#include <QDebug>
 #include "RecordDownloadReceiver.h"
 #include "common/config.h"
 #include "messager/binary_reader.h"
@@ -9,6 +6,9 @@
 #include "storage/database_impl.h"
 #include "storage/include/clip_file_database.h"
 #include "storage/include/conferencedatabase.h"
+#include <QDebug>
+#include <Winsock2.h>
+#include <service/messager/message_base.h>
 
 #define RFDS_DOWNLOAD_FILE "downloadFile"
 #define RFDS_DOWNLOAD_ACK "downloadFileAck"
@@ -16,12 +16,10 @@
 RecordDownloadService *RecordDownloadService::s_pSingleton = nullptr;
 
 RecordDownloadService::RecordDownloadService(MessageBase *pMessager)
-    : CommandBase(pMessager),
-      m_pConfig(Config::GetInstance()),
+    : CommandBase(pMessager), m_pConfig(Config::GetInstance()),
       m_pConfService(Q_NULLPTR),
       m_pDownloadDB(ServiceThread::GetInstance()->GetDownloadDB()),
-      m_pConferenceDB(Q_NULLPTR),
-      m_pClipFileDB(Q_NULLPTR),
+      m_pConferenceDB(Q_NULLPTR), m_pClipFileDB(Q_NULLPTR),
       m_iDownloadStatusTimerId(0) {
   m_pTempRecordInfo = new RecordBlockInfo();
   connect(m_pMessage, SIGNAL(notify_binary(QByteArray)), this,
@@ -36,9 +34,10 @@ RecordDownloadService::RecordDownloadService(MessageBase *pMessager)
                 &RecordDownloadService::DownloadRecordReply);
 }
 
-RecordDownloadReceiver *RecordDownloadService::GetDownloadReciver(
-    const QString &qstrFileUuid, const QString &qstrConferenceUuid,
-    const QString &qstrDeviceUuid) {
+RecordDownloadReceiver *
+RecordDownloadService::GetDownloadReciver(const QString &qstrFileUuid,
+                                          const QString &qstrConferenceUuid,
+                                          const QString &qstrDeviceUuid) {
   QByteArray baLocator;
   baLocator.append(qstrConferenceUuid);
   baLocator.append(qstrDeviceUuid);
@@ -89,20 +88,21 @@ bool RecordDownloadService::DownloadRecord(
   jsData.insert("startPos", iStartPos);
 
   switch (iType) {
-    case RecorderShared::RT_PERSONAL:
-      m_pMessage->sendMessage(MB_PERSONAL_MODE, RFDS_DOWNLOAD_FILE, jsData);
-      break;
-    case RecorderShared::RT_CONFERENCE:
-      m_pMessage->sendMessage(MB_CONFERENCE_MODE, RFDS_DOWNLOAD_FILE, jsData);
-      break;
-    case RecorderShared::RT_MOBILE:
-      m_pMessage->sendMessage(MB_MOBILE_MODE, RFDS_DOWNLOAD_FILE, jsData);
-      break;
-    default:
-      break;
+  case RecorderShared::RT_PERSONAL:
+    m_pMessage->sendMessage(MB_PERSONAL_MODE, RFDS_DOWNLOAD_FILE, jsData);
+    break;
+  case RecorderShared::RT_CONFERENCE:
+    m_pMessage->sendMessage(MB_CONFERENCE_MODE, RFDS_DOWNLOAD_FILE, jsData);
+    break;
+  case RecorderShared::RT_MOBILE:
+    m_pMessage->sendMessage(MB_MOBILE_MODE, RFDS_DOWNLOAD_FILE, jsData);
+    break;
+  default:
+    break;
   }
 
-  if (m_mapReceiver.size() == 1) Q_EMIT startDownloadTick();
+  if (m_mapReceiver.size() == 1)
+    Q_EMIT startDownloadTick();
 
   return true;
 }
@@ -128,17 +128,17 @@ bool RecordDownloadService::ResumeDownload(int iType, const QString &qstrUserId,
     jsData.insert("startPos", iStartPos);
 
     switch (iType) {
-      case RecorderShared::RT_PERSONAL:
-        m_pMessage->sendMessage(MB_PERSONAL_MODE, RFDS_DOWNLOAD_FILE, jsData);
-        break;
-      case RecorderShared::RT_CONFERENCE:
-        m_pMessage->sendMessage(MB_CONFERENCE_MODE, RFDS_DOWNLOAD_FILE, jsData);
-        break;
-      case RecorderShared::RT_MOBILE:
-        m_pMessage->sendMessage(MB_MOBILE_MODE, RFDS_DOWNLOAD_FILE, jsData);
-        break;
-      default:
-        break;
+    case RecorderShared::RT_PERSONAL:
+      m_pMessage->sendMessage(MB_PERSONAL_MODE, RFDS_DOWNLOAD_FILE, jsData);
+      break;
+    case RecorderShared::RT_CONFERENCE:
+      m_pMessage->sendMessage(MB_CONFERENCE_MODE, RFDS_DOWNLOAD_FILE, jsData);
+      break;
+    case RecorderShared::RT_MOBILE:
+      m_pMessage->sendMessage(MB_MOBILE_MODE, RFDS_DOWNLOAD_FILE, jsData);
+      break;
+    default:
+      break;
     }
     return true;
   }
@@ -173,17 +173,17 @@ void RecordDownloadService::DownloadAck(int iType, const char *pUserId,
   jsData.insert("startPos", iStartPos);
 
   switch (iType) {
-    case RecorderShared::RT_PERSONAL:
-      m_pMessage->sendMessage(MB_PERSONAL_MODE, RFDS_DOWNLOAD_ACK, jsData);
-      break;
-    case RecorderShared::RT_CONFERENCE:
-      m_pMessage->sendMessage(MB_CONFERENCE_MODE, RFDS_DOWNLOAD_ACK, jsData);
-      break;
-    case RecorderShared::RT_MOBILE:
-      m_pMessage->sendMessage(MB_MOBILE_MODE, RFDS_DOWNLOAD_ACK, jsData);
-      break;
-    default:
-      break;
+  case RecorderShared::RT_PERSONAL:
+    m_pMessage->sendMessage(MB_PERSONAL_MODE, RFDS_DOWNLOAD_ACK, jsData);
+    break;
+  case RecorderShared::RT_CONFERENCE:
+    m_pMessage->sendMessage(MB_CONFERENCE_MODE, RFDS_DOWNLOAD_ACK, jsData);
+    break;
+  case RecorderShared::RT_MOBILE:
+    m_pMessage->sendMessage(MB_MOBILE_MODE, RFDS_DOWNLOAD_ACK, jsData);
+    break;
+  default:
+    break;
   }
 }
 
@@ -195,6 +195,7 @@ void RecordDownloadService::DownloadRecordReply(bool bResult,
 
   QJsonDocument jsDoc(jsData);
   QString qstr = jsDoc.toJson();
+  qDebug() << jsDoc;
 
   QByteArray baLocator;
   baLocator.append(jsData["conferenceUuid"].toString());
@@ -228,35 +229,35 @@ void RecordDownloadService::DownloadRecordReply(bool bResult,
 void RecordDownloadService::on_binary_received(QByteArray binary) {
   char *pData = binary.data();
   int iLocator = 0;
-  m_pTempRecordInfo->iRecordType = htonl(*(int *)pData + iLocator);  // type
+  m_pTempRecordInfo->iRecordType = htonl(*(int *)pData + iLocator); // type
   iLocator += sizeof(int);
 
-  memcpy(m_pTempRecordInfo->szUserId, pData + iLocator, 17);  // userId
+  memcpy(m_pTempRecordInfo->szUserId, pData + iLocator, 17); // userId
   m_pTempRecordInfo->szUserId[17] = '\0';
   iLocator += 17;
 
-  memcpy(m_pTempRecordInfo->szDeviceUuid, pData + iLocator, 32);  // deviceuuid
+  memcpy(m_pTempRecordInfo->szDeviceUuid, pData + iLocator, 32); // deviceuuid
   m_pTempRecordInfo->szDeviceUuid[32] = '\0';
   iLocator += 32;
 
-  memcpy(m_pTempRecordInfo->szFileUuid, pData + iLocator, 32);  // fileUuid
+  memcpy(m_pTempRecordInfo->szFileUuid, pData + iLocator, 32); // fileUuid
   m_pTempRecordInfo->szFileUuid[32] = '\0';
   iLocator += 32;
 
   memcpy(m_pTempRecordInfo->szConferenceUuid, pData + iLocator,
-         32);  // conferenceUuid
+         32); // conferenceUuid
   m_pTempRecordInfo->szConferenceUuid[32] = '\0';
   iLocator += 32;
 
-  iLocator += sizeof(int);  // meetingTime锛?// 鐩墠娌＄敤锛屾墍浠ヤ笉澶勭悊銆?
+  iLocator += sizeof(int); // meetingTime锛?// 鐩墠娌＄敤锛屾墍浠ヤ笉澶勭悊銆?
 
-  m_pTempRecordInfo->iStartPos = htonl(*(int *)(pData + iLocator));  // startPos
+  m_pTempRecordInfo->iStartPos = htonl(*(int *)(pData + iLocator)); // startPos
   iLocator += sizeof(int);
 
-  m_pTempRecordInfo->iStatus = htonl(*(int *)(pData + iLocator));  // status
+  m_pTempRecordInfo->iStatus = htonl(*(int *)(pData + iLocator)); // status
   iLocator += sizeof(int);
 
-  m_pTempRecordInfo->iDataSize = htonl(*(int *)(pData + iLocator));  // sizeByte
+  m_pTempRecordInfo->iDataSize = htonl(*(int *)(pData + iLocator)); // sizeByte
   iLocator += sizeof(int);
 
   QByteArray baLocator;
